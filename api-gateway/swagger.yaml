@@ -1,0 +1,700 @@
+openapi: 3.0.1
+info:
+  title: book-recommendations
+  description: book-recommendations
+  version: v1
+  contact:
+    name: Julio Scheidt
+    email: julio@blackdevs.com.br
+servers:
+  - url: http://book-recommendations.{NAMESPACE}.svc.cluster.local:3080/
+
+tags:
+  - name: UserServices
+    description: Services related to user resources
+  - name: UserRateServices
+    description: Services related to user rate resources
+  - name: BookServices
+    description: Services related to book resources
+
+paths:
+  /v1/user:
+    post:
+      tags:
+        - UserServices
+      summary: create user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBody'
+      responses:
+        '201':
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    get:
+      tags:
+        - UserServices
+      summary: list user
+      operationId: listUser
+      parameters:
+        - name: page
+          in: query
+          description: Page to search
+          required: true
+          schema:
+            type: integer
+            example: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: Size of page
+          required: true
+          schema:
+            type: integer
+            example: 50
+            maximum: 100
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserSuccessResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /v1/user/{uuid}:
+    get:
+      tags:
+        - UserServices
+      summary: get user
+      operationId: getUser
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for user
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    put:
+      tags:
+        - UserServices
+      summary: update user
+      operationId: updateUser
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for user
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBody'
+      responses:
+        '202':
+          description: 'Accepted'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    delete:
+      tags:
+        - UserServices
+      summary: delete user
+      operationId: deleteUser
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for user
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '204':
+          description: 'No Content'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /v1/user/rate:
+    post:
+      tags:
+        - UserRateServices
+      summary: create user rate
+      operationId: createUserRate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/UserRateBody'
+                - type: object
+                  properties:
+                    book_uuid:
+                      $ref: '#/components/schemas/Uuid'
+                    rate:
+                      type: number
+      responses:
+        '201':
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserRateSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    get:
+      tags:
+        - UserRateServices
+      summary: list user rate
+      operationId: listUserRate
+      parameters:
+        - name: page
+          in: query
+          description: Page to search
+          required: true
+          schema:
+            type: integer
+            example: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: Size of page
+          required: true
+          schema:
+            type: integer
+            example: 50
+            maximum: 100
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListUserRateSuccessResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /v1/user/rate/{user_uuid}:
+    get:
+      tags:
+        - UserRateServices
+      summary: get user rate
+      operationId: getUserRate
+      parameters:
+      - name: user_uuid
+        in: path
+        description: Uuid for user
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserRateSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    delete:
+      tags:
+        - UserRateServices
+      summary: delete user rate
+      operationId: deleteUserRate
+      parameters:
+      - name: user_uuid
+        in: path
+        description: Uuid for user
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '204':
+          description: 'No Content'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /v1/book:
+    post:
+      tags:
+        - BookServices
+      summary: create book
+      operationId: createBook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookBody'
+      responses:
+        '201':
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateBookSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    get:
+      tags:
+        - BookServices
+      summary: list book
+      operationId: listBook
+      parameters:
+        - name: page
+          in: query
+          description: Page to search
+          required: true
+          schema:
+            type: integer
+            example: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: Size of page
+          required: true
+          schema:
+            type: integer
+            example: 50
+            maximum: 100
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListBookSuccessResponse'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /v1/book/{uuid}:
+    get:
+      tags:
+        - BookServices
+      summary: get book
+      operationId: getBook
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for book
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBookSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    put:
+      tags:
+        - BookServices
+      summary: update book
+      operationId: updateBook
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for book
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookBody'
+      responses:
+        '202':
+          description: 'Accepted'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+    delete:
+      tags:
+        - BookServices
+      summary: delete book
+      operationId: deleteBook
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for book
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '204':
+          description: 'No Content'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+components:
+  schemas:
+    DefaultResponseBadRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Status code'
+          example: 'Bad Request'
+
+    DefaultResponseNotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Status code'
+          example: 'Not Found'
+
+    DefaultResponseServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Status code'
+          example: 'Internal Server Error'
+
+    Uuid:
+      type: string
+      example: '17f182b0dfc002737d507f74'
+
+    CreatedAt:
+      type: string
+      format: date-time
+      example: '2021-01-01T12:00:00.000Z'
+
+    UpdatedAt:
+      type: string
+      format: date-time
+      example: '2021-01-01T12:00:00.000Z'
+
+    UserBody:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+          format: phone
+          example: '+551199999999'
+
+    UserFull:
+      allOf:
+        - type: object
+          properties:
+            uuid:
+              $ref: '#/components/schemas/Uuid'
+            created_at:
+              $ref: '#/components/schemas/CreatedAt'
+            updated_at:
+              $ref: '#/components/schemas/UpdatedAt'
+        - $ref: '#/components/schemas/UserBody'
+
+    UserRateBody:
+      allOf:
+        - type: object
+          properties:
+            user_uuid:
+              $ref: '#/components/schemas/Uuid'
+
+    UserRateFull:
+      allOf:
+        - $ref: '#/components/schemas/UserRateBody'
+        - type: object
+          properties:
+            rates:
+              type: array
+              items:
+                type: object
+                properties:
+                  book_uuid:
+                    $ref: '#/components/schemas/Uuid'
+                  rate:
+                    type: number
+            created_at:
+              $ref: '#/components/schemas/CreatedAt'
+            updated_at:
+              $ref: '#/components/schemas/UpdatedAt'
+
+    BookBody:
+      type: object
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+        genre:
+          type: string
+        image:
+          type: string
+
+    BookFull:
+      allOf:
+        - type: object
+          properties:
+            uuid:
+              $ref: '#/components/schemas/Uuid'
+            created_at:
+              $ref: '#/components/schemas/CreatedAt'
+            updated_at:
+              $ref: '#/components/schemas/UpdatedAt'
+        - $ref: '#/components/schemas/BookBody'
+
+    CreateUserSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Uuid'
+
+    GetUserSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UserFull'
+
+    ListUserSuccessResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserFull'
+
+    CreateUserRateSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Uuid'
+
+    GetUserRateSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UserRateFull'
+
+    ListUserRateSuccessResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRateFull'
+
+    CreateBookSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Uuid'
+
+    GetBookSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BookFull'
+
+    ListBookSuccessResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookFull'

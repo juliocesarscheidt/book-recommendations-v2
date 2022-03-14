@@ -1,0 +1,34 @@
+{
+  "name": "users-microservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "eslint .",
+    "test": "jest --forceExit ./test",
+    "test:detect": "jest --detectOpenHandles ./test",
+    "coverage": "jest --ci --coverage jest --forceExit ./test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@grpc/grpc-js": "1.5.5",
+    "@grpc/proto-loader": "0.6.9",
+    "grpc-node-server-reflection": "1.0.2",
+    "mongoose": "6.2.6",
+    "node-cache": "5.1.2",
+    "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "6.0.0-alpha.7",
+    "babel-jest": "25.1.0",
+    "eslint": "6.8.0",
+    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-plugin-import": "2.20.1",
+    "jest": "25.1.0",
+    "nodemon": "2.0.15"
+  }
+}
