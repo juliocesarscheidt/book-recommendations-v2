@@ -8,7 +8,7 @@ export REDIS_PORT=6379
 
 export API_GATEWAY_CONN_STRING=http://127.0.0.1:3080
 
-python3 main.py
+python3 src/recommendations/main.py
 
 
 # black linter

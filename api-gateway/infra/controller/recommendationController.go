@@ -13,16 +13,22 @@ import (
 	httpmodule "github.com/juliocesarscheidt/apigateway/infra/http"
 )
 
-func GetRecommendation(amqpClient *adapter.AmqpClient) http.HandlerFunc {
+func GetRecommendation(grpcClient adapter.GrpcClient, amqpClient *adapter.AmqpClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		user_uuid, _ := params["user_uuid"]
+
+		// check if user exists
+		errCheckUserExists := CheckUserExists(user_uuid, grpcClient); if errCheckUserExists != nil {
+			HandleError(w, errCheckUserExists)
+			return
+		}
 
 		getRecommendationRequestDTO := dto.GetRecommendationRequestDTO{
-			UserUuid: uuid,
+			UserUuid: user_uuid,
 		}
 		recommendations, err := usecase.GetRecommendation(getRecommendationRequestDTO, amqpClient)
 		if err != nil {

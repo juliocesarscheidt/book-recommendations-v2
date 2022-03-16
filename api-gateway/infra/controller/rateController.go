@@ -24,23 +24,27 @@ func UpsertUserRate(grpcClient adapter.GrpcClient, amqpClient *adapter.AmqpClien
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
+
+		// check if user exists
+		errCheckUserExists := CheckUserExists(userRateRequest.GetUserUuid(), grpcClient); if errCheckUserExists != nil {
+			HandleError(w, errCheckUserExists)
+			return
+		}
+
 		req := &userpb.UpsertUserRateRequest{
 			UserRateRequest: &userRateRequest,
 		}
-
 		uuid, err := usecase.UpsertUserRate(req, grpcClient)
 		if err != nil {
 			HandleError(w, err)
 			return
 		}
-
 		fmt.Printf("Response :: %v\n", uuid)
 
 		// publish on recommendations exchange the recommendation.calculate
 		calculateRecommendationRequestDTO := &dto.CalculateRecommendationRequestDTO{
 			UserUuid: userRateRequest.GetUserUuid(),
 		}
-
 		calculateRecommendationRequestDTOJson, err := json.Marshal(&calculateRecommendationRequestDTO)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
@@ -67,6 +71,12 @@ func GetUserRate(grpcClient adapter.GrpcClient) http.HandlerFunc {
 		fmt.Println(params)
 		user_uuid, _ := params["user_uuid"]
 
+		// check if user exists
+		errCheckUserExists := CheckUserExists(user_uuid, grpcClient); if errCheckUserExists != nil {
+			HandleError(w, errCheckUserExists)
+			return
+		}
+
 		req := &userpb.GetUserRateRequest{
 			UserUuid: user_uuid,
 		}
@@ -90,6 +100,12 @@ func DeleteUserRate(grpcClient adapter.GrpcClient) http.HandlerFunc {
 		params := mux.Vars(r)
 		fmt.Println(params)
 		user_uuid, _ := params["user_uuid"]
+
+		// check if user exists
+		errCheckUserExists := CheckUserExists(user_uuid, grpcClient); if errCheckUserExists != nil {
+			HandleError(w, errCheckUserExists)
+			return
+		}
 
 		req := &userpb.DeleteUserRateRequest{
 			UserUuid: user_uuid,

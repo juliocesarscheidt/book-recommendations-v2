@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
 	"github.com/juliocesarscheidt/apigateway/infra/router"

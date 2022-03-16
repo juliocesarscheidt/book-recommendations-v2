@@ -40,10 +40,10 @@ func GetBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		book_uuid, _ := params["book_uuid"]
 
 		getBookRequestDTO := dto.GetBookRequestDTO{
-			Uuid: uuid,
+			Uuid: book_uuid,
 		}
 		book, err := usecase.GetBook(getBookRequestDTO, amqpClient)
 		if err != nil {
@@ -64,14 +64,14 @@ func UpdateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		book_uuid, _ := params["book_uuid"]
 
 		var updateBookRequestDTO dto.UpdateBookRequestDTO
 		if err := json.NewDecoder(r.Body).Decode(&updateBookRequestDTO); err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
-		updateBookRequestDTO.Uuid =  uuid
+		updateBookRequestDTO.Uuid =  book_uuid
 		err := usecase.UpdateBook(updateBookRequestDTO, amqpClient)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
@@ -88,10 +88,10 @@ func DeleteBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		book_uuid, _ := params["book_uuid"]
 
 		deleteBookRequestDTO := dto.DeleteBookRequestDTO{
-			Uuid: uuid,
+			Uuid: book_uuid,
 		}
 		err := usecase.DeleteBook(deleteBookRequestDTO, amqpClient)
 		if err != nil {

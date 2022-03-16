@@ -1,5 +1,5 @@
 package dto
 
 type CalculateRecommendationRequestDTO struct {
-	UserUuid string `json:"user_uuid,omitempty"`
+	UserUuid string `json:"user_uuid"`
 }

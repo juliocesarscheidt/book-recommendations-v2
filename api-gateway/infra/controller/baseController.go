@@ -8,8 +8,25 @@ import (
 	"google.golang.org/grpc/status"
 	// "google.golang.org/grpc/codes"
 
+	"github.com/juliocesarscheidt/apigateway/application/usecase"
+	"github.com/juliocesarscheidt/apigateway/infra/adapter"
+	userpb "github.com/juliocesarscheidt/apigateway/pb"
 	httpmodule "github.com/juliocesarscheidt/apigateway/infra/http"
 )
+
+func CheckUserExists(uuid string, grpcClient adapter.GrpcClient) error {
+	// check if user exists
+	getUserRequest := &userpb.GetUserRequest{
+		Uuid: uuid,
+	}
+	user, err := usecase.GetUser(getUserRequest, grpcClient)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Response :: %v\n", user)
+
+	return nil
+}
 
 func ThrowInternalServerError(w http.ResponseWriter, message string) {
 	fmt.Println(message)

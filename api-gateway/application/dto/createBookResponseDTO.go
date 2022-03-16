@@ -1,5 +1,5 @@
 package dto
 
 type CreateBookResponseDTO struct {
-	Uuid string `json:"uuid,omitempty"`
+	Uuid string `json:"uuid"`
 }

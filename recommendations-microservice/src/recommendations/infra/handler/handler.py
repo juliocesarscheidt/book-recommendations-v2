@@ -16,7 +16,9 @@ class Handler(object):
     redis_client: None
     api_gateway_uri: None
 
-    def __init__(self, amqp_parameters, amqp_queue, redis_host, redis_port, api_gateway_uri) -> None:
+    def __init__(
+        self, amqp_parameters, amqp_queue, redis_host, redis_port, api_gateway_uri
+    ) -> None:
         self.amqp_parameters = amqp_parameters
         logging.info("amqp_parameters :: " + str(self.amqp_parameters))
 
@@ -62,11 +64,11 @@ class Handler(object):
                     delivery_tag=__method.delivery_tag, multiple=False, requeue=True
                 )
 
-            logging.info(" [x] Done")
+            logging.info("[x] Done")
 
         return callback_queue
 
-    def start(self):
+    def handle(self):
         self.channel.basic_qos(prefetch_count=1)
 
         callback = self.generate_callback_main_queue(self.amqp_parameters)

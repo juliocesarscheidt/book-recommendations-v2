@@ -18,4 +18,4 @@ if __name__ in "__main__":
         redis_config["port"],
         api_gateway_config["uri"],
     )
-    handler.start()
+    handler.handle()

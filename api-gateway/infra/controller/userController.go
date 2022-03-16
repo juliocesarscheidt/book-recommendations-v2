@@ -46,10 +46,10 @@ func GetUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		user_uuid, _ := params["user_uuid"]
 
 		req := &userpb.GetUserRequest{
-			Uuid: uuid,
+			Uuid: user_uuid,
 		}
 		user, err := usecase.GetUser(req, grpcClient)
 		if err != nil {
@@ -70,7 +70,7 @@ func UpdateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		user_uuid, _ := params["user_uuid"]
 
 		var userRequest userpb.UserRequest
 		if err := json.NewDecoder(r.Body).Decode(&userRequest); err != nil {
@@ -78,7 +78,7 @@ func UpdateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 			return
 		}
 		req := &userpb.UpdateUserRequest{
-			Uuid: uuid,
+			Uuid: user_uuid,
 			UserRequest: &userRequest,
 		}
 
@@ -98,10 +98,10 @@ func DeleteUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		uuid, _ := params["uuid"]
+		user_uuid, _ := params["user_uuid"]
 
 		req := &userpb.DeleteUserRequest{
-			Uuid: uuid,
+			Uuid: user_uuid,
 		}
 		err := usecase.DeleteUser(req, grpcClient)
 		if err != nil {

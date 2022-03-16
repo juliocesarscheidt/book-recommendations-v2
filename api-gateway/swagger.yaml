@@ -16,6 +16,8 @@ tags:
     description: Services related to user rate resources
   - name: BookServices
     description: Services related to book resources
+  - name: RecommendationServices
+    description: Services related to recommendation resources
 
 paths:
   /v1/user:
@@ -201,8 +203,8 @@ paths:
     post:
       tags:
         - UserRateServices
-      summary: create user rate
-      operationId: createUserRate
+      summary: upsert user rate
+      operationId: upsertUserRate
       requestBody:
         content:
           application/json:
@@ -221,13 +223,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateUserRateSuccessResponse'
+                $ref: '#/components/schemas/UpsertUserRateSuccessResponse'
         '400':
           description: 'Bad Request'
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
         '500':
           description: 'Internal Server Error'
           content:
@@ -523,6 +531,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
+  /v1/recommendation/user/{uuid}:
+    get:
+      tags:
+        - RecommendationServices
+      summary: get recommendation
+      operationId: getRecommendation
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for recommendation
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetRecommendationSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
 components:
   schemas:
     DefaultResponseBadRequest:
@@ -639,6 +686,24 @@ components:
               $ref: '#/components/schemas/UpdatedAt'
         - $ref: '#/components/schemas/BookBody'
 
+    RecommendationBody:
+      type: object
+      properties:
+        user_uuid:
+          $ref: '#/components/schemas/Uuid'
+        recommendations:
+          type: array
+          items:
+            type: object
+            properties:
+              book_uuid:
+                $ref: '#/components/schemas/Uuid'
+              rate:
+                type: number
+
+    RecommendationFull:
+      $ref: '#/components/schemas/RecommendationBody'
+
     CreateUserSuccessResponse:
       type: object
       properties:
@@ -659,7 +724,7 @@ components:
           items:
             $ref: '#/components/schemas/UserFull'
 
-    CreateUserRateSuccessResponse:
+    UpsertUserRateSuccessResponse:
       type: object
       properties:
         data:
@@ -698,3 +763,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BookFull'
+
+    GetRecommendationSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/RecommendationFull'
