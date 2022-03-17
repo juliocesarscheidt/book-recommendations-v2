@@ -8,10 +8,15 @@ yarn run test
 yarn run test:coverage
 
 export MONGO_CONN_STRING=mongodb://root:admin@172.16.0.3:28017
-# export AMQP_CONN_STRING=amqp://rabbitmq:admin@127.0.0.1:5872/
 
 node index.js
 
+
+# generate Public and Private keys for service
+openssl genrsa -out keys/jwtencyptionkey.pem 2048
+openssl rsa -pubout -in keys/jwtencyptionkey.pem -out keys/jwtencyptionkey.pub
+
+chmod 400 keys/jwtencyptionkey.{pem,pub}
 ```
 
 ## Data Structure

@@ -7,6 +7,8 @@ const userRateController = new UserRateController();
 
 new GrpcServer()
   .addUserServices({
+    UserSignIn: userController.UserSignIn,
+    UserSignUp: userController.UserSignUp,
     CreateUser: userController.CreateUser,
     GetUser: userController.GetUser,
     UpdateUser: userController.UpdateUser,

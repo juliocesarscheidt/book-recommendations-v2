@@ -7,7 +7,7 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
-goog.provide('proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest');
+goog.provide('proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
@@ -24,12 +24,12 @@ goog.require('jspb.Message');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest = function(opt_data) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest, jspb.Message);
+goog.inherits(proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
-  proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.displayName = 'proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest';
+  proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.displayName = 'proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp';
 }
 
 
@@ -44,8 +44,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     for transitional soy proto support: http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.toObject = function(opt_includeInstance) {
-  return proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.toObject(opt_includeInstance, this);
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.toObject = function(opt_includeInstance) {
+  return proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.toObject(opt_includeInstance, this);
 };
 
 
@@ -54,11 +54,11 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.toObj
  * @param {boolean|undefined} includeInstance Whether to include the JSPB
  *     instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest} msg The msg instance to transform.
+ * @param {!proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.toObject = function(includeInstance, msg) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.toObject = function(includeInstance, msg) {
   var f, obj = {
     name: jspb.Message.getFieldWithDefault(msg, 1, ""),
     surname: jspb.Message.getFieldWithDefault(msg, 2, ""),
@@ -78,23 +78,23 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.toObject = func
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest}
+ * @return {!proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.deserializeBinary = function(bytes) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest;
-  return proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp;
+  return proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest} msg The message object to deserialize into.
+ * @param {!proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest}
+ * @return {!proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.deserializeBinaryFromReader = function(msg, reader) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -134,9 +134,9 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.deserializeBina
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.serializeBinary = function() {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.serializeBinaryToWriter(this, writer);
+  proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -144,11 +144,11 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.seria
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest} message
+ * @param {!proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.serializeBinaryToWriter = function(message, writer) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getName();
   if (f.length > 0) {
@@ -192,13 +192,13 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.serializeBinary
  * optional string name = 1;
  * @return {string}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.getName = function() {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.getName = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /** @param {string} value */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setName = function(value) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.setName = function(value) {
   jspb.Message.setProto3StringField(this, 1, value);
 };
 
@@ -207,13 +207,13 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setNa
  * optional string surname = 2;
  * @return {string}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.getSurname = function() {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.getSurname = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
 /** @param {string} value */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setSurname = function(value) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.setSurname = function(value) {
   jspb.Message.setProto3StringField(this, 2, value);
 };
 
@@ -222,13 +222,13 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setSu
  * optional string email = 3;
  * @return {string}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.getEmail = function() {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.getEmail = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
 /** @param {string} value */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setEmail = function(value) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.setEmail = function(value) {
   jspb.Message.setProto3StringField(this, 3, value);
 };
 
@@ -237,13 +237,13 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setEm
  * optional string phone = 4;
  * @return {string}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.getPhone = function() {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.getPhone = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /** @param {string} value */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setPhone = function(value) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.setPhone = function(value) {
   jspb.Message.setProto3StringField(this, 4, value);
 };
 
@@ -252,13 +252,13 @@ proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setPh
  * optional string password = 5;
  * @return {string}
  */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.getPassword = function() {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.getPassword = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
 /** @param {string} value */
-proto.github.com.juliocesarscheidt.usersmicroservice.UserRequest.prototype.setPassword = function(value) {
+proto.github.com.juliocesarscheidt.usersmicroservice.UserSignUp.prototype.setPassword = function(value) {
   jspb.Message.setProto3StringField(this, 5, value);
 };
 

@@ -14,8 +14,6 @@ message User {
   string phone = 5;
   string created_at = 6;
   string updated_at = 7;
-  // google.protobuf.Timestamp created_at = 6;
-  // google.protobuf.Timestamp updated_at = 7;
 }
 
 message UserRequest {
@@ -23,6 +21,7 @@ message UserRequest {
   string surname = 2;
   string email = 3;
   string phone = 4;
+  string password = 5;
 }
 
 message CreateUserRequest {
@@ -65,7 +64,38 @@ message ListUserResponse {
   repeated User users = 1;
 }
 
+message UserSignUp {
+  string name = 1;
+  string surname = 2;
+  string email = 3;
+  string phone = 4;
+  string password = 5;
+}
+
+message UserSignUpRequest {
+  UserSignUp userSignUp = 1;
+}
+
+message UserSignUpResponse {
+  string access_token = 1;
+}
+
+message UserSignIn {
+  string email = 1;
+  string password = 2;
+}
+
+message UserSignInRequest {
+  UserSignIn userSignIn = 1;
+}
+
+message UserSignInResponse {
+  string access_token = 1;
+}
+
 service UserService {
+  rpc UserSignUp(UserSignUpRequest) returns (UserSignUpResponse);
+  rpc UserSignIn(UserSignInRequest) returns (UserSignInResponse);
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
@@ -83,8 +113,6 @@ message UserRate {
   repeated Rate rates = 2;
   string created_at = 3;
   string updated_at = 4;
-  // google.protobuf.Timestamp created_at = 6;
-  // google.protobuf.Timestamp updated_at = 7;
 }
 
 message UserRateRequest {

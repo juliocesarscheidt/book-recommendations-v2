@@ -1,4 +1,4 @@
-const { createUser, getUser, updateUser, deleteUser, listUser } = require('../../application/usecase/index');
+const { userSignUp, userSignIn, createUser, getUser, updateUser, deleteUser, listUser } = require('../../application/usecase/index');
 const UserRepository = require('../repository/database/UserRepository');
 // const UserRepository = require('../repository/memory/UserRepositoryMemory');
 
@@ -9,8 +9,16 @@ class UserService {
     this.userRepository = new UserRepository();
   }
 
-  async CreateUser({ name, surname, email, phone }) {
-    return createUser({ name, surname, email, phone }, this.userRepository);
+  async UserSignUp({ name, surname, email, phone, password }) {
+    return userSignUp({ name, surname, email, phone, password }, this.userRepository);
+  }
+
+  async UserSignIn({ email, password }) {
+    return userSignIn({ email, password }, this.userRepository);
+  }
+
+  async CreateUser({ name, surname, email, phone, password }) {
+    return createUser({ name, surname, email, phone, password }, this.userRepository);
   }
 
   async GetUser({ _id }) {

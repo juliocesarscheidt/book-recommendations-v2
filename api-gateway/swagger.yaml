@@ -30,7 +30,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserBody'
+              allOf:
+                - $ref: '#/components/schemas/UserBody'
+                - type: object
+                  properties:
+                    password:
+                      type: string
       responses:
         '201':
           description: 'Created'
@@ -142,7 +147,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserBody'
+              allOf:
+                - $ref: '#/components/schemas/UserBody'
+                - type: object
+                  properties:
+                    password:
+                      type: string
       responses:
         '202':
           description: 'Accepted'

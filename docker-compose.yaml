@@ -32,6 +32,7 @@ services:
       NODE_ENV: development
       MONGO_CONN_STRING: ${MONGO_CONN_STRING}
       MONGO_DATABASE: ${MONGO_DATABASE}
+      API_AUTH_SECRET: ${API_AUTH_SECRET}
     networks:
       - subnet_0
     restart: on-failure

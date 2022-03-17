@@ -8,6 +8,7 @@ const UserSchema = new Schema({
   surname: { type: String },
   email: { type: String, unique: true },
   phone: { type: String },
+  password: { type: String },
   created_at: { type: Date },
   updated_at: { type: Date },
 }, {

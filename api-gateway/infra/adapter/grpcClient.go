@@ -35,6 +35,15 @@ func GetGrpcConnAndServiceClient(grpcConnString string) (*grpc.ClientConn, userp
 	return conn, userpb.NewUserServiceClient(conn), userpb.NewUserRateServiceClient(conn), nil
 }
 
+// auth
+func (client GrpcClient) UserSignUp(ctx context.Context, in *userpb.UserSignUpRequest, opts ...grpc.CallOption) (*userpb.UserSignUpResponse, error) {
+	return client.UserServiceClient.UserSignUp(ctx, in, opts...)
+}
+
+func (client GrpcClient) UserSignIn(ctx context.Context, in *userpb.UserSignInRequest, opts ...grpc.CallOption) (*userpb.UserSignInResponse, error) {
+	return client.UserServiceClient.UserSignIn(ctx, in, opts...)
+}
+
 // user
 func (client GrpcClient) CreateUser(ctx context.Context, in *userpb.CreateUserRequest, opts ...grpc.CallOption) (*userpb.CreateUserResponse, error) {
 	return client.UserServiceClient.CreateUser(ctx, in, opts...)

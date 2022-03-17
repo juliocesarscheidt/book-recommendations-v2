@@ -29,8 +29,8 @@ class UserRepository {
     await this.UserModel.deleteOne(params);
   }
 
-  async insert({ _id, name, surname, email, phone }) {
-    const user = new this.UserModel({ _id, name, surname, email, phone, created_at: new Date(), updated_at: new Date() });
+  async insert({ _id, name, surname, email, phone, password }) {
+    const user = new this.UserModel({ _id, name, surname, email, phone, password, created_at: new Date(), updated_at: new Date() });
     await user.save();
   }
 

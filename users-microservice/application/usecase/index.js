@@ -1,3 +1,5 @@
+const { execute: userSignUp } = require('./userSignUp');
+const { execute: userSignIn } = require('./userSignIn');
 const { execute: createUser } = require('./createUser');
 const { execute: getUser } = require('./getUser');
 const { execute: updateUser } = require('./updateUser');
@@ -10,6 +12,8 @@ const { execute: deleteUserRate } = require('./deleteUserRate');
 const { execute: listUserRate } = require('./listUserRate');
 
 module.exports = {
+  userSignUp,
+  userSignIn,
   createUser,
   getUser,
   updateUser,

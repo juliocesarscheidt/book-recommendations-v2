@@ -13,17 +13,24 @@ chmod +x evans && mv evans /usr/local/bin/
 
 
 #################### User Service ####################
+# SignUp
+echo '{"userSignUp": {"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "", "password": "PASSWORD"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.UserSignUp
+
+# SignIn
+echo '{"userSignIn": {"email": "julio@mail.com", "password": "PASSWORD"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.UserSignIn
+
+
 # CreateUser
-echo '{"userRequest": {"name": "julio", "surname": "cesar", "email": "juliocesar@mail", "phone": ""}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.CreateUser
+echo '{"userRequest": {"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "", "password": "PASSWORD"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.CreateUser
 
 # GetUser
-echo '{"uuid": "17f7e9fcad70e012d21e0069"}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.GetUser
+echo '{"uuid": "17f95c8acba09b614044e4e9"}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.GetUser
 
 # UpdateUser
-echo '{"uuid": "17f7e9fcad70e012d21e0069", "userRequest": {"name": "julio", "surname": "cesar", "email": "juliocesar@mail", "phone": "+554199999991"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.UpdateUser
+echo '{"uuid": "17f95c8acba09b614044e4e9", "userRequest": {"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "+554199999991", "password": "PASSWORD"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.UpdateUser
 
 # DeleteUser
-echo '{"uuid": "17f7e9fcad70e012d21e0069"}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.DeleteUser
+echo '{"uuid": "17f95c8acba09b614044e4e9"}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.DeleteUser
 
 # ListUser
 echo '{"page": 0, "size": 50}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.ListUser

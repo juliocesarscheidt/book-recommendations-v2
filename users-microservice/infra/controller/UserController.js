@@ -8,13 +8,39 @@ class UserController extends BaseController {
     super()
   }
 
+  async UserSignUp(call, callback) {
+    console.info('call.request', call.request);
+
+    const { name, surname, email, phone, password } = call.request.userSignUp;
+
+    try {
+      const response = await userService.UserSignUp({ name, surname, email, phone, password });
+      return callback(null, response);
+    } catch (err) {
+      return UserController.HandleError(err, callback);
+    }
+  }
+
+  async UserSignIn(call, callback) {
+    console.info('call.request', call.request);
+
+    const { email, password } = call.request.userSignIn;
+
+    try {
+      const response = await userService.UserSignIn({ email, password });
+      return callback(null, response);
+    } catch (err) {
+      return UserController.HandleError(err, callback);
+    }
+  }
+
   async CreateUser(call, callback) {
     console.info('call.request', call.request);
 
-    const { name, surname, email, phone } = call.request.userRequest;
+    const { name, surname, email, phone, password } = call.request.userRequest;
 
     try {
-      const response = await userService.CreateUser({ name, surname, email, phone });
+      const response = await userService.CreateUser({ name, surname, email, phone, password });
       return callback(null, response);
     } catch (err) {
       return UserController.HandleError(err, callback);

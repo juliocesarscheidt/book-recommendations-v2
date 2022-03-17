@@ -21,8 +21,8 @@ class UserRepositoryMemory {
     this.users.splice(index, 1);
   }
 
-  async insert(payload) {
-    this.users.push({ ...payload, created_at: new Date(), updated_at: new Date() });
+  async insert({ _id, name, surname, email, phone, password }) {
+    this.users.push({ _id, name, surname, email, phone, password, created_at: new Date(), updated_at: new Date() });
   }
 
   async list(page = 0, size = 1000) {
