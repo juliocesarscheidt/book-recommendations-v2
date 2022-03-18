@@ -23,7 +23,6 @@ func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFun
 				controller.ThrowUnauthorized(w, "Invalid Authorization Header")
 				return
 			}
-			// log.Printf("tokenString :: %s\n", tokenString)
 
 			token, err := service.ParseTokenUsingPublicKey(tokenString)
 			if err != nil {
@@ -39,10 +38,6 @@ func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFun
 				}
 				return
 			}
-
-			// log.Printf("token :: %s\n", token)
-			// log.Printf("token.Valid :: %v\n", token.Valid)
-			// log.Printf("token.Signature :: %v\n", token.Signature)
 
 			claims, err := service.ValidateClaims(token)
 			if err != nil {

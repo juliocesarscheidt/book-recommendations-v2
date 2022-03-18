@@ -1,12 +1,12 @@
 module.exports = {
   devServer: {
     proxy: {
-      '^/api': {
-        target: 'http://stock-api:5050',
+      '^/v1': {
+        target: process.env.VUE_APP_API_GATEWAY_CONN_STRING || 'http://172.16.0.3:3080',
         ws: false,
         changeOrigin: true,
-        // pathRewrite: {'^/api': '/api'},
-      }
+        // pathRewrite: {'^/v1': '/v1'},
+      },
     }
   }
 }

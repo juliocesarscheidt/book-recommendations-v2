@@ -1,16 +1,15 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store/store'
-import { currency } from './filters/filters'
-import './plugins/vuetify'
-import './plugins/notification'
+import Vue from 'vue';
 
-Vue.config.productionTip = false
-Vue.filter('currency', currency)
+import App from './App.vue';
+import router from './router';
+import store from './store/store';
+
+import './plugins/bootstrap';
+
+Vue.config.productionTip = false;
 
 new Vue({
   router,
   store,
 	render: h => h(App),
-}).$mount('#app')
+}).$mount('#app');

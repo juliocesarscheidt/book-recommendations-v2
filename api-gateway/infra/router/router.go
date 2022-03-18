@@ -51,6 +51,6 @@ func InjectRoutes(router *mux.Router, grpcClient adapter.GrpcClient, amqpClient 
 	// recommendation sub router
 	subRouterRecommendation := router.PathPrefix("/v1/recommendation").Subrouter()
 	subRouterRecommendation.Use(middleware.AuthenticationMiddleware(redisClient))
-	// recommendation routes (/v1/recommendation)
+	// recommendation routes (/v1/recommendation/user)
 	subRouterRecommendation.Path("/user/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.GetRecommendation(grpcClient, amqpClient)).Methods("GET")
 }

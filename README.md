@@ -35,6 +35,11 @@ docker-compose logs -f --tail 100 recommendations-microservice
 
 docker-compose logs -f --tail 100 api-gateway users-microservice books-microservice recommendations-microservice
 
+
+# front-end
+docker-compose up -d --build client-microservice
+docker-compose logs -f --tail 100 client-microservice
+
 ```
 
 ## Unit Tests

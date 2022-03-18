@@ -15,6 +15,7 @@ const comparePasswordSync = (passwordSource, passwordTarget) => {
 const decodeJwtToken = (token) => {
   try {
     const publicKey = fs.readFileSync(path.resolve(__dirname, '../../keys/jwtencyptionkey.pub'));
+    // Using RSA verifying method (RS256,RS384,RS512) expects privateKey for signing and publicKey for verification
     const tokenDecoded = jwt.verify(token, publicKey, {
       algorithms: ['RS256'],
       aud: 'urn:book-recommendations:api-gateway',
@@ -34,7 +35,7 @@ const decodeJwtToken = (token) => {
 
 const encodeJwtToken = (payload) => {
   const privateKey = fs.readFileSync(path.resolve(__dirname, '../../keys/jwtencyptionkey.pem'));
-  // Using RSA signing method (RS256,RS384,RS512) expects privateKey for signing and publicKey for validation
+  // Using RSA signing method (RS256,RS384,RS512) expects privateKey for signing and publicKey for verification
   payload.aud = 'urn:book-recommendations:api-gateway';
   payload.iss = 'urn:book-recommendations:users-microservice';
   return jwt.sign(payload, privateKey, { algorithm: 'RS256'});
