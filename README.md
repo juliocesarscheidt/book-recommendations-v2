@@ -41,4 +41,4 @@ docker-compose logs -f --tail 100 api-gateway users-microservice books-microserv
 
 - [x] users-microservice
 - [x] books-microservice
-- [ ] recommendations-microservice
+- [x] recommendations-microservice

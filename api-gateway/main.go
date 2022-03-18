@@ -13,6 +13,13 @@ import (
 func main() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
+	var redisConnString = "localhost:6379"
+	if os.Getenv("REDIS_CONN_STRING") != "" {
+		redisConnString = os.Getenv("REDIS_CONN_STRING")
+	}
+	redisClient := adapter.GetRedisClient(redisConnString)
+	defer redisClient.Client.Close()
+
 	var grpcConnString = "localhost:50051"
 	if os.Getenv("GRPC_CONN_STRING") != "" {
 		grpcConnString = os.Getenv("GRPC_CONN_STRING")
@@ -29,8 +36,8 @@ func main() {
 	defer amqpClient.Channel.Close()
 
 	r := router.GetRouter()
-	router.InjectRoutes(r, grpcClient, amqpClient)
+	router.InjectRoutes(r, grpcClient, amqpClient, redisClient)
 
-	fmt.Println("Listening at 0.0.0.0:3080")
+	fmt.Println("[INFO] Server listening on 0.0.0.0:3080")
 	log.Fatal(http.ListenAndServe("0.0.0.0:3080", r))
 }

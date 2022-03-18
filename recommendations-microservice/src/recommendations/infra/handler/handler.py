@@ -1,10 +1,10 @@
 import json
 import logging
 
+from application.commands.commands import Commands
 from infra.adapter.redis_adapter import get_redis_client
 from infra.adapter.amqp_adapter import get_connection, get_channel
 from infra.controller.controller import Controller
-from application.commands.commands import Commands
 
 
 class Handler(object):
@@ -14,10 +14,10 @@ class Handler(object):
     channel: None
     amqp_queue: None
     redis_client: None
-    api_gateway_uri: None
+    grpc_conn_string: None
 
     def __init__(
-        self, amqp_parameters, amqp_queue, redis_host, redis_port, api_gateway_uri
+        self, amqp_parameters, amqp_queue, redis_conn_string, grpc_conn_string
     ) -> None:
         self.amqp_parameters = amqp_parameters
         logging.info("amqp_parameters :: " + str(self.amqp_parameters))
@@ -28,13 +28,13 @@ class Handler(object):
         self.amqp_queue = amqp_queue
         logging.info("amqp_queue :: " + str(self.amqp_queue))
 
-        self.redis_client = get_redis_client(redis_host, redis_port)
+        self.redis_client = get_redis_client(redis_conn_string)
         logging.info("redis_client :: " + str(self.redis_client))
 
-        self.api_gateway_uri = api_gateway_uri
-        logging.info("api_gateway_uri :: " + str(self.api_gateway_uri))
+        self.grpc_conn_string = grpc_conn_string
+        logging.info("grpc_conn_string :: " + str(self.grpc_conn_string))
 
-        self.controller = Controller(self.redis_client, self.api_gateway_uri)
+        self.controller = Controller(self.redis_client, self.grpc_conn_string)
         self.commands = Commands()
 
     def get_event_handler(self, routing_key):

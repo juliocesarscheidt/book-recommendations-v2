@@ -35,19 +35,19 @@ const decodeJwtToken = (token) => {
 const encodeJwtToken = (payload) => {
   const privateKey = fs.readFileSync(path.resolve(__dirname, '../../keys/jwtencyptionkey.pem'));
   // Using RSA signing method (RS256,RS384,RS512) expects privateKey for signing and publicKey for validation
+  payload.aud = 'urn:book-recommendations:api-gateway';
+  payload.iss = 'urn:book-recommendations:users-microservice';
   return jwt.sign(payload, privateKey, { algorithm: 'RS256'});
 }
 
 const generateUserToken = (user) => {
   const now = Math.floor(Date.now() / 1000);
-  const exp = 1 * 60 * 60; // 1 hour
-  // const exp = 1 * 24 * 60 * 60; // 1 day
+  const exp = 60*60*1; // 1 hour
+  // const exp = 1*24*60*60; // 1 day
   const payload = {
     ...user,
     iat: now,
-    exp: now + exp,
-    aud: 'urn:book-recommendations:api-gateway',
-    iss: 'urn:book-recommendations:users-microservice'
+    exp: now + exp
   };
 
   return encodeJwtToken(payload);

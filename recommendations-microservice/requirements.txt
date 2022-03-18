@@ -29,3 +29,5 @@ pytest_mock==3.6.1
 mock==4.0.3
 pytest-cov==2.12.1
 requests==2.26.0
+grpcio==1.44.0
+grpcio-tools==1.44.0

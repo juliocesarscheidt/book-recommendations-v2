@@ -32,7 +32,7 @@ func UserSignUp(grpcClient adapter.GrpcClient) http.HandlerFunc {
 
 		fmt.Printf("Response :: %v\n", access_token)
 
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(&httpmodule.HttpResponse{Data: access_token})
 	}
 }

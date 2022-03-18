@@ -8,6 +8,8 @@ yarn run test
 yarn run test:coverage
 
 export MONGO_CONN_STRING=mongodb://root:admin@172.16.0.3:28017
+export MONGO_DATABASE=user_db
+export REDIS_CONN_STRING=127.0.0.1:6379
 
 node index.js
 
@@ -17,38 +19,4 @@ openssl genrsa -out keys/jwtencyptionkey.pem 2048
 openssl rsa -pubout -in keys/jwtencyptionkey.pem -out keys/jwtencyptionkey.pub
 
 chmod 400 keys/jwtencyptionkey.{pem,pub}
-```
-
-## Data Structure
-
-```javascript
-
-mongo
-database: user_db
-
-user
-[
-  {
-    "_id": "aafsfafs51as", # uuid
-    "name": "",
-    "surname": "",
-    "email": "",
-    "phone": "",
-    "created_at": "",
-    "updated_at": ""
-  }
-]
-
-user_rate
-[
-  {
-    "_id": "aafsfafs51as", # user_uuid -> references user _id
-    "rates": [
-      {"book_uuid": "af45afasf", "rate": 4},
-      {"book_uuid": "3421412", "rate": 6}
-    ],
-    "created_at": "",
-    "updated_at": ""
-  }
-]
 ```

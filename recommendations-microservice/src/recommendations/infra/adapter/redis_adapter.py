@@ -1,7 +1,7 @@
 from redis import Redis
 
 
-def get_redis_client(redis_host, redis_port):
-    return Redis(
-        host=redis_host, port=redis_port, db=0, charset="utf-8", decode_responses=True
+def get_redis_client(redis_conn_string):
+    return Redis.from_url(
+        url=f"redis://{redis_conn_string}/0", charset="utf-8", decode_responses=True
     )

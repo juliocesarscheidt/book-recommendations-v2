@@ -11,16 +11,14 @@ def get_amqp_config():
 
 
 def get_redis_config():
-    REDIS_HOST = os.environ.get("REDIS_HOST")
-    REDIS_PORT = os.environ.get("REDIS_PORT")
+    REDIS_CONN_STRING = os.environ.get("REDIS_CONN_STRING")
     return {
-        "host": REDIS_HOST,
-        "port": REDIS_PORT,
+        "conn_string": REDIS_CONN_STRING,
     }
 
 
-def get_api_gateway_config():
-    API_GATEWAY_CONN_STRING = os.environ.get("API_GATEWAY_CONN_STRING")
+def get_grpc_config():
+    GRPC_CONN_STRING = os.environ.get("GRPC_CONN_STRING")
     return {
-        "uri": API_GATEWAY_CONN_STRING,
+        "conn_string": GRPC_CONN_STRING,
     }

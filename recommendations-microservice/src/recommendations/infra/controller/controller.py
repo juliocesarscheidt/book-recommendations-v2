@@ -1,22 +1,23 @@
 from threading import Thread
 
+from application.service.service import Service
 from infra.adapter.amqp_adapter import get_connection, get_channel
 from infra.adapter.publisher import Publisher
 from infra.adapter.cache import Cache
-from application.service.service import Service
+from infra.adapter.grpc_client import GrpcClient
 
 
 class Controller(object):
     publisher: Publisher
     cache: Cache
     service: Service
-    api_gateway_uri: None
+    grpc_client: None
 
-    def __init__(self, redis_client, api_gateway_uri) -> None:
+    def __init__(self, redis_client, grpc_conn_string) -> None:
         self.publisher = Publisher()
         self.cache = Cache(redis_client)
-        self.api_gateway_uri = api_gateway_uri
-        self.service = Service(self.publisher, self.cache, self.api_gateway_uri)
+        self.grpc_client = GrpcClient(grpc_conn_string)
+        self.service = Service(self.publisher, self.cache, self.grpc_client)
 
     def calculate(self, __message, __properties, __amqp_parameters):
         __connection = get_connection(__amqp_parameters)

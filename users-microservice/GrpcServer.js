@@ -37,7 +37,7 @@ class GrpcServer {
 
   start() {
     this.server.bindAsync('0.0.0.0:50051', grpc.ServerCredentials.createInsecure(), () => {
-      console.info('[INFO] Server listening at 50051');
+      console.info('[INFO] Server listening on 0.0.0.0:50051');
       this.server.start();
     });
   }

@@ -1,11 +1,10 @@
 const SignInDTO = require('../dto/SignInDTO');
-const NotFoundException = require('../exception/NotFoundException');
 const InvalidEmailPasswordException = require('../exception/InvalidEmailPasswordException');
 const { comparePasswordSync, generateUserToken } = require('../service/EncryptionCommonService');
 
-const execute = async ({ email, password }, userRepository) => {
+const execute = async ({ email, password }, userRepository, redisClient) => {
   const user = await userRepository.find({ email });
-  if (!user) throw new NotFoundException('Not Found');
+  if (!user) throw new InvalidEmailPasswordException('Invalid email or password');
 
   if (!comparePasswordSync(password, user.password)) {
     throw new InvalidEmailPasswordException('Invalid email or password');
@@ -19,6 +18,9 @@ const execute = async ({ email, password }, userRepository) => {
     phone: user.phone,
   };
   const accessToken = generateUserToken(userBody);
+
+  // add token to redis for further validations
+  await redisClient.set(`/user/bearer/${user._id}`, accessToken, 60*60*1);
 
   return new SignInDTO(accessToken);
 }

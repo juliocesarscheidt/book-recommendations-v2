@@ -40,6 +40,12 @@ func ThrowBadRequest(w http.ResponseWriter, message string) {
 	json.NewEncoder(w).Encode(&httpmodule.HttpResponseError{Message: message})
 }
 
+func ThrowUnauthorized(w http.ResponseWriter, message string) {
+	fmt.Println(message)
+	w.WriteHeader(http.StatusUnauthorized)
+	json.NewEncoder(w).Encode(&httpmodule.HttpResponseError{Message: message})
+}
+
 func ThrowNotFound(w http.ResponseWriter, message string) {
 	fmt.Println(message)
 	w.WriteHeader(http.StatusNotFound)

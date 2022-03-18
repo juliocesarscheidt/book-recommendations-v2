@@ -10,6 +10,8 @@ servers:
   - url: http://book-recommendations.{NAMESPACE}.svc.cluster.local:3080/
 
 tags:
+  - name: AuthServices
+    description: Services related to auth resources
   - name: UserServices
     description: Services related to user resources
   - name: UserRateServices
@@ -20,12 +22,86 @@ tags:
     description: Services related to recommendation resources
 
 paths:
+  /v1/auth/signup:
+    post:
+      tags:
+        - AuthServices
+      summary: user signup
+      operationId: userSignUp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/UserBody'
+                - type: object
+                  properties:
+                    password:
+                      type: string
+      responses:
+        '201':
+          description: 'Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSignUpSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /v1/auth/signin:
+    post:
+      tags:
+        - AuthServices
+      summary: user signin
+      operationId: userSignIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSignInSuccessResponse'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
   /v1/user:
     post:
       tags:
         - UserServices
       summary: create user
       operationId: createUser
+      security:
+        - BearerAuth: []
       requestBody:
         content:
           application/json:
@@ -49,6 +125,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '500':
           description: 'Internal Server Error'
           content:
@@ -61,6 +143,8 @@ paths:
         - UserServices
       summary: list user
       operationId: listUser
+      security:
+        - BearerAuth: []
       parameters:
         - name: page
           in: query
@@ -85,6 +169,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListUserSuccessResponse'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '500':
           description: 'Internal Server Error'
           content:
@@ -98,6 +188,8 @@ paths:
         - UserServices
       summary: get user
       operationId: getUser
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -118,6 +210,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -136,6 +234,8 @@ paths:
         - UserServices
       summary: update user
       operationId: updateUser
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -162,6 +262,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -180,6 +286,8 @@ paths:
         - UserServices
       summary: delete user
       operationId: deleteUser
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -196,6 +304,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -215,6 +329,8 @@ paths:
         - UserRateServices
       summary: upsert user rate
       operationId: upsertUserRate
+      security:
+        - BearerAuth: []
       requestBody:
         content:
           application/json:
@@ -240,6 +356,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -258,6 +380,8 @@ paths:
         - UserRateServices
       summary: list user rate
       operationId: listUserRate
+      security:
+        - BearerAuth: []
       parameters:
         - name: page
           in: query
@@ -282,6 +406,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListUserRateSuccessResponse'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '500':
           description: 'Internal Server Error'
           content:
@@ -295,6 +425,8 @@ paths:
         - UserRateServices
       summary: get user rate
       operationId: getUserRate
+      security:
+        - BearerAuth: []
       parameters:
       - name: user_uuid
         in: path
@@ -315,6 +447,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -333,6 +471,8 @@ paths:
         - UserRateServices
       summary: delete user rate
       operationId: deleteUserRate
+      security:
+        - BearerAuth: []
       parameters:
       - name: user_uuid
         in: path
@@ -349,6 +489,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -368,6 +514,8 @@ paths:
         - BookServices
       summary: create book
       operationId: createBook
+      security:
+        - BearerAuth: []
       requestBody:
         content:
           application/json:
@@ -386,6 +534,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '500':
           description: 'Internal Server Error'
           content:
@@ -398,6 +552,8 @@ paths:
         - BookServices
       summary: list book
       operationId: listBook
+      security:
+        - BearerAuth: []
       parameters:
         - name: page
           in: query
@@ -422,6 +578,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ListBookSuccessResponse'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '500':
           description: 'Internal Server Error'
           content:
@@ -435,6 +597,8 @@ paths:
         - BookServices
       summary: get book
       operationId: getBook
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -455,6 +619,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -473,6 +643,8 @@ paths:
         - BookServices
       summary: update book
       operationId: updateBook
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -494,6 +666,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -512,6 +690,8 @@ paths:
         - BookServices
       summary: delete book
       operationId: deleteBook
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -528,6 +708,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -547,6 +733,8 @@ paths:
         - RecommendationServices
       summary: get recommendation
       operationId: getRecommendation
+      security:
+        - BearerAuth: []
       parameters:
       - name: uuid
         in: path
@@ -567,6 +755,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
         '404':
           description: 'Not Found'
           content:
@@ -581,6 +775,11 @@ paths:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
   schemas:
     DefaultResponseBadRequest:
       type: object
@@ -589,6 +788,14 @@ components:
           type: string
           description: 'Status code'
           example: 'Bad Request'
+
+    DefaultResponseUnauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 'Status code'
+          example: 'Unauthorized'
 
     DefaultResponseNotFound:
       type: object
@@ -713,6 +920,23 @@ components:
 
     RecommendationFull:
       $ref: '#/components/schemas/RecommendationBody'
+
+    BearerToken:
+      type: string
+      example: >-
+        eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMTdmOWFiMzRmMDUwZmM0MTk5Y2Y5MThiIiwibmFtZSI6Imp1bGlvIiwic3VybmFtZSI6ImNlc2FyIiwiZW1haWwiOiJqdWxpb0BtYWlsLmNvbSIsInBob25lIjoiKzU1NDE5OTg4Nzc2NiIsImlhdCI6MTY0NzU2NzkxNiwiZXhwIjoxNjQ3NTcxNTE2LCJhdWQiOiJ1cm46Ym9vay1yZWNvbW1lbmRhdGlvbnM6YXBpLWdhdGV3YXkiLCJpc3MiOiJ1cm46Ym9vay1yZWNvbW1lbmRhdGlvbnM6dXNlcnMtbWljcm9zZXJ2aWNlIn0.Anff7tEPzaqIlpPFgqNNoxKg0CapOxLl6EaI5I3EmR48VyMJYsm3MWhRpXoTpoGoH_cUXu9AVXAY39kueVZP2-eJmq6sHh8awrjlEOh14mx9og_inaOZps8g-tUE0g93LAbPMAnxeMU584Gorg3xaJpe-RsJn5QttWNX2WgqmFJKKZ4v38Bb5w75SzLFQ0G5FiobwNHJmmqV5z4HFqkRyU-6D65sn_LwrS_TgQ8cw73bpHyfQfoDCkngNjGEpzvi6CEvWNkiPLAgHJiwrnJHNVIF1zt0Ltj3DxgRh_R4TEpLpmUTKxBpTjGbSzbuXSGYqdLEy0EFd9CinOyE04h_0Q
+
+    UserSignUpSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BearerToken'
+
+    UserSignInSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BearerToken'
 
     CreateUserSuccessResponse:
       type: object
