@@ -27,7 +27,7 @@ echo '{"userRequest": {"name": "julio", "surname": "cesar", "email": "julio@mail
 echo '{"uuid": "17f95c8acba09b614044e4e9"}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.GetUser
 
 # UpdateUser
-echo '{"uuid": "17f95c8acba09b614044e4e9", "userRequest": {"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "+554199999991", "password": "PASSWORD"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.UpdateUser
+echo '{"uuid": "17f95c8acba09b614044e4e9", "userRequest": {"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "4199999991", "password": "PASSWORD"}}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.UpdateUser
 
 # DeleteUser
 echo '{"uuid": "17f95c8acba09b614044e4e9"}' | evans -r cli call --host localhost github.com.juliocesarscheidt.usersmicroservice.UserService.DeleteUser

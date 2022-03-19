@@ -14,7 +14,7 @@ class UserRateController extends BaseController {
     const { user_uuid, book_uuid, rate } = call.request.userRateRequest;
 
     try {
-      const response = await userRateService.UpsertUserRate({ _id: user_uuid, book_uuid, rate });
+      const response = await userRateService.UpsertUserRate({ _id: user_uuid, book_uuid, rate: parseFloat(rate.toFixed(2)) });
       return callback(null, response);
     } catch (err) {
       return UserRateController.HandleError(err, callback);

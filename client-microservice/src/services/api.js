@@ -1,33 +1,53 @@
-import axios from 'axios'
+import {
+  signUp,
+  signIn,
+} from './auth';
 
-const signUp = async (email, password) => {
-  return axios
-    .post('/v1/auth/signup', { email, password })
-    .then((response) => {
-      console.log('API signup response', response);
-      if (!response.data) {
-        return null
-      }
-      const access_token = response.data.data
-      return access_token;
-    });
-}
+import {
+  getCurrentUserInfo,
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser,
+  listUser,
+} from './user';
 
-const signIn = async (email, password) => {
-  return axios
-    .post('/v1/auth/signin', { email, password })
-    .then((response) => {
-      console.log('API signin response', response);
-      if (!response.data) {
-        return null
-      }
-      const access_token = response.data.data
-      return access_token;
-    });
-}
+import {
+  createBook,
+  getBook,
+  updateBook,
+  deleteBook,
+  listBook,
+} from './book';
+
+import {
+  upsertRate,
+  getRate,
+  deleteRate,
+  listRate,
+} from './rate';
+
+import {
+  getRecommendations,
+} from './recommendation';
 
 export {
   signUp,
   signIn,
+  getCurrentUserInfo,
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser,
+  listUser,
+  createBook,
+  getBook,
+  updateBook,
+  deleteBook,
+  listBook,
+  upsertRate,
+  getRate,
+  deleteRate,
+  listRate,
+  getRecommendations,
 }
-

@@ -4,10 +4,10 @@ const { comparePasswordSync, generateUserToken } = require('../service/Encryptio
 
 const execute = async ({ email, password }, userRepository, redisClient) => {
   const user = await userRepository.find({ email });
-  if (!user) throw new InvalidEmailPasswordException('Invalid email or password');
+  if (!user) throw new InvalidEmailPasswordException('Invalid Email or Password');
 
   if (!comparePasswordSync(password, user.password)) {
-    throw new InvalidEmailPasswordException('Invalid email or password');
+    throw new InvalidEmailPasswordException('Invalid Email or Password');
   }
 
   const userBody = {

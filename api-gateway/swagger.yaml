@@ -10,18 +10,44 @@ servers:
   - url: http://book-recommendations.{NAMESPACE}.svc.cluster.local:3080/
 
 tags:
+  - name: HealthChechServices
+    description: Services related to Health Chech resources
   - name: AuthServices
-    description: Services related to auth resources
+    description: Services related to Auth resources
   - name: UserServices
-    description: Services related to user resources
+    description: Services related to User resources
   - name: UserRateServices
-    description: Services related to user rate resources
+    description: Services related to User Rate resources
   - name: BookServices
-    description: Services related to book resources
+    description: Services related to Book resources
   - name: RecommendationServices
-    description: Services related to recommendation resources
+    description: Services related to Recommendation resources
 
 paths:
+  /v1/healthcheck:
+    get:
+      tags:
+        - HealthChechServices
+      summary: get healthcheck
+      operationId: getHealthcheck
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'alive'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
   /v1/auth/signup:
     post:
       tags:
@@ -94,6 +120,34 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
+  /v1/user/me:
+    get:
+      tags:
+        - UserServices
+      summary: get current user info
+      operationId: getCurrentUserInfo
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUserSuccessResponse'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
   /v1/user:
     post:
       tags:
@@ -126,7 +180,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -170,7 +224,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListUserSuccessResponse'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -211,7 +265,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -263,7 +317,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -305,7 +359,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -357,7 +411,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -407,7 +461,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListUserRateSuccessResponse'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -448,7 +502,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -490,7 +544,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -535,7 +589,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -579,7 +633,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ListBookSuccessResponse'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -620,7 +674,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -667,7 +721,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -709,7 +763,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -756,7 +810,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseBadRequest'
         '401':
-          description: 'Bad Request'
+          description: 'Unauthorized'
           content:
             application/json:
               schema:
@@ -839,7 +893,7 @@ components:
         phone:
           type: string
           format: phone
-          example: '+551199999999'
+          example: '1199999999'
 
     UserFull:
       allOf:

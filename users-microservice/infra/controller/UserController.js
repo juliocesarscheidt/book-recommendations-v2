@@ -1,7 +1,9 @@
 const BaseController = require('./BaseController');
 const UserService = require('../service/UserService');
+const UserRateService = require('../service/UserRateService');
 
 const userService = new UserService();
+const userRateService = new UserRateService();
 
 class UserController extends BaseController {
   constructor() {
@@ -87,6 +89,10 @@ class UserController extends BaseController {
 
     try {
       const response = await userService.DeleteUser({ _id: uuid });
+
+      // delete user rates as well
+      await userRateService.DeleteUserRate({ _id: uuid });
+
       return callback(null, response);
     } catch (err) {
       return UserController.HandleError(err, callback);

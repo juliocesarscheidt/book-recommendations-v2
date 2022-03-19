@@ -1,0 +1,175 @@
+<template>
+  <section class="flex flex-column flex-align-center p-5">
+    <article class="flex flex-column flex-justify-center flex-align-center">
+      <b-table
+        style="width: 100%; min-width: 200px; margin-bottom: 0px;"
+        striped
+        hover
+        outlined
+        fixed
+        responsive
+        show-empty
+        :sortable="false"
+        :fields="fields"
+        :items="booksData"
+        :busy="loading"
+      >
+        <template #table-busy>
+          <div class="text-center text-danger my-2">
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Loading...</strong>
+          </div>
+        </template>
+
+        <template #empty="">
+          <p style="text-align: center;"><b>Data not Found</b></p>
+        </template>
+
+        <template #cell(title)="data">
+          <i>{{ data.value | capitalize }}</i>
+        </template>
+
+        <template #cell(author)="data">
+          <i>{{ data.value | capitalize }}</i>
+        </template>
+
+        <template #cell(genre)="data">
+          <i>{{ data.value | capitalize }}</i>
+        </template>
+
+        <template #cell(image)="data">
+          <a v-bind:href="data.value" target="_blank" title="See Image">{{ data.value | trimLetters(25) }}</a>
+        </template>
+
+        <template #head(uuid)="">
+          <div class="text-nowrap">Actions</div>
+        </template>
+
+        <template #cell(uuid)="data">
+          <b-button type="button" variant="primary" class="mr-2" title="View" @click="callGetBook(data.value)">
+            <i class="fas fa-eye" aria-hidden="true"></i>
+          </b-button>
+
+          <b-button type="button" variant="secondary" class="mr-2" title="Edit" @click="callUpdateBook(data.value)">
+            <i class="fas fa-edit" aria-hidden="true"></i>
+          </b-button>
+
+          <b-button type="button" variant="danger" class="mr-2" title="Delete" @click="callDeleteBook(data.value)">
+            <i class="fas fa-eraser" aria-hidden="true"></i>
+          </b-button>
+        </template>
+      </b-table>
+    </article>
+  </section>
+</template>
+
+<script>
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { listBook, deleteBook, getRate } from '../../../services/api';
+
+export default {
+  components: {
+  },
+  directives: {
+  },
+  filters: {
+  },
+  mixins: [
+  ],
+  props: {
+  },
+  data() {
+    return {
+      loading: false,
+      booksData: [],
+      fields: ['title', 'author', 'genre', 'image', 'rate', 'uuid'],
+      rates: [],
+    }
+  },
+  computed: {
+    ...mapState([]),
+    ...mapGetters(['user']),
+  },
+  watch: {
+  },
+  beforeMount() {
+  },
+  async mounted() {
+    await this.callRefreshData();
+  },
+  methods: {
+    callGetBook(uuid) {
+      this.$router.push({ name: 'BookView', params: { uuid, isEdit: false } });
+    },
+    callUpdateBook(uuid) {
+      this.$router.push({ name: 'BookView', params: { uuid, isEdit: true } });
+    },
+    async callDeleteBook(uuid) {
+      try {
+        await deleteBook(uuid);
+        this.callRefreshData();
+      } catch (err) {
+        console.log(err);
+        this.notifyError(err.response.data.message);
+      }
+    },
+    async callRefreshData() {
+      await this.callListBook();
+      await this.callGetRate();
+    },
+    async callGetRate() {
+      if (this.user) {
+        try {
+          const response = await getRate(this.user.uuid);
+          this.rates = response.rates;
+
+          if (this.rates && this.rates.length) {
+            this.booksData = this.booksData.map((book) => {
+              const rate = this.rates.find(b => b.book_uuid === book.uuid);
+              return { ...book, rate: rate && parseFloat(rate.rate.toFixed(2)) || 0.00 }
+            });
+          }
+
+        } catch (err) {
+          console.log(err);
+          this.notifyError(err.response.data.message);
+          this.$router.push({ name: 'Home' });
+        }
+      }
+    },
+    async callListBook() {
+      this.loading = true;
+      try {
+        const response = await listBook();
+        this.booksData = response.map((book) => ({ ...book, rate: 0.00 }));
+      } catch (err) {
+        console.log(err);
+        this.notifyError(err.response.data.message);
+        this.$router.push({ name: 'Home' });
+
+      } finally {
+        this.loading = false;
+      };
+    },
+  },
+  beforeDestroy() {
+  },
+  destroyed() {
+  },
+}
+</script>
+
+<style scoped>
+section {
+  min-height: calc(100vh - 42px);
+  width: auto;
+}
+
+section > article {
+  height: auto;
+  padding: 20px;
+}
+
+@media only screen and (max-width: 991px) {
+}
+</style>

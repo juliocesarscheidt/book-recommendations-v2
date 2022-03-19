@@ -1,18 +1,22 @@
 <template>
   <main id="app">
+    <Header/>
     <b-container>
       <transition name="slide" mode="out-in">
         <router-view></router-view>
       </transition>
+      <notifications position="top right" group="notification" class="my-4 mx-4"/>
     </b-container>
   </main>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import Header from './components/common/Header';
 
 export default {
   components: {
+    Header,
   },
   computed: {
     ...mapState([]),

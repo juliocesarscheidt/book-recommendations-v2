@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"errors"
 	"encoding/json"
 
 	"github.com/juliocesarscheidt/apigateway/application/dto"
@@ -40,6 +41,10 @@ func GetBook(getBookRequestDTO dto.GetBookRequestDTO, amqpClient *adapter.AmqpCl
 	if err := json.Unmarshal(messageBody, &bodyDTO); err != nil {
 		fmt.Errorf("Failed to unmarshal JSON: %v", err)
 		return emptyResponse, err
+	}
+
+	if (bodyDTO == emptyResponse) {
+		return emptyResponse, errors.New("Not Found")
 	}
 
 	return bodyDTO, nil

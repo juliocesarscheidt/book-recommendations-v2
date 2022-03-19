@@ -1,10 +1,11 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"log"
+	"time"
 	"net/http"
-	"os"
 
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
 	"github.com/juliocesarscheidt/apigateway/infra/router"
@@ -38,6 +39,13 @@ func main() {
 	r := router.GetRouter()
 	router.InjectRoutes(r, grpcClient, amqpClient, redisClient)
 
+	srv := &http.Server{
+		Handler:      r,
+		Addr:         "0.0.0.0:3080",
+		WriteTimeout: 60 * time.Second,
+		ReadTimeout:  60 * time.Second,
+		IdleTimeout:  60 * time.Second,
+	}
 	fmt.Println("[INFO] Server listening on 0.0.0.0:3080")
-	log.Fatal(http.ListenAndServe("0.0.0.0:3080", r))
+	log.Fatal(srv.ListenAndServe())
 }

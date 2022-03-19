@@ -23,7 +23,7 @@ const createFakeUser = async (userRepository) => {
   const name = faker.name.firstName();
   const surname = faker.name.lastName();
   const email = faker.internet.email(name, surname).toLowerCase();
-  const phone = faker.phone.phoneNumber('+55###########');
+  const phone = faker.phone.phoneNumber('###########');
   const responseCreateUser = await createUser({ name, surname, email, phone }, userRepository);
 
   return responseCreateUser.uuid;

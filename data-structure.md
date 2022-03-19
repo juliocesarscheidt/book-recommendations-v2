@@ -13,6 +13,7 @@ table: user
     "surname": "",
     "email": "",
     "phone": "",
+    "password": "",
     "created_at": "",
     "updated_at": ""
   }

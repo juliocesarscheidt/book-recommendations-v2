@@ -33,7 +33,8 @@ docker-compose up -d --build recommendations-microservice
 docker-compose logs -f --tail 100 recommendations-microservice
 
 
-docker-compose logs -f --tail 100 api-gateway users-microservice books-microservice recommendations-microservice
+docker-compose logs -f --tail 100 \
+  api-gateway users-microservice books-microservice recommendations-microservice
 
 
 # front-end

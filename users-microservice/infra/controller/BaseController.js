@@ -8,28 +8,29 @@ class BaseController {
   constructor() {
   }
 
-  static BadRequest(callback) {
-    return callback({ code: 400, message: 'Bad Request', status: status.INVALID_ARGUMENT }, null);
+  static BadRequest(callback, message = 'Bad Request') {
+    return callback({ code: 400, message, status: status.INVALID_ARGUMENT }, null);
   }
 
-  static InternalServerError(callback) {
-    return callback({ code: 500, message: 'Internal Server Error', status: status.INTERNAL }, null);
+  static InternalServerError(callback, message = 'Internal Server Error') {
+    return callback({ code: 500, message, status: status.INTERNAL }, null);
   }
 
-  static NotFound(callback) {
-    return callback({ code: 404, message: 'Not Found', status: status.NOT_FOUND }, null);
+  static NotFound(callback, message = 'Not Found') {
+    return callback({ code: 404, message, status: status.NOT_FOUND }, null);
   }
 
   static HandleError(err, callback) {
     console.error(err);
-    if (err instanceof NotFoundException) {
-      return BaseController.NotFound(callback);
 
-    } else if (err instanceof InvalidRateException) {
-      return BaseController.BadRequest(callback);
+    if (err instanceof InvalidRateException) {
+      return BaseController.BadRequest(callback, err.message);
 
     } else if (err instanceof InvalidEmailPasswordException) {
-      return BaseController.BadRequest(callback);
+      return BaseController.BadRequest(callback, err.message);
+
+    } else if (err instanceof NotFoundException) {
+      return BaseController.NotFound(callback, err.message);
 
     } else {
       return BaseController.InternalServerError(callback);

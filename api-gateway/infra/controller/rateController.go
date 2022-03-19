@@ -31,6 +31,16 @@ func UpsertUserRate(grpcClient adapter.GrpcClient, amqpClient *adapter.AmqpClien
 			return
 		}
 
+		// check if book exists
+		getBookRequestDTO := dto.GetBookRequestDTO{
+			Uuid: userRateRequest.GetBookUuid(),
+		}
+		_, err := usecase.GetBook(getBookRequestDTO, amqpClient)
+		if err != nil {
+			ThrowNotFound(w, "Not Found")
+			return
+		}
+
 		req := &userpb.UpsertUserRateRequest{
 			UserRateRequest: &userRateRequest,
 		}
@@ -69,16 +79,16 @@ func GetUserRate(grpcClient adapter.GrpcClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		user_uuid, _ := params["user_uuid"]
+		userUuid, _ := params["user_uuid"]
 
 		// check if user exists
-		errCheckUserExists := CheckUserExists(user_uuid, grpcClient); if errCheckUserExists != nil {
+		errCheckUserExists := CheckUserExists(userUuid, grpcClient); if errCheckUserExists != nil {
 			HandleError(w, errCheckUserExists)
 			return
 		}
 
 		req := &userpb.GetUserRateRequest{
-			UserUuid: user_uuid,
+			UserUuid: userUuid,
 		}
 		user, err := usecase.GetUserRate(req, grpcClient)
 		if err != nil {
@@ -99,16 +109,16 @@ func DeleteUserRate(grpcClient adapter.GrpcClient) http.HandlerFunc {
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		user_uuid, _ := params["user_uuid"]
+		userUuid, _ := params["user_uuid"]
 
 		// check if user exists
-		errCheckUserExists := CheckUserExists(user_uuid, grpcClient); if errCheckUserExists != nil {
+		errCheckUserExists := CheckUserExists(userUuid, grpcClient); if errCheckUserExists != nil {
 			HandleError(w, errCheckUserExists)
 			return
 		}
 
 		req := &userpb.DeleteUserRateRequest{
-			UserUuid: user_uuid,
+			UserUuid: userUuid,
 		}
 		err := usecase.DeleteUserRate(req, grpcClient)
 		if err != nil {

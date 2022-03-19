@@ -19,16 +19,16 @@ func GetRecommendation(grpcClient adapter.GrpcClient, amqpClient *adapter.AmqpCl
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		user_uuid, _ := params["user_uuid"]
+		userUuid, _ := params["user_uuid"]
 
 		// check if user exists
-		errCheckUserExists := CheckUserExists(user_uuid, grpcClient); if errCheckUserExists != nil {
+		errCheckUserExists := CheckUserExists(userUuid, grpcClient); if errCheckUserExists != nil {
 			HandleError(w, errCheckUserExists)
 			return
 		}
 
 		getRecommendationRequestDTO := dto.GetRecommendationRequestDTO{
-			UserUuid: user_uuid,
+			UserUuid: userUuid,
 		}
 		recommendations, err := usecase.GetRecommendation(getRecommendationRequestDTO, amqpClient)
 		if err != nil {

@@ -2,6 +2,8 @@ class GetUserRateDTO {
   userRate;
 
   constructor(userRate) {
+    if (!userRate) return;
+
     const u = JSON.parse(JSON.stringify(userRate));
     u.user_uuid = u._id;
     delete u._id;

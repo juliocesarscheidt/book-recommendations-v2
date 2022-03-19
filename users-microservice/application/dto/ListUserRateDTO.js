@@ -2,6 +2,8 @@ class ListUserRateResponse {
   userRates;
 
   constructor(userRates) {
+    if (!userRates) return;
+
     const userRatesMapped = userRates.map(user => {
       const u = JSON.parse(JSON.stringify(user));
       u.user_uuid = u._id;

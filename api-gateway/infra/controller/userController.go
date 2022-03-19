@@ -14,9 +14,33 @@ import (
 	httpmodule "github.com/juliocesarscheidt/apigateway/infra/http"
 )
 
+func GetCurrentUserInfo(grpcClient adapter.GrpcClient) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		currentUserUuid := r.Header.Get("X-Session-User")
+		fmt.Printf("X-Session-User :: %v\n", currentUserUuid)
+
+		req := &userpb.GetUserRequest{
+			Uuid: currentUserUuid,
+		}
+		user, err := usecase.GetUser(req, grpcClient)
+		if err != nil {
+			HandleError(w, err)
+			return
+		}
+
+		fmt.Printf("Response :: %v\n", user)
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(&httpmodule.HttpResponse{Data: user})
+	}
+}
+
 func CreateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		currentUserUuid := r.Header.Get("X-Session-User")
+		fmt.Printf("X-Session-User :: %v\n", currentUserUuid)
 
 		var userRequest userpb.UserRequest
 		if err := json.NewDecoder(r.Body).Decode(&userRequest); err != nil {
@@ -43,13 +67,15 @@ func CreateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 func GetUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		currentUserUuid := r.Header.Get("X-Session-User")
+		fmt.Printf("X-Session-User :: %v\n", currentUserUuid)
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		user_uuid, _ := params["user_uuid"]
+		userUuid, _ := params["user_uuid"]
 
 		req := &userpb.GetUserRequest{
-			Uuid: user_uuid,
+			Uuid: userUuid,
 		}
 		user, err := usecase.GetUser(req, grpcClient)
 		if err != nil {
@@ -67,10 +93,12 @@ func GetUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 func UpdateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		currentUserUuid := r.Header.Get("X-Session-User")
+		fmt.Printf("X-Session-User :: %v\n", currentUserUuid)
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		user_uuid, _ := params["user_uuid"]
+		userUuid, _ := params["user_uuid"]
 
 		var userRequest userpb.UserRequest
 		if err := json.NewDecoder(r.Body).Decode(&userRequest); err != nil {
@@ -78,7 +106,7 @@ func UpdateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 			return
 		}
 		req := &userpb.UpdateUserRequest{
-			Uuid: user_uuid,
+			Uuid: userUuid,
 			UserRequest: &userRequest,
 		}
 
@@ -95,13 +123,21 @@ func UpdateUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 func DeleteUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		currentUserUuid := r.Header.Get("X-Session-User")
+		fmt.Printf("X-Session-User :: %v\n", currentUserUuid)
 
 		params := mux.Vars(r)
 		fmt.Println(params)
-		user_uuid, _ := params["user_uuid"]
+		userUuid, _ := params["user_uuid"]
+
+		// the user can not delete itself
+		if userUuid == currentUserUuid {
+			ThrowBadRequest(w, "The User Can Not Delete Itself")
+			return
+		}
 
 		req := &userpb.DeleteUserRequest{
-			Uuid: user_uuid,
+			Uuid: userUuid,
 		}
 		err := usecase.DeleteUser(req, grpcClient)
 		if err != nil {
@@ -116,6 +152,8 @@ func DeleteUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 func ListUser(grpcClient adapter.GrpcClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		currentUserUuid := r.Header.Get("X-Session-User")
+		fmt.Printf("X-Session-User :: %v\n", currentUserUuid)
 
 		page, _ := strconv.ParseInt(r.FormValue("page"), 10, 64)
 		size, _ := strconv.ParseInt(r.FormValue("size"), 10, 64)

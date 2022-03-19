@@ -60,9 +60,19 @@ func HandleError(w http.ResponseWriter, err error) {
 	if stat.Message() == "Not Found" {
 		ThrowNotFound(w, stat.Message())
 		return
+
 	} else if stat.Message() == "Bad Request" {
 		ThrowBadRequest(w, stat.Message())
 		return
+
+	}	else if stat.Message() == "Invalid Rate" {
+		ThrowBadRequest(w, stat.Message())
+		return
+
+	} else if stat.Message() == "Invalid Email or Password" {
+		ThrowBadRequest(w, stat.Message())
+		return
+
 	} else if stat.Message() == "Internal Server Error" {
 		ThrowInternalServerError(w, stat.Message())
 		return
@@ -70,3 +80,5 @@ func HandleError(w http.ResponseWriter, err error) {
 
 	ThrowInternalServerError(w, err.Error())
 }
+
+

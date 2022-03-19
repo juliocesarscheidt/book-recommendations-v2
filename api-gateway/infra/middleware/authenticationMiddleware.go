@@ -17,7 +17,6 @@ import (
 func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
 			tokenString, err := service.ExtractTokenString(r.Header.Get("Authorization"))
 			if err != nil {
 				controller.ThrowUnauthorized(w, "Invalid Authorization Header")
@@ -31,7 +30,6 @@ func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFun
 					controller.ThrowUnauthorized(w, "Malformed Token")
 				} else if (errors.Is(err, jwt.ErrTokenExpired) ||
 					errors.Is(err, jwt.ErrTokenNotValidYet)) {
-					// Token is either expired or not active yet
 					controller.ThrowUnauthorized(w, "Expired Token")
 				} else {
 					controller.ThrowUnauthorized(w, "Unauthorized")
@@ -49,11 +47,13 @@ func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFun
 			userUuid := claims["uuid"]
 			log.Printf("userUuid :: %v\n", userUuid)
 			result, err := redisClient.Get(fmt.Sprintf("/user/bearer/%s", userUuid))
-			// fmt.Println(result)
 			if (result == nil || err != nil) {
 				controller.ThrowUnauthorized(w, "Unauthorized")
 				return
 			}
+
+			// set user uuid on header
+			r.Header.Add("X-Session-User", userUuid.(string))
 
 			// call next handler
 			next.ServeHTTP(w, r)
