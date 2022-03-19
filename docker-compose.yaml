@@ -74,23 +74,23 @@ services:
     volumes:
       - ./recommendations-microservice/src:/usr/src/app:rw
 
-  # client-microservice:
-  #   container_name: client-microservice
-  #   hostname: client-microservice
-  #   image: juliocesarmidia/client-microservice:latest
-  #   build:
-  #     context: ./ui
-  #     dockerfile: Development.Dockerfile
-  #   restart: on-failure
-  #   networks:
-  #     - subnet_0
-  #   ports:
-  #     - 8080:8080
-  #   environment:
-  #     VUE_APP_API_GATEWAY_CONN_STRING: ${API_GATEWAY_CONN_STRING}
-  #   volumes:
-  #     - ./client-microservice:/app:rw
-  #     - client-microservice-node-modules:/app/node_modules:rw
+  client-microservice:
+    container_name: client-microservice
+    hostname: client-microservice
+    image: juliocesarmidia/client-microservice:latest
+    build:
+      context: ./client-microservice
+      dockerfile: Development.Dockerfile
+    restart: on-failure
+    networks:
+      - subnet_0
+    ports:
+      - 8080:8080
+    environment:
+      VUE_APP_API_GATEWAY_CONN_STRING: ${API_GATEWAY_CONN_STRING}
+    volumes:
+      - ./client-microservice:/app:rw
+      - client-microservice-node-modules:/app/node_modules:rw
 
   postgres:
     container_name: postgres
