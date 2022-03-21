@@ -73,6 +73,10 @@ func HandleError(w http.ResponseWriter, err error) {
 		ThrowBadRequest(w, stat.Message())
 		return
 
+	}	else if stat.Message() == "Duplicate Email" {
+		ThrowBadRequest(w, stat.Message())
+		return
+
 	} else if stat.Message() == "Internal Server Error" {
 		ThrowInternalServerError(w, stat.Message())
 		return

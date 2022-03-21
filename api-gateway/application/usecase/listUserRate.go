@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"time"
 	"context"
 
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
@@ -9,7 +10,10 @@ import (
 )
 
 func ListUserRate(req *userpb.ListUserRateRequest, grpcClient adapter.GrpcClient) ([]*userpb.UserRate, error) {
-	res, err := grpcClient.ListUserRate(context.Background(), req)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	res, err := grpcClient.ListUserRate(ctx, req)
 	if err != nil {
 		fmt.Errorf("Failed to call endpoint: %v", err)
 		return []*userpb.UserRate{}, err

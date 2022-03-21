@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.github.juliocesarscheidt.books.domain.service.DatetimeConverter;
+import com.github.juliocesarscheidt.books.application.service.DatetimeConverter;
 
 @Entity(name = "book")
 public class Book {

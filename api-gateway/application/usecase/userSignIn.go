@@ -1,15 +1,19 @@
 package usecase
 
 import (
-	"context"
 	"fmt"
+	"time"
+	"context"
 
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
 	userpb "github.com/juliocesarscheidt/apigateway/pb"
 )
 
 func UserSignIn(req *userpb.UserSignInRequest, grpcClient adapter.GrpcClient) (string, error) {
-	res, err := grpcClient.UserSignIn(context.Background(), req)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	res, err := grpcClient.UserSignIn(ctx, req)
 	if err != nil {
 		fmt.Errorf("Failed to call endpoint: %v", err)
 		return "", err

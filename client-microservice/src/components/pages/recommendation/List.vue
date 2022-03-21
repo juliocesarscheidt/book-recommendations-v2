@@ -99,25 +99,32 @@ export default {
     },
     async callGetRecommendations() {
       if (this.user) {
+        this.loading = true;
         try {
           const response = await getRecommendations(this.user.uuid);
           if (response.recommendations && response.recommendations.length) {
-            this.recommendationsData = response.recommendations.map((r) => {
-              const book = this.books.find(b => b.uuid === r.book_uuid);
-              return {
-                uuid: book.uuid,
-                title: book.title,
-                author: book.author,
-                genre: book.genre,
-                image: book.image,
-              };
-            })
+            this.recommendationsData = response.recommendations
+              .map((r) => {
+                const book = this.books.find(b => b.uuid === r.book_uuid);
+                if (!book) return null;
+                return {
+                  uuid: book.uuid,
+                  title: book.title,
+                  author: book.author,
+                  genre: book.genre,
+                  image: book.image,
+                };
+              })
+              .filter(b => b !== null);
           }
 
         } catch (err) {
           console.log(err);
           this.notifyError(err.response.data.message);
           this.$router.push({ name: 'Home' });
+
+        } finally {
+          this.loading = false;
         }
       }
     },
@@ -126,6 +133,7 @@ export default {
       try {
         const response = await listBook();
         this.books = response;
+
       } catch (err) {
         console.log(err);
         this.notifyError(err.response.data.message);
@@ -133,7 +141,7 @@ export default {
 
       } finally {
         this.loading = false;
-      };
+      }
     },
   },
   beforeDestroy() {

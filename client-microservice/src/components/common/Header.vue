@@ -30,8 +30,8 @@
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto" v-if="user">
-          <b-nav-item>
-            <b>{{ user.name }}</b>
+          <b-nav-item v-bind:to="{ name: 'UserView', params: { uuid: user.uuid, isEdit: false } }">
+            <b>{{ user.name | capitalize }}</b>
           </b-nav-item>
 
           <b-nav-item @click="logout">Logout</b-nav-item>

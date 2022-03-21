@@ -39,6 +39,9 @@ curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "ju
 
 # sign in
 curl --silent -X POST --data '{"email": "julio@mail.com", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signin' | jq -r
+
+export TOKEN=$(curl --silent -X POST --data '{"email": "julio@mail.com", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signin' | jq -r '.data')
+echo "${TOKEN}"
 ```
 
 ## USER requests

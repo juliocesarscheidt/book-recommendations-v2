@@ -101,7 +101,6 @@ export default {
     },
     callDeleteUser(uuid) {
       deleteUser(uuid).then((response) => {
-        console.log(response);
         this.callListUser();
       })
       .catch((err) => {
@@ -112,7 +111,6 @@ export default {
     callListUser() {
       this.loading = true;
       listUser().then((response) => {
-        console.log(response);
         this.usersData = response;
       })
       .catch((err) => {

@@ -40,7 +40,7 @@ package:
 		-v "$$(pwd)":/usr/src/app \
 		-w /usr/src/app \
 		juliocesarmidia/java14.0.2-maven3.8.1:latest \
-		mvn package
+		mvn package -Dmaven.test.skip=true
 
 # mvn package -Dmaven.test.skip=true
 

@@ -2,7 +2,7 @@ package com.github.juliocesarscheidt.books.application.dto;
 
 import java.util.Date;
 
-import com.github.juliocesarscheidt.books.domain.service.DatetimeConverter;
+import com.github.juliocesarscheidt.books.application.service.DatetimeConverter;
 import com.google.gson.annotations.SerializedName;
 
 public class GetBookResponseDTO extends BaseDTO {

@@ -1,9 +1,12 @@
 package adapter
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"time"
+	"errors"
+	"context"
 
 	"github.com/streadway/amqp"
 )
@@ -87,7 +90,13 @@ func (client AmqpClient) MakeTempQueue() (amqp.Queue, error) {
 }
 
 func (client AmqpClient) ConsumeMessageFromTempQueue(queueName string, consumerName string) ([]byte, error) {
-	msgs, _ := client.Channel.Consume(
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	var msgs (<-chan amqp.Delivery)
+	var messageBody []byte
+
+	msgs, err := client.Channel.Consume(
 		queueName, // queue
 		consumerName, // consumer
 		false, // auto-ack
@@ -96,24 +105,29 @@ func (client AmqpClient) ConsumeMessageFromTempQueue(queueName string, consumerN
 		false, // no-wait
 		nil, // args
 	)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("Failed to Consume from Queue %s: %v", queueName, err.Error()))
+	}
+	if msgs != nil {
+		cancel()
+	}
 
-	forever := make(chan bool)
-	var messageBody []byte
-
-	go func() {
-		for msg := range msgs {
-			messageBody = []byte(msg.Body)
-			msg.Ack(true)
-			// cancel the consumer, then the queue will be deleted
-			if err := client.Channel.Cancel(consumerName, false); err != nil {
-				log.Fatalf("Failed to cancel consumer: %v", err)
-				// TODO: better handling for this
+	select {
+		case <-ctx.Done():
+			if msgs == nil {
+				return nil, errors.New(fmt.Sprintf("Failed to Consume from Queue %s: %v", queueName, ctx.Err()))
 			}
-			forever <- true
-		}
-	}()
+	}
 
-	<-forever
+	for msg := range msgs {
+		messageBody = []byte(msg.Body)
+		msg.Ack(true)
+		// cancel the consumer, then the queue will be deleted
+		if err := client.Channel.Cancel(consumerName, false); err != nil {
+			return nil, errors.New(fmt.Sprintf("Failed to cancel consumer %s: %v", consumerName, err.Error()))
+		}
+		break
+	}
 
 	return messageBody, nil
 }

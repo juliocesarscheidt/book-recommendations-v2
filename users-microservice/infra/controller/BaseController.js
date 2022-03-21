@@ -3,6 +3,7 @@ const { status } = require('@grpc/grpc-js');
 const NotFoundException = require('../../application/exception/NotFoundException');
 const InvalidRateException = require('../../application/exception/InvalidRateException');
 const InvalidEmailPasswordException = require('../../application/exception/InvalidEmailPasswordException');
+const DuplicateEmailException = require('../../application/exception/DuplicateEmailException');
 
 class BaseController {
   constructor() {
@@ -27,6 +28,9 @@ class BaseController {
       return BaseController.BadRequest(callback, err.message);
 
     } else if (err instanceof InvalidEmailPasswordException) {
+      return BaseController.BadRequest(callback, err.message);
+
+    } else if (err instanceof DuplicateEmailException) {
       return BaseController.BadRequest(callback, err.message);
 
     } else if (err instanceof NotFoundException) {

@@ -1,5 +1,5 @@
 const SignUpDTO = require('../dto/SignUpDTO');
-const { encryptPassword, generateUserToken } = require('../service/EncryptionCommonService');
+const { encryptPassword, generateUserToken } = require('../service/encryptionCommonService');
 
 const execute = async ({ name, surname, email, phone, password }, userRepository, redisClient) => {
   const uuid = ((new Date()).getTime().toString(16) + Math.random().toString(16)).replace('.', '').substring(0, 24);

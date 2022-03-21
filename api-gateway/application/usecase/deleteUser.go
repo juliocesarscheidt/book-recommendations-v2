@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"time"
 	"context"
 
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
@@ -9,7 +10,10 @@ import (
 )
 
 func DeleteUser(req *userpb.DeleteUserRequest, grpcClient adapter.GrpcClient) (error) {
-	_, err := grpcClient.DeleteUser(context.Background(), req)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	_, err := grpcClient.DeleteUser(ctx, req)
 	if err != nil {
 		fmt.Errorf("Failed to call endpoint: %v", err)
 		return err
