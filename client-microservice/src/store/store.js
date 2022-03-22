@@ -2,15 +2,21 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import setAuthToken from '../utils/setAuthToken.js';
+import { setLocalStorageLanguage, getLocalStorageLanguage } from '../utils/userLanguage.js';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    language: getLocalStorageLanguage(),
     user: null,
     token: null,
   },
   mutations: {
+    setLanguage(state, language) {
+      state.language = language;
+      setLocalStorageLanguage(state.language);
+    },
     setUser(state, user) {
       state.user = user;
     },
@@ -19,6 +25,9 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    setLanguage({ commit }, language) {
+      commit('setLanguage', language);
+    },
     setUser({ commit }, user) {
       commit('setUser', user);
     },
@@ -33,6 +42,9 @@ export default new Vuex.Store({
     },
   },
   getters: {
+    language(state) {
+      return state.language;
+    },
     user(state) {
       return state.user;
     },

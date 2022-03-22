@@ -3,24 +3,24 @@
     <article class="flex flex-column flex-justify-center flex-align-center">
       <form style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="bookData">
         <div class="form-group">
-          <label for="input-title">Title</label>
+          <label for="input-title">{{ $t('book.title') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.title"></b-form-input>
         </div>
         <div class="form-group">
-          <label for="input-author">Author</label>
+          <label for="input-author">{{ $t('book.author') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.author"></b-form-input>
         </div>
         <div class="form-group">
-          <label for="input-genre">Genre</label>
+          <label for="input-genre">{{ $t('book.genre') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.genre"></b-form-input>
         </div>
         <div class="form-group">
-          <label for="input-image">Image</label>
+          <label for="input-image">{{ $t('book.image') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.image"></b-form-input>
         </div>
 
         <div class="form-group">
-          <label for="input-rate">Rate ({{ rate }})</label>
+          <label for="input-rate">{{ $t('book.rate') }} ({{ rate }})</label>
           <star-rating v-model="rate"
             v-bind:show-rating="false"
             v-bind:read-only="!isEdit || loading"
@@ -33,15 +33,15 @@
         </div>
 
         <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditBook">
-          Edit
+          {{ $t('buttons.edit') }}
         </button>
 
         <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateBook">
-          Save
+          {{ $t('buttons.save') }}
         </button>
 
         <button type="submit" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteBook">
-          Delete
+          {{ $t('buttons.delete') }}
         </button>
       </form>
     </article>

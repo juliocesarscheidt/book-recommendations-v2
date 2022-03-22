@@ -1,4 +1,5 @@
 const SignUpDTO = require('../dto/SignUpDTO');
+const DuplicateEmailException = require('../exception/DuplicateEmailException');
 const { encryptPassword, generateUserToken } = require('../service/encryptionCommonService');
 
 const execute = async ({ name, surname, email, phone, password }, userRepository, redisClient) => {
@@ -8,7 +9,15 @@ const execute = async ({ name, surname, email, phone, password }, userRepository
   }
   const user = { _id: uuid, name, surname, email, phone, password };
 
-  await userRepository.insert(user);
+  try {
+    await userRepository.insert(user);
+
+  } catch (err) {
+    if (err.code && err.code === 11000) { // MongoServerError: E11000 duplicate key error collection
+      throw new DuplicateEmailException('Duplicate Email');
+    }
+    throw err;
+  }
 
   const userBody = { uuid, name, surname, email, phone };
   const accessToken = generateUserToken(userBody);

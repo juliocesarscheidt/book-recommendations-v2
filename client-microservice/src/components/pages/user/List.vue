@@ -22,7 +22,7 @@
         </template>
 
         <template #empty="">
-          <p style="text-align: center;"><b>Data not Found</b></p>
+          <p style="text-align: center;"><b>{{ $t('messages.info.data_not_found') }}</b></p>
         </template>
 
         <template #cell(name)="data">

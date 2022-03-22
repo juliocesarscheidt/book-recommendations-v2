@@ -19,9 +19,17 @@ export default {
     Header,
   },
   computed: {
-    ...mapState([]),
+    ...mapState(['language']),
   },
-  watch: {},
+  watch: {
+    'language': {
+      handler() {
+        if (this.language && this.$i18n) {
+          this.$i18n.locale = this.language;
+        }
+      },
+    },
+  },
 }
 </script>
 

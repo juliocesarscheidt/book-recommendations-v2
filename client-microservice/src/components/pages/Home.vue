@@ -2,19 +2,19 @@
   <section class="flex flex-column flex-align-center p-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
       <p class="mb-4">
-        Welcome to <b>Book Recommendations</b>
+        {{ $t('home.intro_01') }} <b>{{ $t('home.intro_02') }}</b>
       </p>
 
       <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Users" @click="goTo('UserList')">
-        Users <i class="fas fa-users" aria-hidden="true"></i>
+        {{ $t('header.users') }} <i class="fas fa-users" aria-hidden="true"></i>
       </button>
 
       <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Books" @click="goTo('BookList')">
-        Books <i class="fas fa-book" aria-hidden="true"></i>
+        {{ $t('header.books') }} <i class="fas fa-book" aria-hidden="true"></i>
       </button>
 
       <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Recommendations" @click="goTo('RecommendationList')">
-        Recommendations <i class="fas fa-star" aria-hidden="true"></i>
+        {{ $t('header.recommendations') }} <i class="fas fa-star" aria-hidden="true"></i>
       </button>
     </article>
   </section>

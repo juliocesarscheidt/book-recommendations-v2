@@ -3,15 +3,15 @@
     <article class="flex flex-column flex-justify-center flex-align-center">
       <form style="width: 100%; min-width: 200px; margin-bottom: 0px;">
         <div class="form-group">
-          <label for="input-email">Email</label>
+          <label for="input-email">{{ $t('user.email') }}</label>
           <input type="email" class="form-control" id="input-email" placeholder="Email" v-model.trim="email">
         </div>
         <div class="form-group">
-          <label for="input-password">Password</label>
+          <label for="input-password">{{ $t('user.password') }}</label>
           <input type="password" class="form-control" id="input-password" placeholder="Password" v-model.trim="password">
         </div>
         <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="userSignIn">
-          Sign In
+          {{ $t('buttons.signin') }}
         </button>
       </form>
     </article>
@@ -19,10 +19,10 @@
     <article class="flex flex-column flex-justify-center flex-align-center">
       <div style="width: 100%; min-width: 200px;">
         <p>
-          Or sign-up
+          {{ $t('auth.or_signup') }}
         </p>
         <button class="btn btn-outline-secondary btn-lg btn-block" @click="goUserSignUp">
-          Sign Up
+          {{ $t('buttons.signup') }}
         </button>
       </div>
     </article>

@@ -1,11 +1,4 @@
-# Stock Trader Project
-
-A simple stock trader website made with VueJS
-## Deploy static website on S3
-
-```bash
-bash deploy_s3.sh
-```
+# BOok Recommendations Client
 
 ## Project setup
 ```

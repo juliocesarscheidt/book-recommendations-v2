@@ -3,23 +3,23 @@
     <article class="flex flex-column flex-justify-center flex-align-center">
       <form style="width: 100%; min-width: 200px; margin-bottom: 0px;">
         <div class="form-group">
-          <label for="input-title">Title</label>
+          <label for="input-title">{{ $t('book.title') }}</label>
           <input type="text" class="form-control" id="input-title" placeholder="Name" v-model.trim="title">
         </div>
         <div class="form-group">
-          <label for="input-author">Author</label>
+          <label for="input-author">{{ $t('book.author') }}</label>
           <input type="text" class="form-control" id="input-author" placeholder="Author" v-model.trim="author">
         </div>
         <div class="form-group">
-          <label for="input-genre">Genre</label>
+          <label for="input-genre">{{ $t('book.genre') }}</label>
           <input type="text" class="form-control" id="input-genre" placeholder="Genre" v-model.trim="genre">
         </div>
         <div class="form-group">
-          <label for="input-image">Image</label>
+          <label for="input-image">{{ $t('book.image') }}</label>
           <input type="text" class="form-control" id="input-image" placeholder="Image" v-model.trim="image">
         </div>
         <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createBookFn">
-          Create
+          {{ $t('buttons.save') }}
         </button>
       </form>
     </article>

@@ -34,12 +34,13 @@ const capitalize = (str) => {
   return stringSplitted.join(' ');
 };
 
-const trimLetters = (str, amount) => {
-  return `${str.slice(0, amount)}...`;
-}
+const trimLetters = (str, amount) => `${str.slice(0, amount)}...`;
+
+const currency = value => `R$ ${parseFloat(value).toFixed(2).toLocaleString()}`;
 
 export {
   formatPhone,
   capitalize,
   trimLetters,
+  currency,
 }

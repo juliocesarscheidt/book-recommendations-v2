@@ -17,7 +17,6 @@ const execute = async ({ name, surname, email, phone, password }, userRepository
     if (err.code && err.code === 11000) { // MongoServerError: E11000 duplicate key error collection
       throw new DuplicateEmailException('Duplicate Email');
     }
-
     throw err;
   }
 }

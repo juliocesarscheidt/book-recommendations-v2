@@ -3,32 +3,32 @@
     <article class="flex flex-column flex-justify-center flex-align-center">
       <form style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="userData">
         <div class="form-group">
-          <label for="input-name">Name</label>
+          <label for="input-name">{{ $t('user.name') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.name"></b-form-input>
         </div>
         <div class="form-group">
-          <label for="input-surname">Surname</label>
+          <label for="input-surname">{{ $t('user.surname') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.surname"></b-form-input>
         </div>
         <div class="form-group">
-          <label for="input-email">Email</label>
+          <label for="input-email">{{ $t('user.email') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.email"></b-form-input>
         </div>
         <div class="form-group">
-          <label for="input-phone">Phone</label>
+          <label for="input-phone">{{ $t('user.phone') }}</label>
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.phone"></b-form-input>
         </div>
 
         <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditUser">
-          Edit
+          {{ $t('buttons.edit') }}
         </button>
 
         <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateUser">
-          Save
+          {{ $t('buttons.save') }}
         </button>
 
         <button type="submit" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteUser">
-          Delete
+          {{ $t('buttons.delete') }}
         </button>
       </form>
     </article>
