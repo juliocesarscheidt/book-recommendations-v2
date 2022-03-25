@@ -14,12 +14,6 @@ RUN GOOS=linux \
     CGO_ENABLED=0 \
     go build -o /go/src/app/main .
 
-FROM gcr.io/distroless/static:nonroot as runtime
-
-WORKDIR /
-COPY --from=builder /go/src/app/main .
-USER nonroot:nonroot
-
 EXPOSE 3080
 
-ENTRYPOINT [ "/main" ]
+ENTRYPOINT [ "/go/src/app/main" ]

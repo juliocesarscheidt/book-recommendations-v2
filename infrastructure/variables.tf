@@ -10,7 +10,6 @@ variable "env" {
   default     = "development"
 }
 
-
 variable "root_domain" {
   type        = string
   description = "The root domain"
@@ -20,7 +19,6 @@ variable "certificate_arn" {
   type        = string
   description = "The certificate ARN"
 }
-
 
 variable "docker_registry" {
   type        = string
@@ -36,7 +34,6 @@ variable "image_version" {
   type        = string
   description = "Image version"
 }
-
 
 ######################### RabbitMQ Variables #########################
 variable "rabbitmq_broker_name" {
@@ -74,7 +71,6 @@ variable "rabbitmq_instance_type" {
   default     = "mq.t3.micro"
 }
 
-
 ######################### Mongo Variables #########################
 variable "mongo_cluster_identifier" {
   description = "Mongo cluster identifier"
@@ -98,7 +94,6 @@ variable "mongo_password" {
   type        = string
 }
 
-
 ######################### Redis Variables #########################
 variable "redis_cluster_name" {
   description = "Redis cluster name"
@@ -109,7 +104,7 @@ variable "redis_cluster_name" {
 variable "redis_instance_type" {
   description = "Redis instance type"
   type        = string
-  default     = "cache.t2.small"
+  default     = "cache.t3.micro"
 }
 
 variable "redis_cache_nodes" {
@@ -123,7 +118,6 @@ variable "redis_engine_version" {
   type        = string
   default     = "5.0.6"
 }
-
 
 ######################### Postgres Variables #########################
 variable "postgres_identifier" {
@@ -148,52 +142,76 @@ variable "postgres_password" {
   type        = string
 }
 
-
 # apps config
-# variable "app_config_stock_ui" {
-#   description = "Config for app stock-ui"
-#   type        = map(string)
-#   default     = {}
-# }
-# variable "app_config_stock_ui_container_port" {
-#   type        = number
-#   description = "Config for app stock-ui container ports"
-# }
-# variable "app_config_stock_ui_container_environment" {
-#   type        = list(any)
-#   description = "Config for app stock-ui container environment"
-# }
+variable "app_config_client_microservice" {
+  description = "Config for app client-microservice"
+  type        = map(string)
+  default     = {}
+}
+variable "app_config_client_microservice_container_port" {
+  type        = number
+  description = "Config for app client-microservice container ports"
+}
+variable "app_config_client_microservice_container_environment" {
+  type        = list(any)
+  description = "Config for app client-microservice container environment"
+}
 
+variable "app_config_users_microservice" {
+  description = "Config for app users-microservice"
+  type        = map(string)
+  default     = {}
+}
+variable "app_config_users_microservice_container_port" {
+  type        = number
+  description = "Config for app users-microservice container ports"
+}
+variable "app_config_users_microservice_container_environment" {
+  type        = list(any)
+  description = "Config for app users-microservice container environment"
+}
 
-# variable "app_config_stock_api" {
-#   description = "Config for app stock-api"
-#   type        = map(any)
-#   default     = {}
-# }
-# variable "app_config_stock_api_container_port" {
-#   type        = number
-#   description = "Config for app stock-api container ports"
-# }
-# variable "app_config_stock_api_container_environment" {
-#   type        = list(any)
-#   description = "Config for app stock-api container environment"
-# }
+variable "app_config_books_microservice" {
+  description = "Config for app books-microservice"
+  type        = map(string)
+  default     = {}
+}
+variable "app_config_books_microservice_container_port" {
+  type        = number
+  description = "Config for app books-microservice container ports"
+}
+variable "app_config_books_microservice_container_environment" {
+  type        = list(any)
+  description = "Config for app books-microservice container environment"
+}
 
+variable "app_config_recommendations_microservice" {
+  description = "Config for app recommendations-microservice"
+  type        = map(string)
+  default     = {}
+}
+variable "app_config_recommendations_microservice_container_port" {
+  type        = number
+  description = "Config for app recommendations-microservice container ports"
+}
+variable "app_config_recommendations_microservice_container_environment" {
+  type        = list(any)
+  description = "Config for app recommendations-microservice container environment"
+}
 
-# variable "app_config_stock_crawler" {
-#   description = "Config for app stock-crawler"
-#   type        = map(any)
-#   default     = {}
-# }
-# variable "app_config_stock_crawler_container_port" {
-#   type        = number
-#   description = "Config for app stock-crawler container ports"
-# }
-# variable "app_config_stock_crawler_container_environment" {
-#   type        = list(any)
-#   description = "Config for app stock-crawler container environment"
-# }
-
+variable "app_config_api_gateway" {
+  description = "Config for app api-gateway"
+  type        = map(string)
+  default     = {}
+}
+variable "app_config_api_gateway_container_port" {
+  type        = number
+  description = "Config for app api-gateway container ports"
+}
+variable "app_config_api_gateway_container_environment" {
+  type        = list(any)
+  description = "Config for app api-gateway container environment"
+}
 
 variable "tags" {
   type        = map(string)

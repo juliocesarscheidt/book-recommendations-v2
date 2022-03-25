@@ -109,23 +109,95 @@ resource "aws_security_group" "alb-sg" {
   depends_on = [aws_vpc.vpc_0]
 }
 
-# resource "aws_security_group" "client-microservice-sg" {
-#   vpc_id = aws_vpc.vpc_0.id
-#   name   = "client-microservice-sg-${var.env}"
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#   ingress {
-#     from_port       = var.app_config_client_microservice_container_port
-#     to_port         = var.app_config_client_microservice_container_port
-#     protocol        = "tcp"
-#     security_groups = [aws_security_group.alb-sg.id]
-#   }
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-#   depends_on = [aws_security_group.alb-sg]
-# }
+resource "aws_security_group" "client-microservice-sg" {
+  vpc_id = aws_vpc.vpc_0.id
+  name   = "client-microservice-sg-${var.env}"
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port       = var.app_config_client_microservice_container_port
+    to_port         = var.app_config_client_microservice_container_port
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb-sg.id]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [aws_security_group.alb-sg]
+}
+
+resource "aws_security_group" "users-microservice-sg" {
+  vpc_id = aws_vpc.vpc_0.id
+  name   = "users-microservice-sg-${var.env}"
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port       = var.app_config_users_microservice_container_port
+    to_port         = var.app_config_users_microservice_container_port
+    protocol        = "tcp"
+    security_groups = [aws_security_group.api-gateway-sg.id, aws_security_group.recommendations-microservice-sg.id]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [aws_security_group.api-gateway-sg, aws_security_group.recommendations-microservice-sg]
+}
+
+resource "aws_security_group" "books-microservice-sg" {
+  vpc_id = aws_vpc.vpc_0.id
+  name   = "books-microservice-sg-${var.env}"
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [aws_security_group.alb-sg]
+}
+
+resource "aws_security_group" "recommendations-microservice-sg" {
+  vpc_id = aws_vpc.vpc_0.id
+  name   = "recommendations-microservice-sg-${var.env}"
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [aws_security_group.alb-sg]
+}
+
+resource "aws_security_group" "api-gateway-sg" {
+  vpc_id = aws_vpc.vpc_0.id
+  name   = "api-gateway-sg-${var.env}"
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port       = var.app_config_api_gateway_container_port
+    to_port         = var.app_config_api_gateway_container_port
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb-sg.id]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  depends_on = [aws_security_group.alb-sg]
+}

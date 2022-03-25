@@ -1,17 +1,14 @@
 #!make
 
 ENV?=development
-PLAN_FILE?="tfplan"
-CLUSTER_NAME?="ecs-cluster"
+PLAN_FILE?=tfplan
+CLUSTER_NAME?=ecs-cluster-development
 # DOCKER_REGISTRY?=
 IMAGE_VERSION?=0.0.1
 
-
 AWS_DEFAULT_REGION?=us-east-1
 DOCKER_REGISTRY?=829560024531.dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
-
 AWS_BACKEND_BUCKET?=blackdevs-aws
-
 
 docker-login:
 	-@echo "Docker login"
@@ -77,6 +74,12 @@ fmt:
 validate:
 	terraform validate
 
+refresh:
+	terraform refresh	-var-file=$(ENV).tfvars
+
+output:
+	terraform output
+
 plan: validate
 	-@echo "Plan"
 	terraform plan \
@@ -88,10 +91,10 @@ plan: validate
 		-var image_version="$(IMAGE_VERSION)" \
 		-input=false
 
-apply: plan
+apply:
 	-@echo "Apply"
-# terraform apply $(PLAN_FILE)
-# terraform output -json
+	terraform apply $(PLAN_FILE)
+	terraform output -json
 
 destroy:
 	-@echo "Destroy"
