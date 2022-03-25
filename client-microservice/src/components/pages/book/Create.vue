@@ -6,19 +6,23 @@
           <label for="input-title">{{ $t('book.title') }}</label>
           <input type="text" class="form-control" id="input-title" placeholder="Name" v-model.trim="title">
         </div>
+
         <div class="form-group">
           <label for="input-author">{{ $t('book.author') }}</label>
           <input type="text" class="form-control" id="input-author" placeholder="Author" v-model.trim="author">
         </div>
+
         <div class="form-group">
           <label for="input-genre">{{ $t('book.genre') }}</label>
           <input type="text" class="form-control" id="input-genre" placeholder="Genre" v-model.trim="genre">
         </div>
+
         <div class="form-group">
           <label for="input-image">{{ $t('book.image') }}</label>
           <input type="text" class="form-control" id="input-image" placeholder="Image" v-model.trim="image">
         </div>
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createBookFn">
+
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createBookFn">
           {{ $t('buttons.save') }}
         </button>
       </form>
@@ -28,7 +32,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { createBook } from '../../../services/api';
+import { createBook } from '../../../services/';
 
 export default {
   components: {

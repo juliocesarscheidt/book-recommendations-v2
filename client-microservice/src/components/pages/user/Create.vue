@@ -6,23 +6,28 @@
           <label for="input-name">{{ $t('user.name') }}</label>
           <input type="text" class="form-control" id="input-name" placeholder="Name" v-model.trim="name">
         </div>
+
         <div class="form-group">
           <label for="input-surname">{{ $t('user.surname') }}</label>
           <input type="text" class="form-control" id="input-surname" placeholder="Surname" v-model.trim="surname">
         </div>
+
         <div class="form-group">
           <label for="input-email">{{ $t('user.email') }}</label>
           <input type="email" class="form-control" id="input-email" placeholder="Email" v-model.trim="email">
         </div>
+
         <div class="form-group">
           <label for="input-phone">{{ $t('user.phone') }}</label>
           <input type="phone" class="form-control" id="input-phone" placeholder="Phone" v-model.trim="phone">
         </div>
+
         <div class="form-group">
           <label for="input-password">{{ $t('user.password') }}</label>
           <input type="password" class="form-control" id="input-password" placeholder="Password" v-model.trim="password">
         </div>
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createUserFn">
+
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createUserFn">
           {{ $t('buttons.save') }}
         </button>
       </form>
@@ -32,7 +37,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { createUser } from '../../../services/api';
+import { createUser } from '../../../services/';
 
 export default {
   components: {

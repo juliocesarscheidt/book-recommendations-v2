@@ -46,6 +46,9 @@ export default {
     return: 'Return',
     signin: 'Sign-In',
     signup: 'Sign-Up',
+    view: 'View',
+    actions: 'Actions',
+    loading: 'Loading',
   },
   messages: {
     info: {

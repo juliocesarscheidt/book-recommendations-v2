@@ -19,15 +19,15 @@
           <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.phone"></b-form-input>
         </div>
 
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditUser">
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditUser">
           {{ $t('buttons.edit') }}
         </button>
 
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateUser">
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateUser">
           {{ $t('buttons.save') }}
         </button>
 
-        <button type="submit" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteUser">
+        <button type="button" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteUser">
           {{ $t('buttons.delete') }}
         </button>
       </form>
@@ -37,7 +37,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { getUser, updateUser, deleteUser } from '../../../services/api';
+import { getUser, updateUser, deleteUser } from '../../../services/';
 
 export default {
   components: {

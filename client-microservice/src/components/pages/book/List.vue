@@ -1,6 +1,10 @@
 <template>
   <section class="flex flex-column flex-align-center p-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
+      <button type="button" class="btn btn-outline-secondary btn-lg mb-4 ml-auto" @click="callCreateBook">
+        {{ $t('header.create_book') }}
+      </button>
+
       <b-table
         style="width: 100%; min-width: 200px; margin-bottom: 0px;"
         striped
@@ -17,7 +21,7 @@
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
-            <strong>Loading...</strong>
+            <strong>{{ $t('buttons.loading') }}...</strong>
           </div>
         </template>
 
@@ -41,20 +45,40 @@
           <a v-bind:href="data.value" target="_blank" title="See Image">{{ data.value | trimLetters(25) }}</a>
         </template>
 
+        <template #head(title)="">
+          <div class="text-nowrap">{{ $t('book.title') }}</div>
+        </template>
+
+        <template #head(author)="">
+          <div class="text-nowrap">{{ $t('book.author') }}</div>
+        </template>
+
+        <template #head(genre)="">
+          <div class="text-nowrap">{{ $t('book.genre') }}</div>
+        </template>
+
+        <template #head(image)="">
+          <div class="text-nowrap">{{ $t('book.image') }}</div>
+        </template>
+
+        <template #head(rate)="">
+          <div class="text-nowrap">{{ $t('book.rate') }}</div>
+        </template>
+
         <template #head(uuid)="">
-          <div class="text-nowrap">Actions</div>
+          <div class="text-nowrap">{{ $t('buttons.actions') }}</div>
         </template>
 
         <template #cell(uuid)="data">
-          <b-button type="button" variant="primary" class="mr-2" title="View" @click="callGetBook(data.value)">
+          <b-button type="button" variant="primary" class="mr-2" v-bind:title="$t('buttons.view')" @click="callGetBook(data.value)">
             <i class="fas fa-eye" aria-hidden="true"></i>
           </b-button>
 
-          <b-button type="button" variant="secondary" class="mr-2" title="Edit" @click="callUpdateBook(data.value)">
+          <b-button type="button" variant="secondary" class="mr-2" v-bind:title="$t('buttons.edit')" @click="callUpdateBook(data.value)">
             <i class="fas fa-edit" aria-hidden="true"></i>
           </b-button>
 
-          <b-button type="button" variant="danger" class="mr-2" title="Delete" @click="callDeleteBook(data.value)">
+          <b-button type="button" variant="danger" class="mr-2" v-bind:title="$t('buttons.delete')" @click="callDeleteBook(data.value)">
             <i class="fas fa-eraser" aria-hidden="true"></i>
           </b-button>
         </template>
@@ -64,8 +88,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { listBook, deleteBook, getRate } from '../../../services/api';
+import { mapState, mapGetters } from 'vuex'
+import { listBook, deleteBook, getRate } from '../../../services/';
 
 export default {
   components: {
@@ -98,6 +122,9 @@ export default {
     await this.callRefreshData();
   },
   methods: {
+    callCreateBook() {
+      this.$router.push({ name: 'BookCreate' });
+    },
     callGetBook(uuid) {
       this.$router.push({ name: 'BookView', params: { uuid, isEdit: false } });
     },

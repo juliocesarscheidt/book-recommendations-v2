@@ -17,7 +17,7 @@
         <template #table-busy>
           <div class="text-center text-danger my-2">
             <b-spinner class="align-middle"></b-spinner>
-            <strong>Loading...</strong>
+            <strong>{{ $t('buttons.loading') }}...</strong>
           </div>
         </template>
 
@@ -41,12 +41,32 @@
           <a v-bind:href="data.value" target="_blank" title="See Image">{{ data.value | trimLetters(25) }}</a>
         </template>
 
+        <template #head(title)="">
+          <div class="text-nowrap">{{ $t('book.title') }}</div>
+        </template>
+
+        <template #head(author)="">
+          <div class="text-nowrap">{{ $t('book.author') }}</div>
+        </template>
+
+        <template #head(genre)="">
+          <div class="text-nowrap">{{ $t('book.genre') }}</div>
+        </template>
+
+        <template #head(image)="">
+          <div class="text-nowrap">{{ $t('book.image') }}</div>
+        </template>
+
+        <template #head(rate)="">
+          <div class="text-nowrap">{{ $t('book.rate') }}</div>
+        </template>
+
         <template #head(uuid)="">
-          <div class="text-nowrap">Actions</div>
+          <div class="text-nowrap">{{ $t('buttons.actions') }}</div>
         </template>
 
         <template #cell(uuid)="data">
-          <b-button type="button" variant="primary" class="mr-2" title="View" @click="callGetBook(data.value)">
+          <b-button type="button" variant="primary" class="mr-2" v-bind:title="$t('buttons.view')" @click="callGetBook(data.value)">
             <i class="fas fa-eye" aria-hidden="true"></i>
           </b-button>
         </template>
@@ -56,8 +76,8 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { listBook, getRecommendations } from '../../../services/api';
+import { mapState, mapGetters } from 'vuex'
+import { listBook, getRecommendations } from '../../../services/';
 
 export default {
   components: {

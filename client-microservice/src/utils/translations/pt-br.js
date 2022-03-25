@@ -46,6 +46,9 @@ export default {
     return: 'Voltar',
     signin: 'Login',
     signup: 'Cadastro',
+    view: 'Ver',
+    actions: 'Ações',
+    loading: 'Carregando',
   },
   messages: {
     info: {

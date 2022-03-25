@@ -32,15 +32,15 @@
           </star-rating>
         </div>
 
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditBook">
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditBook">
           {{ $t('buttons.edit') }}
         </button>
 
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateBook">
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateBook">
           {{ $t('buttons.save') }}
         </button>
 
-        <button type="submit" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteBook">
+        <button type="button" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteBook">
           {{ $t('buttons.delete') }}
         </button>
       </form>
@@ -51,7 +51,7 @@
 <script>
 import StarRating from 'vue-star-rating';
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { getBook, updateBook, deleteBook, getRate, upsertRate } from '../../../services/api';
+import { getBook, updateBook, deleteBook, getRate, upsertRate } from '../../../services/';
 
 export default {
   components: {

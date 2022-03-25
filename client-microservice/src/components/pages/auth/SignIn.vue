@@ -10,7 +10,7 @@
           <label for="input-password">{{ $t('user.password') }}</label>
           <input type="password" class="form-control" id="input-password" placeholder="Password" v-model.trim="password">
         </div>
-        <button type="submit" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="userSignIn">
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="userSignIn">
           {{ $t('buttons.signin') }}
         </button>
       </form>
@@ -31,7 +31,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { signIn, getCurrentUserInfo } from '../../../services/api';
+import { signIn, getCurrentUserInfo } from '../../../services/';
 
 export default {
   components: {
