@@ -32,7 +32,7 @@ init: create-bucket
 		-backend-config="bucket=$(AWS_BACKEND_BUCKET)" \
 		-backend-config="key=state.tfstate" \
 		-backend-config="region=$(AWS_BACKEND_REGION)" \
-		-backend-config="workspace_key_prefix=terraform/$(CLUSTER_NAME)" \
+		-backend-config="workspace_key_prefix=terraform/ecs-cluster" \
 		-backend-config="access_key=$(AWS_BACKEND_ACCESS_KEY_ID)" \
 		-backend-config="secret_key=$(AWS_BACKEND_SECRET_ACCESS_KEY)" \
 		-backend-config="encrypt=true"

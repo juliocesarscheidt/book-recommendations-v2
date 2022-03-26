@@ -48,3 +48,6 @@ init:
 
 deploy:
 	cd $(TERRAFORM_PATH) && make deploy
+
+destroy:
+	cd $(TERRAFORM_PATH) && make destroy
