@@ -10,7 +10,7 @@ const NotificationMixin = {
       const classIcon = type === 'error' ? 'fas fa-exclamation-circle' : (type === 'warn' ? 'fas fa-info-circle' : 'fas fa-check-circle');
       this.$notify({
         group: 'notification',
-        title: `${type} <i class="${classIcon}" aria-hidden="true"></i>`,
+        title: `${this.$t(`notification.title_${type}`)} <i class="${classIcon}" aria-hidden="true"></i>`,
         text,
         type,
         duration,

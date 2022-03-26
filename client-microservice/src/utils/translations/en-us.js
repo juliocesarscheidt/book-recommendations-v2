@@ -57,7 +57,15 @@ export default {
     errors: {
     },
     success: {
+      created_with_success: 'Created with Success',
+      updated_with_success: 'Updated with Success',
+      deleted_with_success: 'Deleted with Success',
     },
+  },
+  notification: {
+    title_error: 'Error',
+    title_warn: 'Information',
+    title_success: 'Success',
   },
   dates: {
     long_date_format: {

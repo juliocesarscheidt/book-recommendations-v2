@@ -102,7 +102,7 @@ export default {
   beforeMount() {
   },
   mounted() {
-    this.callListUser();
+    this.callRefreshData();
   },
   methods: {
     callCreateUser() {
@@ -114,28 +114,34 @@ export default {
     callUpdateUser(uuid) {
       this.$router.push({ name: 'UserView', params: { uuid, isEdit: true } });
     },
-    callDeleteUser(uuid) {
-      deleteUser(uuid).then((response) => {
-        this.callListUser();
-      })
-      .catch((err) => {
+    async callDeleteUser(uuid) {
+      try {
+        await deleteUser(uuid);
+        this.notifySuccess(this.$t('messages.success.deleted_with_success'));
+        this.callRefreshData();
+
+      } catch (err) {
         console.log(err);
         this.notifyError(err.response.data.message);
-      });
+      }
     },
-    callListUser() {
+    async callRefreshData() {
+      await this.callListUser();
+    },
+    async callListUser() {
       this.loading = true;
-      listUser().then((response) => {
+      try {
+        const response = await listUser();
         this.usersData = response;
-      })
-      .catch((err) => {
+
+      } catch (err) {
         console.log(err);
         this.notifyError(err.response.data.message);
         this.$router.push({ name: 'Home' });
-      })
-      .finally(() => {
+
+      } finally {
         this.loading = false;
-      });
+      };
     },
   },
   beforeDestroy() {

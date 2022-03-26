@@ -35,7 +35,7 @@ class Service(object):
         recommendations = get_recommendations(user_uuid, rates_dict)
         logging.info("recommendations :: " + str(recommendations))
 
-        if len(recommendations) > 0:
+        if recommendations is not None:
             cache_key = f"/recommendation/user/{user_uuid}"
             logging.info("cache_key :: " + cache_key)
             self.cache.set_cache(cache_key, json.dumps(recommendations))

@@ -76,7 +76,7 @@ export default {
     '$route': {
       handler(to, from) {
         if (from.params.uuid !== to.params.uuid) {
-          this.callGetUser();
+          this.callRefreshData();
         }
       },
       deep: true,
@@ -89,8 +89,8 @@ export default {
   },
   beforeMount() {
   },
-  async mounted() {
-    await this.callGetUser();
+  mounted() {
+    this.callRefreshData();
   },
   methods: {
     removeNonNumericDigits(val) {
@@ -101,6 +101,9 @@ export default {
     },
     callEditUser() {
       this.replaceRoute(true);
+    },
+    async callRefreshData() {
+      await this.callGetUser();
     },
     async callGetUser() {
       if (!this.uuid) {
@@ -142,6 +145,7 @@ export default {
           payload.password = this.password;
         }
         await updateUser(this.uuid, payload);
+        this.notifySuccess(this.$t('messages.success.updated_with_success'));
 
       } catch (err) {
         console.log(err);
@@ -161,6 +165,7 @@ export default {
 
       try {
         await deleteUser(this.uuid);
+        this.notifySuccess(this.$t('messages.success.deleted_with_success'));
         this.$router.push({ name: 'UserList' });
 
       } catch (err) {

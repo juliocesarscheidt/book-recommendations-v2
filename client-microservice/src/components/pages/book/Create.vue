@@ -19,7 +19,7 @@
           <input type="text" class="form-control" v-model.trim="image">
         </div>
 
-        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createBookFn">
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="callCreateBook">
           {{ $t('buttons.save') }}
         </button>
       </div>
@@ -61,7 +61,7 @@ export default {
   mounted() {
   },
   methods: {
-    async createBookFn() {
+    async callCreateBook() {
       if (!this.title || !this.author || !this.genre || !this.image) {
         alert('Invalid Entries');
         return;
@@ -69,6 +69,7 @@ export default {
 
       try {
         const uuid = await createBook(this.title, this.author, this.genre, this.image);
+        this.notifySuccess(this.$t('messages.success.created_with_success'));
         this.$router.push({ name: 'BookView', params: { uuid, isEdit: false } });
 
       } catch (err) {

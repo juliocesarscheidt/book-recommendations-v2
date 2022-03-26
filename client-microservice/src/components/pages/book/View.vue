@@ -22,12 +22,14 @@
           <label for="input-rate">{{ $t('book.rate') }} ({{ rate }})</label>
           <star-rating v-model="rate"
             v-bind:show-rating="false"
-            v-bind:read-only="!isEdit || loading"
+            v-bind:read-only="loading"
             v-bind:active-on-click="false"
             v-bind:star-size="25"
             v-bind:fixed-points=2
             v-bind:increment=0.01
-            v-bind:max-rating=10>
+            v-bind:max-rating=10
+            @rating-selected ="callUpsertRate"
+          >
           </star-rating>
         </div>
 
@@ -99,8 +101,8 @@ export default {
   },
   beforeMount() {
   },
-  async mounted() {
-    await this.callRefreshData();
+  mounted() {
+    this.callRefreshData();
   },
   methods: {
     replaceRoute(editMode) {
@@ -114,6 +116,7 @@ export default {
       await this.callGetRate();
     },
     async callGetRate() {
+      this.loading = true;
       if (this.user) {
         try {
           const response = await getRate(this.user.uuid);
@@ -121,9 +124,13 @@ export default {
             const rate = response.rates.find(b => b.book_uuid === this.uuid);
             this.rate = rate && parseFloat(rate.rate.toFixed(2)) || 0.00;
           }
+
         } catch (err) {
           console.log(err);
           this.notifyError(err.response.data.message);
+
+        } finally {
+          this.loading = false;
         }
       }
     },
@@ -148,6 +155,19 @@ export default {
         this.loading = false;
       }
     },
+    async callUpsertRate(rating) {
+      console.log('rating', rating);
+      console.log('this.rate', this.rate);
+
+      try {
+        await upsertRate(this.user.uuid, this.uuid, parseFloat(this.rate.toFixed(2)));
+        this.notifySuccess(this.$t('messages.success.updated_with_success'));
+
+      } catch (err) {
+        console.log(err);
+        this.notifyError(err.response.data.message);
+      }
+    },
     async callUpdateBook() {
       if (!this.uuid) {
         this.notifyError('Book Not Found');
@@ -163,8 +183,7 @@ export default {
           genre: this.bookData.genre,
           image: this.bookData.image,
         });
-
-        await upsertRate(this.user.uuid, this.uuid, parseFloat(this.rate.toFixed(2)));
+        this.notifySuccess(this.$t('messages.success.updated_with_success'));
 
       } catch (err) {
         console.log(err);
@@ -184,6 +203,7 @@ export default {
 
       try {
         await deleteBook(this.uuid);
+        this.notifySuccess(this.$t('messages.success.deleted_with_success'));
         this.$router.push({ name: 'BookList' });
 
       } catch (err) {

@@ -1,3 +1,4 @@
+# this is a sample file
 aws_region      = "us-east-1"
 env             = "development"
 root_domain     = "domain.com.br"

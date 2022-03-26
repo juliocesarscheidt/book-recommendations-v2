@@ -377,7 +377,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user/rate:
+  /v1/user/rating:
     post:
       tags:
         - UserRateServices
@@ -473,7 +473,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user/rate/{user_uuid}:
+  /v1/user/rating/{user_uuid}:
     get:
       tags:
         - UserRateServices

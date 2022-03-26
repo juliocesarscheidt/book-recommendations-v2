@@ -11,12 +11,42 @@ AWS_DEFAULT_REGION?=us-east-1
 
 DOCKER_REGISTRY?=000000000000.dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
 
-AWS_BACKEND_BUCKET?=blackdevs-aws
-AWS_BACKEND_REGION?=sa-east-1
+AWS_BACKEND_BUCKET?=
 AWS_BACKEND_ACCESS_KEY_ID?=
 AWS_BACKEND_SECRET_ACCESS_KEY?=
+AWS_BACKEND_REGION?=sa-east-1
 
-create-bucket:
+docker-login:
+	aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \
+		docker login --username AWS $(DOCKER_REGISTRY) --password-stdin
+
+build-image:
+	docker image build --tag $(DOCKER_REGISTRY)/api-gateway:$(IMAGE_VERSION) $$(pwd)/api-gateway
+	docker image build --tag $(DOCKER_REGISTRY)/books-microservice:$(IMAGE_VERSION) $$(pwd)/books-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/users-microservice:$(IMAGE_VERSION) $$(pwd)/users-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/recommendations-microservice:$(IMAGE_VERSION) $$(pwd)/recommendations-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/client-microservice:$(IMAGE_VERSION) $$(pwd)/client-microservice
+
+create-ecr-repo:
+	aws ecr describe-repositories --repository-names api-gateway --region $(AWS_DEFAULT_REGION) || \
+		aws ecr create-repository --repository-name api-gateway --region $(AWS_DEFAULT_REGION)
+	aws ecr describe-repositories --repository-names books-microservice --region $(AWS_DEFAULT_REGION) || \
+		aws ecr create-repository --repository-name books-microservice --region $(AWS_DEFAULT_REGION)
+	aws ecr describe-repositories --repository-names users-microservice --region $(AWS_DEFAULT_REGION) || \
+		aws ecr create-repository --repository-name users-microservice --region $(AWS_DEFAULT_REGION)
+	aws ecr describe-repositories --repository-names recommendations-microservice --region $(AWS_DEFAULT_REGION) || \
+		aws ecr create-repository --repository-name recommendations-microservice --region $(AWS_DEFAULT_REGION)
+	aws ecr describe-repositories --repository-names client-microservice --region $(AWS_DEFAULT_REGION) || \
+		aws ecr create-repository --repository-name client-microservice --region $(AWS_DEFAULT_REGION)
+
+push-image: docker-login build-image create-ecr-repo
+	docker image push $(DOCKER_REGISTRY)/api-gateway:$(IMAGE_VERSION)
+	docker image push $(DOCKER_REGISTRY)/books-microservice:$(IMAGE_VERSION)
+	docker image push $(DOCKER_REGISTRY)/users-microservice:$(IMAGE_VERSION)
+	docker image push $(DOCKER_REGISTRY)/recommendations-microservice:$(IMAGE_VERSION)
+	docker image push $(DOCKER_REGISTRY)/client-microservice:$(IMAGE_VERSION)
+
+create-backend-bucket:
 	aws s3 ls s3://$(AWS_BACKEND_BUCKET) --region $(AWS_BACKEND_REGION) || \
 		aws s3api create-bucket --bucket $(AWS_BACKEND_BUCKET) --region $(AWS_BACKEND_REGION) \
 			--create-bucket-configuration LocationConstraint=$(AWS_BACKEND_REGION) --acl private
@@ -27,7 +57,7 @@ create-workspace:
 	-@terraform workspace new production 2> /dev/null
 	terraform workspace select $(ENV)
 
-init: create-bucket
+init: create-backend-bucket
 	terraform init -upgrade=true \
 		-backend-config="bucket=$(AWS_BACKEND_BUCKET)" \
 		-backend-config="key=state.tfstate" \
@@ -61,7 +91,7 @@ plan: validate
 		-var image_version="$(IMAGE_VERSION)" \
 		-input=false
 
-deploy:
+apply:
 	terraform apply $(PLAN_FILE)
 
 destroy:

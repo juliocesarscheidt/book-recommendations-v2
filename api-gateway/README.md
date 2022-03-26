@@ -54,13 +54,13 @@ curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost
 curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user' | jq -r
 
 # get user
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fa449d5c20fed922318b89' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fc6972e270d41bcd45e9e8' | jq -r
 
 # update user
-curl --silent -X PUT --data '{"name": "julio2", "surname": "cesar", "email": "julio2@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fa449d5c20fed922318b89' | jq -r
+curl --silent -X PUT --data '{"name": "julio2", "surname": "cesar", "email": "julio2@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fc6972e270d41bcd45e9e8' | jq -r
 
 # delete user
-curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fa449d5c20fed922318b89' | jq -r
+curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fc6972e270d41bcd45e9e8' | jq -r
 
 # list user
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user?page=0&size=50' | jq -r
@@ -73,16 +73,16 @@ done
 
 
 # upsert user rate
-curl --silent -X POST --data '{"user_uuid": "17fa449d5c20fed922318b89", "book_uuid": "d3n1t3q6w3f4x3x7c3d7x3l3", "rate": 8}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rate' | jq -r
+curl --silent -X POST --data '{"user_uuid": "17fc6972e270d41bcd45e9e8", "book_uuid": "d3n1t3q6w3f4x3x7c3d7x3l3", "rate": 8}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rating' | jq -r
 
 # get user rate
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rate/17fa449d5c20fed922318b89' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rating/17fc6972e270d41bcd45e9e8' | jq -r
 
 # delete user rate
-curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rate/17fa449d5c20fed922318b89' | jq -r
+curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rating/17fc6972e270d41bcd45e9e8' | jq -r
 
 # list user rate
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rate?page=0&size=50' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/rating?page=0&size=50' | jq -r
 
 ```
 
@@ -115,6 +115,6 @@ done
 
 ```bash
 # get recommendations
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/recommendation/user/17fa449d5c20fed922318b89' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/recommendation/user/17fc6972e270d41bcd45e9e8' | jq -r
 
 ```

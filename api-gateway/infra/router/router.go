@@ -45,11 +45,11 @@ func InjectRoutes(router *mux.Router, grpcClient adapter.GrpcClient, amqpClient 
 	subRouterUser.Path("/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.UpdateUser(grpcClient)).Methods(http.MethodPut)
 	subRouterUser.Path("/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.DeleteUser(grpcClient)).Methods(http.MethodDelete)
 	subRouterUser.Path("").Queries("page", "{page}", "size", "{size}").HandlerFunc(controller.ListUser(grpcClient)).Methods(http.MethodGet)
-	// user rates routes (/v1/user/rate)
-	subRouterUser.Path("/rate").HandlerFunc(controller.UpsertUserRate(grpcClient, amqpClient)).Methods(http.MethodPost)
-	subRouterUser.Path("/rate/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.GetUserRate(grpcClient)).Methods(http.MethodGet)
-	subRouterUser.Path("/rate/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.DeleteUserRate(grpcClient)).Methods(http.MethodDelete)
-	subRouterUser.Path("/rate").Queries("page", "{page}", "size", "{size}").HandlerFunc(controller.ListUserRate(grpcClient)).Methods(http.MethodGet)
+	// user rates routes (/v1/user/rating)
+	subRouterUser.Path("/rating").HandlerFunc(controller.UpsertUserRate(grpcClient, amqpClient)).Methods(http.MethodPost)
+	subRouterUser.Path("/rating/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.GetUserRate(grpcClient)).Methods(http.MethodGet)
+	subRouterUser.Path("/rating/{user_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.DeleteUserRate(grpcClient)).Methods(http.MethodDelete)
+	subRouterUser.Path("/rating").Queries("page", "{page}", "size", "{size}").HandlerFunc(controller.ListUserRate(grpcClient)).Methods(http.MethodGet)
 
 	// book sub router
 	subRouterBook := router.PathPrefix("/v1/book").Subrouter()

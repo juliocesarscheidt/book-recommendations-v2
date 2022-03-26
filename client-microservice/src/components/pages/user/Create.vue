@@ -77,6 +77,7 @@ export default {
 
       try {
         const uuid = await createUser(this.name, this.surname, this.email, this.removeNonNumericDigits(this.phone), this.password);
+        this.notifySuccess(this.$t('messages.success.created_with_success'));
         this.$router.push({ name: 'UserView', params: { uuid, isEdit: false } });
 
       } catch (err) {

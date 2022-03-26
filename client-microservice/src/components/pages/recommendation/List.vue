@@ -98,8 +98,8 @@ export default {
   },
   beforeMount() {
   },
-  async mounted() {
-    await this.callRefreshData();
+  mounted() {
+    this.callRefreshData();
   },
   methods: {
     callGetBook(uuid) {

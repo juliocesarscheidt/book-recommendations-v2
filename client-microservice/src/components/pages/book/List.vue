@@ -108,8 +108,8 @@ export default {
   },
   beforeMount() {
   },
-  async mounted() {
-    await this.callRefreshData();
+  mounted() {
+    this.callRefreshData();
   },
   methods: {
     callCreateBook() {
@@ -124,7 +124,9 @@ export default {
     async callDeleteBook(uuid) {
       try {
         await deleteBook(uuid);
+        this.notifySuccess(this.$t('messages.success.deleted_with_success'));
         this.callRefreshData();
+
       } catch (err) {
         console.log(err);
         this.notifyError(err.response.data.message);
@@ -133,6 +135,21 @@ export default {
     async callRefreshData() {
       await this.callListBook();
       await this.callGetRate();
+    },
+    async callListBook() {
+      this.loading = true;
+      try {
+        const response = await listBook();
+        this.booksData = response.map((book) => ({ ...book, rate: 0.00 }));
+
+      } catch (err) {
+        console.log(err);
+        this.notifyError(err.response.data.message);
+        this.$router.push({ name: 'Home' });
+
+      } finally {
+        this.loading = false;
+      };
     },
     async callGetRate() {
       if (this.user) {
@@ -153,20 +170,6 @@ export default {
           this.$router.push({ name: 'Home' });
         }
       }
-    },
-    async callListBook() {
-      this.loading = true;
-      try {
-        const response = await listBook();
-        this.booksData = response.map((book) => ({ ...book, rate: 0.00 }));
-      } catch (err) {
-        console.log(err);
-        this.notifyError(err.response.data.message);
-        this.$router.push({ name: 'Home' });
-
-      } finally {
-        this.loading = false;
-      };
     },
   },
   beforeDestroy() {

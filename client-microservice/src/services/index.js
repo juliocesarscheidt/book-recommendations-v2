@@ -25,7 +25,7 @@ import {
   getRate,
   deleteRate,
   listRate,
-} from './rate';
+} from './rating';
 
 import {
   getRecommendations,

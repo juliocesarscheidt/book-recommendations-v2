@@ -37,6 +37,8 @@ Also it will use services like DocumentDB, Amazon MQ, ElasticCache for Redis and
 ## Cloud architecture
 ![Architecture](./architecture/book-recommendations-infra.drawio.png)
 
+Instructions for deploy here: [Instructions](./infrastructure/README.md)
+
 ## Unit Tests
 
 - [x] users-microservice
