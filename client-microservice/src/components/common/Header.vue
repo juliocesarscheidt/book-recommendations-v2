@@ -10,7 +10,7 @@
 
       <b-collapse id="nav-collapse" is-nav right>
         <b-navbar-nav>
-          <b-nav-item v-bind:to="{name: 'Home'}" class="ml-4">{{ $t('header.home') }}</b-nav-item>
+          <b-nav-item v-bind:to="{name: 'Home'}">{{ $t('header.home') }}</b-nav-item>
 
           <b-nav-item-dropdown v-bind:text="$t('header.users')">
             <b-dropdown-item v-bind:to="{name: 'UserList'}">{{ $t('header.list_users') }}</b-dropdown-item>

@@ -10,10 +10,6 @@ output "redis_conn_string" {
   value = local.redis_conn_string
 }
 
-# output "alb_record_fqdn" {
-#   value = aws_route53_record.alb_record.fqdn
-# }
-
-output "postgres" {
-  value = aws_db_instance.postgres
+output "postgres_conn_string" {
+  value = local.postgres_conn_string
 }

@@ -31,5 +31,9 @@ resource "aws_db_instance" "postgres" {
 
 resource "aws_db_subnet_group" "postgres-subnet-group" {
   name       = "postgres-subnet-group-${var.postgres_identifier}"
-  subnet_ids = aws_subnet.public_subnet.*.id
+  subnet_ids = aws_subnet.private_subnet.*.id
+
+  depends_on = [
+    aws_subnet.private_subnet,
+  ]
 }

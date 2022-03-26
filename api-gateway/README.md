@@ -35,12 +35,12 @@ curl --silent -X GET --url 'http://localhost:3080/v1/healthcheck' | jq -r
 
 ```bash
 # sign up
-curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "4199887766", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signup' | jq -r
+curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signup' | jq -r
 
 # sign in
-curl --silent -X POST --data '{"email": "julio@mail.com", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signin' | jq -r
+curl --silent -X POST --data '{"email": "admin@email.com", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signin' | jq -r
 
-export TOKEN=$(curl --silent -X POST --data '{"email": "julio@mail.com", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signin' | jq -r '.data')
+export TOKEN=$(curl --silent -X POST --data '{"email": "admin@email.com", "password": "PASSWORD"}' --url 'http://localhost:3080/v1/auth/signin' | jq -r '.data')
 echo "${TOKEN}"
 ```
 
@@ -51,7 +51,7 @@ echo "${TOKEN}"
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/me' | jq -r
 
 # create user
-curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "julio@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user' | jq -r
+curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user' | jq -r
 
 # get user
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/v1/user/17fa449d5c20fed922318b89' | jq -r

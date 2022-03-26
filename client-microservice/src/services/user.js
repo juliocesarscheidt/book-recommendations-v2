@@ -27,8 +27,8 @@ const getUser = async (uuid) => http
   return response.data.data
 });
 
-const updateUser = async (uuid, { name, surname, email, phone }) => http
-.put(`/user/${uuid}`, { name, surname, email, phone })
+const updateUser = async (uuid, { name, surname, email, phone, password }) => http
+.put(`/user/${uuid}`, { name, surname, email, phone, password })
 .then((response) => {
   if (!response.data) {
     return null

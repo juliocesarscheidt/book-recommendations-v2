@@ -1,36 +1,32 @@
 <template>
-  <section class="flex flex-column flex-align-center p-5">
+  <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <form style="width: 100%; min-width: 200px; margin-bottom: 0px;">
+      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;">
         <div class="form-group">
           <label for="input-name">{{ $t('user.name') }}</label>
-          <input type="text" class="form-control" id="input-name" placeholder="Name" v-model.trim="name">
+          <input type="text" class="form-control" v-model.trim="name">
         </div>
-
         <div class="form-group">
           <label for="input-surname">{{ $t('user.surname') }}</label>
-          <input type="text" class="form-control" id="input-surname" placeholder="Surname" v-model.trim="surname">
+          <input type="text" class="form-control" v-model.trim="surname">
         </div>
-
         <div class="form-group">
           <label for="input-email">{{ $t('user.email') }}</label>
-          <input type="email" class="form-control" id="input-email" placeholder="Email" v-model.trim="email">
+          <input type="email" class="form-control" v-model.trim="email">
         </div>
-
         <div class="form-group">
           <label for="input-phone">{{ $t('user.phone') }}</label>
-          <input type="phone" class="form-control" id="input-phone" placeholder="Phone" v-model.trim="phone">
+          <input type="phone" class="form-control" v-model.trim="phone" v-format-phone="phone">
         </div>
-
         <div class="form-group">
           <label for="input-password">{{ $t('user.password') }}</label>
-          <input type="password" class="form-control" id="input-password" placeholder="Password" v-model.trim="password">
+          <input type="password" class="form-control" v-model.trim="password">
         </div>
 
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createUserFn">
           {{ $t('buttons.save') }}
         </button>
-      </form>
+      </div>
     </article>
   </section>
 </template>
@@ -52,11 +48,11 @@ export default {
   },
   data() {
     return {
-      name: 'julio',
-      surname: 'cesar',
-      email: 'julio@mail.com',
-      phone: '41995540808',
-      password: 'PASSWORD',
+      name: '',
+      surname: '',
+      email: '',
+      phone: '',
+      password: '',
     }
   },
   computed: {
@@ -70,6 +66,9 @@ export default {
   mounted() {
   },
   methods: {
+    removeNonNumericDigits(val) {
+      return val.replace(/\D/g, '');
+    },
     async createUserFn() {
       if (!this.name || !this.surname || !this.email || !this.phone || !this.password) {
         alert('Invalid Entries');
@@ -77,7 +76,7 @@ export default {
       }
 
       try {
-        const uuid = await createUser(this.name, this.surname, this.email, this.phone, this.password);
+        const uuid = await createUser(this.name, this.surname, this.email, this.removeNonNumericDigits(this.phone), this.password);
         this.$router.push({ name: 'UserView', params: { uuid, isEdit: false } });
 
       } catch (err) {

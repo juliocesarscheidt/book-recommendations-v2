@@ -3,47 +3,33 @@
 ## Application architecture
 ![Architecture](./architecture/book-recommendations.drawio.png)
 
+## Infrastructure architecture
+![Architecture](./architecture/book-recommendations-infra.drawio.png)
+
 ## Up and Running
 
 ### Locally
 
 ```bash
-
-docker-compose config
-
 # infra
-docker-compose up -d postgres mongo redis
-docker-compose logs -f --tail 100 postgres mongo redis
-
-docker-compose up -d --build rabbitmq
-docker-compose logs -f --tail 100 rabbitmq
-
+docker-compose up -d postgres mongo redis rabbitmq
+# infra logs
+docker-compose logs -f --tail 100 postgres mongo redis rabbitmq
 
 # services
-docker-compose up -d --build api-gateway
-docker-compose logs -f --tail 100 api-gateway
+docker-compose up -d --build \
+  api-gateway \
+  users-microservice \
+  books-microservice \
+  recommendations-microservice \
+  client-microservice
 
-docker-compose up -d --build users-microservice
-docker-compose logs -f --tail 100 users-microservice
-
-docker-compose up -d --build books-microservice
-docker-compose logs -f --tail 100 books-microservice
-
-docker-compose up -d --build recommendations-microservice
-docker-compose logs -f --tail 100 recommendations-microservice
-
-
-# front-end
-docker-compose up -d --build client-microservice
-docker-compose logs -f --tail 100 client-microservice
-
-
+# services logs
 docker-compose logs -f --tail 100 \
   api-gateway users-microservice \
   books-microservice \
   recommendations-microservice \
   client-microservice
-
 ```
 
 ## Unit Tests

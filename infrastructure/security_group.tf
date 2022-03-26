@@ -8,11 +8,10 @@ resource "aws_security_group" "redis-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port = 6379
-    to_port   = 6379
-    protocol  = "tcp"
-    # cidr_blocks = [aws_vpc.vpc_0.cidr_block]
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 6379
+    to_port     = 6379
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.vpc_0.cidr_block]
   }
   depends_on = [aws_vpc.vpc_0]
 }
@@ -27,11 +26,10 @@ resource "aws_security_group" "mongo-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port = 27017
-    to_port   = 27017
-    protocol  = "tcp"
-    # cidr_blocks = [aws_vpc.vpc_0.cidr_block]
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.vpc_0.cidr_block]
   }
   depends_on = [aws_vpc.vpc_0]
 }
@@ -46,11 +44,10 @@ resource "aws_security_group" "postgres-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    from_port = 5432
-    to_port   = 5432
-    protocol  = "tcp"
-    # cidr_blocks = [aws_vpc.vpc_0.cidr_block]
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [aws_vpc.vpc_0.cidr_block]
   }
   depends_on = [aws_vpc.vpc_0]
 }
@@ -68,13 +65,13 @@ resource "aws_security_group" "postgres-sg" {
 #     from_port   = 5671
 #     to_port     = 5671
 #     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
+#     cidr_blocks = [aws_vpc.vpc_0.cidr_block]
 #   }
 #   ingress {
 #     from_port   = 443
 #     to_port     = 443
 #     protocol    = "tcp"
-#     cidr_blocks = ["0.0.0.0/0"]
+#     cidr_blocks = [aws_vpc.vpc_0.cidr_block]
 #   }
 #   lifecycle {
 #     create_before_destroy = true

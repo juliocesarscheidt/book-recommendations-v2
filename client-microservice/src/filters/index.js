@@ -9,7 +9,7 @@ const formatPhone = (phone) => {
   }
 
   if (returnPhone.length > 3) {
-    returnPhone = `${returnPhone.substring(0, 3)}) ${returnPhone.substring(3)}`;
+    returnPhone = `${returnPhone.substring(0, 3)})${returnPhone.substring(3)}`;
   }
 
   if (returnPhone.length > 8) {

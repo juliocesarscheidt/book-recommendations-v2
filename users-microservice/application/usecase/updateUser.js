@@ -16,6 +16,7 @@ const execute = async ({ _id }, payload, userRepository, redisClient) => {
     return new UpdateUserDTO();
 
   } catch (err) {
+    console.error(err);
     if (err.code && err.code === 11000) { // MongoServerError: E11000 duplicate key error collection
       throw new DuplicateEmailException('Duplicate Email');
     }

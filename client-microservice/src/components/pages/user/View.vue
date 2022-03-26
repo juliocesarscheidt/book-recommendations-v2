@@ -1,36 +1,38 @@
 <template>
-  <section class="flex flex-column flex-align-center p-5">
+  <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <form style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="userData">
+      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="userData">
         <div class="form-group">
           <label for="input-name">{{ $t('user.name') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.name"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="userData.name">
         </div>
         <div class="form-group">
           <label for="input-surname">{{ $t('user.surname') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.surname"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="userData.surname">
         </div>
         <div class="form-group">
           <label for="input-email">{{ $t('user.email') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.email"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="userData.email">
         </div>
         <div class="form-group">
           <label for="input-phone">{{ $t('user.phone') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="userData.phone"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="userData.phone" v-format-phone="userData.phone">
+        </div>
+        <div class="form-group">
+          <label for="input-password">{{ $t('user.password') }}</label>
+          <input type="password" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="password">
         </div>
 
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditUser">
           {{ $t('buttons.edit') }}
         </button>
-
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateUser">
           {{ $t('buttons.save') }}
         </button>
-
         <button type="button" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteUser">
           {{ $t('buttons.delete') }}
         </button>
-      </form>
+      </div>
     </article>
   </section>
 </template>
@@ -63,6 +65,7 @@ export default {
     return {
       loading: false,
       userData: {},
+      password:  '********',
     }
   },
   computed: {
@@ -90,6 +93,9 @@ export default {
     await this.callGetUser();
   },
   methods: {
+    removeNonNumericDigits(val) {
+      return val.replace(/\D/g, '');
+    },
     replaceRoute(editMode) {
       this.$router.replace({ params: { uuid: this.uuid, isEdit: editMode} });
     },
@@ -126,12 +132,16 @@ export default {
 
       this.loading = true;
       try {
-        await updateUser(this.uuid, {
+        const payload = {
           name: this.userData.name,
           surname: this.userData.surname,
           email: this.userData.email,
-          phone: this.userData.phone,
-        });
+          phone: this.removeNonNumericDigits(this.userData.phone),
+        }
+        if (this.password && this.password !== '********') {
+          payload.password = this.password;
+        }
+        await updateUser(this.uuid, payload);
 
       } catch (err) {
         console.log(err);

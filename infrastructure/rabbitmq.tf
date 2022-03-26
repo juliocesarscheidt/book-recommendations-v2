@@ -4,13 +4,17 @@ resource "aws_mq_broker" "rabbitmq" {
   engine_version      = var.rabbitmq_engine_version
   deployment_mode     = var.rabbitmq_deployment_mode
   publicly_accessible = true
-  host_instance_type  = var.rabbitmq_instance_type
-  subnet_ids          = var.rabbitmq_deployment_mode == "SINGLE_INSTANCE" ? [aws_subnet.public_subnet.0.id] : aws_subnet.public_subnet.*.id
+  # security_groups     = [aws_security_group.rabbitmq-sg.id]
+  subnet_ids         = var.rabbitmq_deployment_mode == "SINGLE_INSTANCE" ? [aws_subnet.private_subnet.0.id] : aws_subnet.private_subnet.*.id
+  host_instance_type = var.rabbitmq_instance_type
   user {
     username = var.rabbitmq_username
     password = var.rabbitmq_password
   }
-  depends_on = [aws_subnet.public_subnet]
+  depends_on = [
+    # aws_security_group.rabbitmq-sg,
+    aws_subnet.private_subnet,
+  ]
 }
 
 provider "rabbitmq" {
@@ -34,7 +38,6 @@ resource "rabbitmq_permissions" "rabbitmq" {
   }
   depends_on = [rabbitmq_vhost.vhost]
 }
-
 
 resource "rabbitmq_queue" "rabbitmq-books-queue" {
   name  = "books_queue"
@@ -69,7 +72,6 @@ resource "rabbitmq_binding" "rabbitmq-books-binding" {
     rabbitmq_queue.rabbitmq-books-queue,
   ]
 }
-
 
 variable "recommendations-queue-arguments" {
   default = <<EOF

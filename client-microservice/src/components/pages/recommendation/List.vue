@@ -1,12 +1,11 @@
 <template>
-  <section class="flex flex-column flex-align-center p-5">
-    <article class="flex flex-column flex-justify-center flex-align-center">
+  <section class="flex flex-column flex-align-center pt-5 pb-5">
+    <article class="flex flex-column flex-justify-center flex-align-center" style="width: 100%;">
       <b-table
-        style="width: 100%; min-width: 200px; margin-bottom: 0px;"
+        class="lg-2 md-3 sm-4"
         striped
         hover
         outlined
-        fixed
         responsive
         show-empty
         :sortable="false"
@@ -20,7 +19,6 @@
             <strong>{{ $t('buttons.loading') }}...</strong>
           </div>
         </template>
-
         <template #empty="">
           <p style="text-align: center;"><b>{{ $t('messages.info.data_not_found') }}</b></p>
         </template>
@@ -28,15 +26,12 @@
         <template #cell(title)="data">
           <i>{{ data.value | capitalize }}</i>
         </template>
-
         <template #cell(author)="data">
           <i>{{ data.value | capitalize }}</i>
         </template>
-
         <template #cell(genre)="data">
           <i>{{ data.value | capitalize }}</i>
         </template>
-
         <template #cell(image)="data">
           <a v-bind:href="data.value" target="_blank" title="See Image">{{ data.value | trimLetters(25) }}</a>
         </template>
@@ -44,31 +39,28 @@
         <template #head(title)="">
           <div class="text-nowrap">{{ $t('book.title') }}</div>
         </template>
-
         <template #head(author)="">
           <div class="text-nowrap">{{ $t('book.author') }}</div>
         </template>
-
         <template #head(genre)="">
           <div class="text-nowrap">{{ $t('book.genre') }}</div>
         </template>
-
         <template #head(image)="">
           <div class="text-nowrap">{{ $t('book.image') }}</div>
         </template>
-
         <template #head(rate)="">
           <div class="text-nowrap">{{ $t('book.rate') }}</div>
         </template>
-
         <template #head(uuid)="">
           <div class="text-nowrap">{{ $t('buttons.actions') }}</div>
         </template>
 
         <template #cell(uuid)="data">
-          <b-button type="button" variant="primary" class="mr-2" v-bind:title="$t('buttons.view')" @click="callGetBook(data.value)">
-            <i class="fas fa-eye" aria-hidden="true"></i>
-          </b-button>
+          <div style="white-space: nowrap">
+            <b-button type="button" variant="outline-primary" class="mr-2" v-bind:title="$t('buttons.view')" @click="callGetBook(data.value)">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+            </b-button>
+          </div>
         </template>
       </b-table>
     </article>

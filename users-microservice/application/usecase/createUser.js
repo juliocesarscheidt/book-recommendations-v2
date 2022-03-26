@@ -14,6 +14,7 @@ const execute = async ({ name, surname, email, phone, password }, userRepository
     return new CreateUserDTO(uuid);
 
   } catch (err) {
+    console.error(err);
     if (err.code && err.code === 11000) { // MongoServerError: E11000 duplicate key error collection
       throw new DuplicateEmailException('Duplicate Email');
     }

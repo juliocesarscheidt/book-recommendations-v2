@@ -1,24 +1,23 @@
 <template>
-  <section class="flex flex-column flex-align-center p-5">
+  <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <form style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="bookData">
+      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="bookData">
         <div class="form-group">
           <label for="input-title">{{ $t('book.title') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.title"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.title"></input>
         </div>
         <div class="form-group">
           <label for="input-author">{{ $t('book.author') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.author"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.author"></input>
         </div>
         <div class="form-group">
           <label for="input-genre">{{ $t('book.genre') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.genre"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.genre"></input>
         </div>
         <div class="form-group">
           <label for="input-image">{{ $t('book.image') }}</label>
-          <b-form-input type="text" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.image"></b-form-input>
+          <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.image"></input>
         </div>
-
         <div class="form-group">
           <label for="input-rate">{{ $t('book.rate') }} ({{ rate }})</label>
           <star-rating v-model="rate"
@@ -35,15 +34,13 @@
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditBook">
           {{ $t('buttons.edit') }}
         </button>
-
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateBook">
           {{ $t('buttons.save') }}
         </button>
-
         <button type="button" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteBook">
           {{ $t('buttons.delete') }}
         </button>
-      </form>
+      </div>
     </article>
   </section>
 </template>

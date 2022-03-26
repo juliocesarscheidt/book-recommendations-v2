@@ -49,5 +49,9 @@ resource "aws_docdb_cluster_parameter_group" "mongo_cluster_parameter_group" {
 
 resource "aws_docdb_subnet_group" "mongo_cluster_subnet_group" {
   name       = "mongo-cluster-subnet-group-${var.mongo_cluster_identifier}"
-  subnet_ids = aws_subnet.public_subnet.*.id
+  subnet_ids = aws_subnet.private_subnet.*.id
+
+  depends_on = [
+    aws_subnet.private_subnet,
+  ]
 }

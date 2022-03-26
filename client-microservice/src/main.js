@@ -15,7 +15,10 @@ import './plugins/i18n';
 import './mixins/notification';
 
 // filters
-import { formatPhone, capitalize, trimLetters, currency } from './filters/filters';
+import { formatPhone, capitalize, trimLetters, currency } from './filters/';
+
+// directives
+import { formatPhoneDirective } from './directives/';
 
 // utils
 import { getLocalStorageLanguage } from './utils/userLanguage';
@@ -25,6 +28,8 @@ Vue.filter('formatPhone', formatPhone);
 Vue.filter('capitalize', capitalize);
 Vue.filter('trimLetters', trimLetters);
 Vue.filter('currency', currency);
+
+Vue.directive('formatPhone', formatPhoneDirective);
 
 const userlanguage = getLocalStorageLanguage();
 const i18n = new VueI18n({ locale: userlanguage, messages: locales });

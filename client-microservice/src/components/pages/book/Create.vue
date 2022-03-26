@@ -1,31 +1,28 @@
 <template>
-  <section class="flex flex-column flex-align-center p-5">
+  <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <form style="width: 100%; min-width: 200px; margin-bottom: 0px;">
+      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;">
         <div class="form-group">
           <label for="input-title">{{ $t('book.title') }}</label>
-          <input type="text" class="form-control" id="input-title" placeholder="Name" v-model.trim="title">
+          <input type="text" class="form-control" v-model.trim="title">
         </div>
-
         <div class="form-group">
           <label for="input-author">{{ $t('book.author') }}</label>
-          <input type="text" class="form-control" id="input-author" placeholder="Author" v-model.trim="author">
+          <input type="text" class="form-control" v-model.trim="author">
         </div>
-
         <div class="form-group">
           <label for="input-genre">{{ $t('book.genre') }}</label>
-          <input type="text" class="form-control" id="input-genre" placeholder="Genre" v-model.trim="genre">
+          <input type="text" class="form-control" v-model.trim="genre">
         </div>
-
         <div class="form-group">
           <label for="input-image">{{ $t('book.image') }}</label>
-          <input type="text" class="form-control" id="input-image" placeholder="Image" v-model.trim="image">
+          <input type="text" class="form-control" v-model.trim="image">
         </div>
 
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="createBookFn">
           {{ $t('buttons.save') }}
         </button>
-      </form>
+      </div>
     </article>
   </section>
 </template>
@@ -47,10 +44,10 @@ export default {
   },
   data() {
     return {
-      title: 'Clean Architecture',
-      author: 'Robert Martin',
-      genre: 'Software',
-      image: 'https://images-na.ssl-images-amazon.com/images/I/41-sN-mzwKL._SX258_BO1,204,203,200_QL70_ML2_.jpg',
+      title: '',
+      author: '',
+      genre: '',
+      image: '',
     }
   },
   computed: {

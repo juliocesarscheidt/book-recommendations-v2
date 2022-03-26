@@ -1,19 +1,19 @@
 <template>
-  <section class="flex flex-column flex-align-center p-5">
+  <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <form style="width: 100%; min-width: 200px; margin-bottom: 0px;">
+      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;">
         <div class="form-group">
           <label for="input-email">{{ $t('user.email') }}</label>
-          <input type="email" class="form-control" id="input-email" placeholder="Email" v-model.trim="email">
+          <input type="email" class="form-control" v-model.trim="email">
         </div>
         <div class="form-group">
           <label for="input-password">{{ $t('user.password') }}</label>
-          <input type="password" class="form-control" id="input-password" placeholder="Password" v-model.trim="password">
+          <input type="password" class="form-control" v-model.trim="password">
         </div>
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="userSignIn">
           {{ $t('buttons.signin') }}
         </button>
-      </form>
+      </div>
     </article>
 
     <article class="flex flex-column flex-justify-center flex-align-center">
@@ -46,8 +46,8 @@ export default {
   },
   data() {
     return {
-      email: 'julio@mail.com',
-      password: 'PASSWORD',
+      email: '',
+      password: '',
     }
   },
   computed: {

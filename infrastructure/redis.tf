@@ -30,5 +30,9 @@ resource "aws_elasticache_cluster" "redis_cluster" {
 
 resource "aws_elasticache_subnet_group" "redis-subnet-group" {
   name       = "redis-subnet-group-${var.redis_cluster_name}"
-  subnet_ids = aws_subnet.public_subnet.*.id
+  subnet_ids = aws_subnet.private_subnet.*.id
+
+  depends_on = [
+    aws_subnet.private_subnet,
+  ]
 }
