@@ -1,6 +1,7 @@
 db.createCollection('user');
 db.createCollection('user_rate');
 
+db.user.createIndex( { "email": 1 }, { unique: true } );
 db.user.insertMany([
   {
     "name" : "julio",
@@ -12,5 +13,4 @@ db.user.insertMany([
     "updated_at" : new Date(),
   }
 ]);
-
-db.user.createIndex({ email: -1 })
+// db.user.getIndexes({})
