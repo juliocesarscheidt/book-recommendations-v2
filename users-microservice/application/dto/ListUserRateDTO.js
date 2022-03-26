@@ -2,6 +2,7 @@ class ListUserRateResponse {
   userRates;
 
   constructor(userRates) {
+    this.userRates = [];
     if (!userRates) return;
 
     const userRatesMapped = userRates.map(user => {

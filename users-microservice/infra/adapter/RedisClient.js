@@ -15,7 +15,7 @@ class RedisClient {
 
   async get(key) {
     const response = await this.client.get(key);
-    return response;
+    return response || null;
   }
 
   async set(key, value, expiryTime) {

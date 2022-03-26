@@ -5,7 +5,7 @@
 yarn run lint
 
 yarn run test
-yarn run test:coverage
+yarn run coverage
 
 export MONGO_CONN_STRING=mongodb://root:admin@172.16.0.3:28017
 export MONGO_DATABASE=user_db

@@ -2,6 +2,7 @@ class GetUserRateDTO {
   userRate;
 
   constructor(userRate) {
+    this.userRate = null;
     if (!userRate) return;
 
     const u = JSON.parse(JSON.stringify(userRate));

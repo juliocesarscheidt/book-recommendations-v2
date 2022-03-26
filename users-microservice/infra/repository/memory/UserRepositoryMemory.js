@@ -6,7 +6,12 @@ class UserRepositoryMemory {
   }
 
   async find(params) {
-    const response = this.users.find(u => u?._id?.toString() === params?._id?.toString());
+    let response = null;
+    if (params?._id) {
+      response = this.users.find(u => u?._id?.toString() === params?._id?.toString());
+    } else if (params?.email) {
+      response = this.users.find(u => u?.email?.toString() === params?.email?.toString());
+    }
     return response || null;
   }
 

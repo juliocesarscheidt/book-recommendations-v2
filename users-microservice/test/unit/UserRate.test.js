@@ -1,10 +1,14 @@
 const UserRateRepository = require('../../infra/repository/memory/UserRateRepositoryMemory');
+const RedisClient = require('../../infra/adapter/RedisClientMock');
+
 const { upsertUserRate, getUserRate, deleteUserRate, listUserRate } = require('../../application/usecase/index');
 
 let userRateRepository;
+let redisClient;
 
 beforeAll(() => {
   userRateRepository = new UserRateRepository();
+  redisClient = new RedisClient();
 });
 
 afterAll(() => {
@@ -43,8 +47,8 @@ test('It should throw not found when creating an invalid user rate', async funct
 
 test('It should create a user rate and retrieve them by its _id', async function() {
   const _id = await createFakeUserRate(userRateRepository);
-  const responseGetUser = await getUserRate({ _id }, userRateRepository);
-  const { userRate } = responseGetUser;
+  const responseGetUserRate = await getUserRate({ _id }, userRateRepository);
+  const { userRate } = responseGetUserRate;
 
   expect(userRate).not.toBeNull();
   expect(userRate.user_uuid).toEqual(_id);
@@ -56,27 +60,33 @@ test('It should create a user rate and retrieve them by its _id', async function
 
 test('It should create a user rate and they should have created_at and updated_at fields', async function() {
   const _id = await createFakeUserRate(userRateRepository);
-  const responseGetUser = await getUserRate({ _id }, userRateRepository);
-  const { userRate } = responseGetUser;
+  const responseGetUserRate = await getUserRate({ _id }, userRateRepository);
+  const { userRate } = responseGetUserRate;
 
   expect(userRate).not.toBeNull();
   expect(userRate.created_at).not.toBeNull();
   expect(userRate.updated_at).not.toBeNull();
 });
 
-test('It should throw not found when retrieving an inexisting user rate', async function() {
-  await expect(getUserRate({ _id: null }, userRateRepository)).rejects.toThrow('Not Found');
+test('It should return null when retrieving an inexisting user rate', async function() {
+  const responseGetUserRate = await getUserRate({ _id: null }, userRateRepository);
+  const { userRate } = responseGetUserRate;
+
+  expect(userRate).toBeNull();
 });
 
 test('It should update the user rate', async function() {
   const user_uuid = await createFakeUserRate(userRateRepository);
-
   let responseGetUserRate = await getUserRate({ _id: user_uuid }, userRateRepository);
   const { userRate: userRateInitial } = responseGetUserRate;
 
   expect(userRateInitial).not.toBeNull();
 
-  const userRateCopy = JSON.parse(JSON.stringify({ _id: userRateInitial.user_uuid, book_uuid: userRateInitial.rates[0].book_uuid, rate: 5 }));
+  const userRateCopy = JSON.parse(JSON.stringify({
+    _id: userRateInitial.user_uuid,
+    book_uuid: userRateInitial.rates[0].book_uuid,
+    rate: 5,
+  }));
   await upsertUserRate(userRateCopy, userRateRepository);
 
   responseGetUserRate = await getUserRate({ _id: user_uuid }, userRateRepository);
@@ -86,21 +96,19 @@ test('It should update the user rate', async function() {
 
   // fields that should be different
   expect(userRateFinal.rates).not.toBe(userRateInitial.rates);
-  expect(userRateFinal.updated_at).not.toBe(userRateInitial.updated_at);
    // field that should remain the same
   expect(userRateFinal.user_uuid).toEqual(userRateInitial.user_uuid);
   expect(userRateFinal.created_at).toEqual(userRateInitial.created_at);
 });
 
-test('It should delete the user rate and the throw not found when we retrieve them', async function() {
+test('It should delete the user rate and return null when retrieving them', async function() {
   const _id = await createFakeUserRate(userRateRepository);
   await deleteUserRate({ _id }, userRateRepository);
 
-  await expect(getUserRate({ _id }, userRateRepository)).rejects.toThrow('Not Found');
-});
+  const responseGetUserRate = await getUserRate({ _id }, userRateRepository);
+  const { userRate } = responseGetUserRate;
 
-test('It should throw not found when trying to delete an inexisting user rate', async function() {
-  await expect(deleteUserRate({ _id: null }, userRateRepository)).rejects.toThrow('Not Found');
+  await expect(userRate).toBeNull();
 });
 
 test('It should list all user rates and have 0 user rates', async function() {
