@@ -6,6 +6,7 @@ import requests
 
 SVC_NAME = os.environ.get('SVC_NAME')
 ENV_NAME = os.environ.get('ENV_NAME')
+NAMESPACE = os.environ.get('NAMESPACE')
 SVC_PORT = os.environ.get('SVC_PORT', 4080)
 
 API_TOKEN = os.environ.get('API_TOKEN', '')
@@ -21,12 +22,11 @@ def make_request(url, method='GET', data=None):
   response = requests.request(method=method, json=data, url=url, headers=headers, auth=auth)
   return response.json()
 
-def create_service(svc_name, env_name, svc_port):
-  svc_full_name = f'{svc_name}-{env_name}'
-
+def create_service(svc_name, env_name, namespace, svc_port):
+  svc_full_name = f'{svc_name}-{env_name}.{namespace}'
   payload = {
     'name': svc_full_name,
-    'host': f'{svc_name}.patio-dss-{env_name}.svc.cluster.local',
+    'host': f'{svc_name}.svc.cluster.local',
     'protocol': 'http',
     'port': svc_port,
     'retries': 5,
@@ -41,13 +41,9 @@ def create_service(svc_name, env_name, svc_port):
   make_request(url, 'POST', payload)
 
   services = make_request(url, 'GET')
-  # with open('services.json') as f:
-  #   services = json.loads(f.read())
-
   svc_id = None
 
   for service in services['data']:
-    # print('service', service)
     if service['name'] == svc_full_name:
       svc_id = service['id']
 
@@ -60,7 +56,7 @@ def create_route(svc_name, env_name, svc_id, route_name, route_path, methods):
 
   payload = {
     'name': svc_route_full_name,
-    'hosts': [f'api-{env_name}.oci.ti.rumolog.com'],
+    'hosts': [f'api-{env_name}.blackdevs.com.br'],
     'protocols': ['http', 'https'],
     'methods': methods,
     'paths': [route_path],
@@ -79,13 +75,9 @@ def create_route(svc_name, env_name, svc_id, route_name, route_path, methods):
 
   url = 'http://kong-proxy/routes'
   routes = make_request(url, 'GET')
-  # with open('routes.json') as f:
-  #   routes = json.loads(f.read())
-
   route_id = None
 
   for route in routes['data']:
-    # print('route', route)
     if route['name'] == svc_route_full_name:
       route_id = route['id']
 
@@ -107,7 +99,6 @@ def create_route(svc_name, env_name, svc_id, route_name, route_path, methods):
       'consumer_match_claim': 'azp'
     }
   }
-  # print('jwt_payload', jwt_payload)
 
   url = f'http://kong-proxy/plugins'
   make_request(url, 'POST', jwt_payload)
@@ -125,24 +116,18 @@ def create_route(svc_name, env_name, svc_id, route_name, route_path, methods):
       'preflight_continue': False
     }
   }
-  # print('cors_payload', cors_payload)
 
   url = f'http://kong-proxy/plugins'
   make_request(url, 'POST', cors_payload)
 
 with open(f'etc/openapi/{SVC_NAME}-{ENV_NAME}.yaml') as file:
   swagger = yaml.load(file, Loader=yaml.FullLoader)
-  # print(swagger['paths'])
-
   svc_name = swagger['info']['title']
-  # print(svc_name)
-
-  routes_list = []
-
+  # print('svc_name', svc_name)
   routes = list(swagger['paths'].keys())
-  # print(routes)
-
-  svc_id = create_service(SVC_NAME, ENV_NAME, SVC_PORT)
+  # print('routes', routes)
+  routes_list = []
+  svc_id = create_service(SVC_NAME, ENV_NAME, NAMESPACE, SVC_PORT)
 
   for route in routes:
     # print(swagger['paths'][route])
@@ -156,7 +141,6 @@ with open(f'etc/openapi/{SVC_NAME}-{ENV_NAME}.yaml') as file:
         'methods': methods,
         'path': route,
       })
-
       create_route(SVC_NAME, ENV_NAME, svc_id, route_name, route, methods)
 
   print(routes_list)

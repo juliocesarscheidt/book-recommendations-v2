@@ -1,117 +1,17 @@
-resource "aws_mq_broker" "rabbitmq" {
-  broker_name         = var.rabbitmq_broker_name
-  engine_type         = "RabbitMQ"
-  engine_version      = var.rabbitmq_engine_version
-  deployment_mode     = var.rabbitmq_deployment_mode
-  publicly_accessible = true
-  # security_groups     = [aws_security_group.rabbitmq-sg.id]
-  subnet_ids         = var.rabbitmq_deployment_mode == "SINGLE_INSTANCE" ? [aws_subnet.private_subnet.0.id] : aws_subnet.private_subnet.*.id
-  host_instance_type = var.rabbitmq_instance_type
-  user {
-    username = var.rabbitmq_username
-    password = var.rabbitmq_password
-  }
-  depends_on = [
+module "rabbitmq" {
+  source               = "./modules/rabbitmq"
+  env                  = var.env
+  tags                 = var.tags
+  # sg_ids               = [aws_security_group.rabbitmq-sg.id]
+  subnet_ids           = var.rabbitmq_deployment_mode == "SINGLE_INSTANCE" ? [aws_subnet.private_subnet.0.id] : aws_subnet.private_subnet.*.id
+  rabbitmq_broker_name = var.rabbitmq_broker_name
+  rabbitmq_engine_version = var.rabbitmq_engine_version
+  rabbitmq_deployment_mode = var.rabbitmq_deployment_mode
+  rabbitmq_instance_type = var.rabbitmq_instance_type
+  rabbitmq_username = var.rabbitmq_username
+  rabbitmq_password = var.rabbitmq_password
+  dependencies = [
     # aws_security_group.rabbitmq-sg,
     aws_subnet.private_subnet,
-  ]
-}
-
-provider "rabbitmq" {
-  endpoint = "https://${replace(local.amqp_address, ":5671", "")}"
-  username = var.rabbitmq_username
-  password = var.rabbitmq_password
-}
-
-resource "rabbitmq_vhost" "vhost" {
-  name       = "/"
-  depends_on = [aws_mq_broker.rabbitmq]
-}
-
-resource "rabbitmq_permissions" "rabbitmq" {
-  user  = var.rabbitmq_username
-  vhost = rabbitmq_vhost.vhost.name
-  permissions {
-    configure = ".*"
-    write     = ".*"
-    read      = ".*"
-  }
-  depends_on = [rabbitmq_vhost.vhost]
-}
-
-resource "rabbitmq_queue" "rabbitmq-books-queue" {
-  name  = "books_queue"
-  vhost = rabbitmq_permissions.rabbitmq.vhost
-  settings {
-    durable     = true
-    auto_delete = false
-  }
-  depends_on = [rabbitmq_permissions.rabbitmq]
-}
-
-resource "rabbitmq_exchange" "rabbitmq-books-exchange" {
-  name  = "books_exchange"
-  vhost = rabbitmq_permissions.rabbitmq.vhost
-  settings {
-    type        = "topic"
-    durable     = true
-    auto_delete = false
-  }
-  depends_on = [rabbitmq_permissions.rabbitmq]
-}
-
-resource "rabbitmq_binding" "rabbitmq-books-binding" {
-  source           = rabbitmq_exchange.rabbitmq-books-exchange.name
-  vhost            = rabbitmq_vhost.vhost.name
-  destination      = rabbitmq_queue.rabbitmq-books-queue.name
-  destination_type = "queue"
-  routing_key      = "books.#"
-  depends_on = [
-    rabbitmq_exchange.rabbitmq-books-exchange,
-    rabbitmq_vhost.vhost,
-    rabbitmq_queue.rabbitmq-books-queue,
-  ]
-}
-
-variable "recommendations-queue-arguments" {
-  default = <<EOF
-{
-  "x-max-priority":10
-}
-EOF
-}
-
-resource "rabbitmq_queue" "rabbitmq-recommendations-queue" {
-  name  = "recommendations_queue"
-  vhost = rabbitmq_permissions.rabbitmq.vhost
-  settings {
-    durable        = true
-    auto_delete    = false
-    arguments_json = var.recommendations-queue-arguments
-  }
-  depends_on = [rabbitmq_permissions.rabbitmq]
-}
-
-resource "rabbitmq_exchange" "rabbitmq-recommendations-exchange" {
-  name  = "recommendations_exchange"
-  vhost = rabbitmq_permissions.rabbitmq.vhost
-  settings {
-    type        = "topic"
-    durable     = true
-    auto_delete = false
-  }
-  depends_on = [rabbitmq_permissions.rabbitmq]
-}
-
-resource "rabbitmq_binding" "rabbitmq-recommendations-binding" {
-  source           = rabbitmq_exchange.rabbitmq-recommendations-exchange.name
-  vhost            = rabbitmq_vhost.vhost.name
-  destination      = rabbitmq_queue.rabbitmq-recommendations-queue.name
-  destination_type = "queue"
-  routing_key      = "recommendations.#"
-  depends_on = [
-    rabbitmq_exchange.rabbitmq-recommendations-exchange,
-    rabbitmq_vhost.vhost,
-    rabbitmq_queue.rabbitmq-recommendations-queue,
   ]
 }

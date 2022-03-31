@@ -1,3 +1,11 @@
+output "app_dns" {
+  value = local.app_dns
+}
+
+output "grpc_conn_string" {
+  value = local.grpc_conn_string
+}
+
 output "amqp_conn_string" {
   value = local.amqp_conn_string
 }

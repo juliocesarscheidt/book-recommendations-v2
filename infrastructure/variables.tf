@@ -42,17 +42,6 @@ variable "rabbitmq_broker_name" {
   default     = "rabbitmq"
 }
 
-variable "rabbitmq_username" {
-  type        = string
-  description = "RabbitMQ username"
-  default     = "rabbitmq"
-}
-
-variable "rabbitmq_password" {
-  type        = string
-  description = "RabbitMQ password"
-}
-
 variable "rabbitmq_engine_version" {
   type        = string
   description = "RabbitMQ engine version"
@@ -69,6 +58,17 @@ variable "rabbitmq_instance_type" {
   type        = string
   description = "RabbitMQ instance type"
   default     = "mq.t3.micro"
+}
+
+variable "rabbitmq_username" {
+  type        = string
+  description = "RabbitMQ username"
+  default     = "rabbitmq"
+}
+
+variable "rabbitmq_password" {
+  type        = string
+  description = "RabbitMQ password"
 }
 
 ######################### Mongo Variables #########################
