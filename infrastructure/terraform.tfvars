@@ -1,6 +1,6 @@
 # this is a sample file
-aws_region      = "us-east-1"
 env             = "development"
+aws_region      = "us-east-1"
 root_domain     = "domain.com.br"
 certificate_arn = "arn:aws:acm:us-east-1:000000000000:certificate/aaaaaaaa-aaaa-0000-0000-aaaaaaaaaaaa"
 docker_registry = "000000000000.dkr.ecr.us-east-1.amazonaws.com"

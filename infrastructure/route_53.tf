@@ -9,7 +9,7 @@ data "aws_route53_zone" "root_zone" {
 resource "aws_route53_record" "alb_record" {
   allow_overwrite = true
   zone_id         = data.aws_route53_zone.root_zone.zone_id
-  name            = "books.${var.root_domain}"
+  name            = local.app_dns
   type            = "A"
   alias {
     name                   = aws_lb.application-lb.dns_name

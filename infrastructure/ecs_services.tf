@@ -1,24 +1,3 @@
-resource "aws_ecs_cluster" "ecs-cluster" {
-  name               = var.cluster_name
-  capacity_providers = ["FARGATE_SPOT", "FARGATE"]
-  default_capacity_provider_strategy {
-    capacity_provider = "FARGATE_SPOT"
-  }
-  # tags = var.tags
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_service_discovery_private_dns_namespace" "private-namespace" {
-  name = "${var.cluster_name}.local"
-  vpc  = aws_vpc.vpc_0.id
-  tags = {
-    Name = "${var.cluster_name}.local"
-  }
-  depends_on = [aws_ecs_cluster.ecs-cluster]
-}
-
 module "client-microservice" {
   source                           = "./modules/ecs-service-tg"
   aws_region                       = var.aws_region
@@ -39,11 +18,6 @@ module "client-microservice" {
     aws_alb_target_group.client-microservice-tg.id,
     aws_ecs_cluster.ecs-cluster.id,
     aws_service_discovery_private_dns_namespace.private-namespace,
-    rabbitmq_vhost.vhost,
-    local.amqp_conn_string,
-    local.mongo_conn_string,
-    local.redis_conn_string,
-    local.postgres_conn_string,
   ]
   tags = var.tags
 }
@@ -69,11 +43,10 @@ module "users-microservice" {
     aws_security_group.users-microservice-sg.id,
     aws_ecs_cluster.ecs-cluster.id,
     aws_service_discovery_private_dns_namespace.private-namespace,
-    rabbitmq_vhost.vhost,
-    local.amqp_conn_string,
+    module.mongo,
+    module.redis,
     local.mongo_conn_string,
     local.redis_conn_string,
-    local.postgres_conn_string,
   ]
   tags = var.tags
 }
@@ -91,8 +64,8 @@ module "books-microservice" {
   app_config_container_port = var.app_config_books_microservice_container_port
   app_config_container_environment = concat(var.app_config_books_microservice_container_environment, [
     { "name" : "AMQP_CONN_STRING", "value" : local.amqp_conn_string },
-    { "name" : "POSTGRES_HOST", "value" : aws_db_instance.postgres.address },
-    { "name" : "POSTGRES_PORT", "value" : aws_db_instance.postgres.port },
+    { "name" : "POSTGRES_HOST", "value" : module.postgres.postgres_host },
+    { "name" : "POSTGRES_PORT", "value" : module.postgres.postgres_port },
     { "name" : "POSTGRES_USER", "value" : var.postgres_username },
     { "name" : "POSTGRES_PASS", "value" : var.postgres_password },
   ])
@@ -102,10 +75,9 @@ module "books-microservice" {
     aws_security_group.books-microservice-sg.id,
     aws_ecs_cluster.ecs-cluster.id,
     aws_service_discovery_private_dns_namespace.private-namespace,
-    rabbitmq_vhost.vhost,
+    module.rabbitmq,
+    module.postgres,
     local.amqp_conn_string,
-    local.mongo_conn_string,
-    local.redis_conn_string,
     local.postgres_conn_string,
   ]
   tags = var.tags
@@ -123,7 +95,7 @@ module "recommendations-microservice" {
   app_config                = var.app_config_recommendations_microservice
   app_config_container_port = var.app_config_recommendations_microservice_container_port
   app_config_container_environment = concat(var.app_config_recommendations_microservice_container_environment, [
-    { "name" : "GRPC_CONN_STRING", "value" : "${var.app_config_users_microservice.name}-${var.env}.${aws_service_discovery_private_dns_namespace.private-namespace.name}:50051" },
+    { "name" : "GRPC_CONN_STRING", "value" : local.grpc_conn_string },
     { "name" : "AMQP_CONN_STRING", "value" : local.amqp_conn_string },
     { "name" : "REDIS_CONN_STRING", "value" : local.redis_conn_string },
   ])
@@ -133,11 +105,11 @@ module "recommendations-microservice" {
     aws_security_group.recommendations-microservice-sg.id,
     aws_ecs_cluster.ecs-cluster.id,
     aws_service_discovery_private_dns_namespace.private-namespace,
-    rabbitmq_vhost.vhost,
+    local.grpc_conn_string,
+    module.rabbitmq,
+    module.redis,
     local.amqp_conn_string,
-    local.mongo_conn_string,
     local.redis_conn_string,
-    local.postgres_conn_string,
   ]
   tags = var.tags
 }
@@ -155,7 +127,7 @@ module "api-gateway" {
   app_config                = var.app_config_api_gateway
   app_config_container_port = var.app_config_api_gateway_container_port
   app_config_container_environment = concat(var.app_config_api_gateway_container_environment, [
-    { "name" : "GRPC_CONN_STRING", "value" : "${var.app_config_users_microservice.name}-${var.env}.${aws_service_discovery_private_dns_namespace.private-namespace.name}:50051" },
+    { "name" : "GRPC_CONN_STRING", "value" : local.grpc_conn_string },
     { "name" : "AMQP_CONN_STRING", "value" : local.amqp_conn_string },
     { "name" : "REDIS_CONN_STRING", "value" : local.redis_conn_string },
   ])
@@ -166,11 +138,11 @@ module "api-gateway" {
     aws_alb_target_group.api-gateway-tg.id,
     aws_ecs_cluster.ecs-cluster.id,
     aws_service_discovery_private_dns_namespace.private-namespace,
-    rabbitmq_vhost.vhost,
+    local.grpc_conn_string,
+    module.rabbitmq,
+    module.redis,
     local.amqp_conn_string,
-    local.mongo_conn_string,
     local.redis_conn_string,
-    local.postgres_conn_string,
   ]
   tags = var.tags
 }

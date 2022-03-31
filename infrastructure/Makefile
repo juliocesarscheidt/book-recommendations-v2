@@ -21,11 +21,11 @@ docker-login:
 		docker login --username AWS $(DOCKER_REGISTRY) --password-stdin
 
 build-image:
-	docker image build --tag $(DOCKER_REGISTRY)/api-gateway:$(IMAGE_VERSION) $$(pwd)/api-gateway
-	docker image build --tag $(DOCKER_REGISTRY)/books-microservice:$(IMAGE_VERSION) $$(pwd)/books-microservice
-	docker image build --tag $(DOCKER_REGISTRY)/users-microservice:$(IMAGE_VERSION) $$(pwd)/users-microservice
-	docker image build --tag $(DOCKER_REGISTRY)/recommendations-microservice:$(IMAGE_VERSION) $$(pwd)/recommendations-microservice
-	docker image build --tag $(DOCKER_REGISTRY)/client-microservice:$(IMAGE_VERSION) $$(pwd)/client-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/api-gateway:$(IMAGE_VERSION) ../api-gateway
+	docker image build --tag $(DOCKER_REGISTRY)/books-microservice:$(IMAGE_VERSION) ../books-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/users-microservice:$(IMAGE_VERSION) ../users-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/recommendations-microservice:$(IMAGE_VERSION) ../recommendations-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/client-microservice:$(IMAGE_VERSION) ../client-microservice
 
 create-ecr-repo:
 	aws ecr describe-repositories --repository-names api-gateway --region $(AWS_DEFAULT_REGION) || \
@@ -57,7 +57,8 @@ create-workspace:
 	-@terraform workspace new production 2> /dev/null
 	terraform workspace select $(ENV)
 
-init: create-backend-bucket
+# init: create-backend-bucket
+init:
 	terraform init -upgrade=true \
 		-backend-config="bucket=$(AWS_BACKEND_BUCKET)" \
 		-backend-config="key=state.tfstate" \
@@ -93,6 +94,7 @@ plan: validate
 
 apply:
 	terraform apply $(PLAN_FILE)
+	@echo "Access the application on https://$$(terraform output app_dns)"
 
 destroy:
 	terraform destroy \
