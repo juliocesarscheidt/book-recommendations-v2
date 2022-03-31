@@ -4,6 +4,8 @@ This project is a mesh of microservices simulating a complex environment with di
 
 Also it implements an API Gateway to proxy and orquestrate requests through internal services.
 
+The services which use AMQP queue to receive commands, use the request/response pattern.
+
 The main intention it is to calculate and recommend books based on users ratings.
 
 ## Application architecture
@@ -17,7 +19,8 @@ It is possible to run all services locally using docker and docker-compose.
 
 ```bash
 # infrastructure
-docker-compose up -d --build postgres mongo redis rabbitmq
+docker-compose up -d --build \
+  postgres mongo redis rabbitmq
 
 # services
 docker-compose up -d --build \
@@ -32,15 +35,21 @@ docker-compose up -d --build \
 
 The services are going to run on AWS, using ECS with Fargate for containers underlying infrastructure.
 
-Also it will use services like DocumentDB, Amazon MQ, ElasticCache for Redis and RDS Postgres, for databases, event queues and cache.
+Also it will use services like RDS Postgres, DocumentDB, Amazon MQ for Rabbitmq, ElasticCache for Redis, for databases, event queues and cache respectively.
 
 ## Cloud architecture
 ![Architecture](./architecture/book-recommendations-infra.drawio.png)
 
 Instructions for deploy here: [Instructions](./infrastructure/README.md)
 
-## Unit Tests
+## TODO
+
+> Implement Unit Tests
 
 - [x] users-microservice
 - [x] books-microservice
 - [ ] recommendations-microservice
+
+> Implement CI/CD
+
+- [ ] Github Actions
