@@ -36,7 +36,7 @@ resource "aws_alb_target_group" "api-gateway-tg" {
     timeout             = 30
     interval            = 60
     matcher             = "200-299"
-    path                = "/v1/healthcheck"
+    path                = "/api/healthcheck"
     protocol            = "HTTP"
     port                = var.app_config_api_gateway_container_port
   }
@@ -82,7 +82,7 @@ resource "aws_alb_listener_rule" "application-lb-listener-rule" {
   }
   condition {
     path_pattern {
-      values = ["/v1/*"]
+      values = ["/api/*"]
     }
   }
   depends_on = [

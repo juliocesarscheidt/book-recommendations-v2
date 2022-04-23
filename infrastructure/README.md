@@ -18,6 +18,8 @@ export DOCKER_REGISTRY="000000000000.dkr.ecr.${AWS_BACKEND_REGION}.amazonaws.com
 export CLUSTER_NAME="ecs-cluster-${ENV}"
 export IMAGE_VERSION="0.0.1"
 
+cd terraform/
+
 # login into the ECR, build the image, creates the repository (if doesn't exist) and pushes the image to the repository
 make push-image
 
