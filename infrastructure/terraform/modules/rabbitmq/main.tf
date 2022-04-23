@@ -29,7 +29,7 @@ provider "rabbitmq" {
 }
 
 resource "rabbitmq_vhost" "vhost" {
-  name       = "/"
+  name = "/"
   depends_on = [
     aws_mq_broker.rabbitmq
   ]

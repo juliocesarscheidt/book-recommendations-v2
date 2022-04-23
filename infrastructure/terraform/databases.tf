@@ -16,17 +16,17 @@ module "mongo" {
 }
 
 module "postgres" {
-  source               = "./modules/postgres"
-  env                  = var.env
-  tags                 = var.tags
-  az_names                 = [data.aws_availability_zones.available_azs.names[0]]
-  sg_ids                   = [aws_security_group.postgres-sg.id]
-  subnet_ids               = aws_subnet.private_subnet.*.id
-  postgres_identifier = var.postgres_identifier
-  postgres_db_name = "book_db"
+  source                 = "./modules/postgres"
+  env                    = var.env
+  tags                   = var.tags
+  az_names               = [data.aws_availability_zones.available_azs.names[0]]
+  sg_ids                 = [aws_security_group.postgres-sg.id]
+  subnet_ids             = aws_subnet.private_subnet.*.id
+  postgres_identifier    = var.postgres_identifier
+  postgres_db_name       = "book_db"
   postgres_instance_type = var.postgres_instance_type
-  postgres_username = var.postgres_username
-  postgres_password = var.postgres_password
+  postgres_username      = var.postgres_username
+  postgres_password      = var.postgres_password
   dependencies = [
     aws_security_group.postgres-sg,
     aws_subnet.private_subnet,
