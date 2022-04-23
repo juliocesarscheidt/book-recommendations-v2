@@ -24,7 +24,7 @@ tags:
     description: Services related to Recommendation resources
 
 paths:
-  /v1/healthcheck:
+  /api/healthcheck:
     get:
       tags:
         - HealthChechServices
@@ -48,7 +48,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/auth/signup:
+  /api/auth/signup:
     post:
       tags:
         - AuthServices
@@ -84,7 +84,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/auth/signin:
+  /api/auth/signin:
     post:
       tags:
         - AuthServices
@@ -120,7 +120,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user/me:
+  /api/user/me:
     get:
       tags:
         - UserServices
@@ -148,7 +148,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user:
+  /api/user:
     post:
       tags:
         - UserServices
@@ -236,7 +236,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user/{uuid}:
+  /api/user/{uuid}:
     get:
       tags:
         - UserServices
@@ -377,7 +377,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user/rating:
+  /api/user/rating:
     post:
       tags:
         - UserRateServices
@@ -473,7 +473,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/user/rating/{user_uuid}:
+  /api/user/rating/{user_uuid}:
     get:
       tags:
         - UserRateServices
@@ -562,7 +562,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/book:
+  /api/book:
     post:
       tags:
         - BookServices
@@ -645,7 +645,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/book/{uuid}:
+  /api/book/{uuid}:
     get:
       tags:
         - BookServices
@@ -781,7 +781,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/DefaultResponseServerError'
 
-  /v1/recommendation/user/{uuid}:
+  /api/recommendation/user/{uuid}:
     get:
       tags:
         - RecommendationServices

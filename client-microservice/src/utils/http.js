@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const http = axios.create({
-  baseURL: '/v1',
-  timeout: 30000, // 30 seconds
+  baseURL: '/api',
+  timeout: 15000, // 15 seconds
 });
 
 http.interceptors.request.use((config) => {

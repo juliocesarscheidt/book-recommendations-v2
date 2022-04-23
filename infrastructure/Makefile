@@ -1,31 +1,32 @@
 #!make
 
+# general variables
 ENV?=development
 PLAN_FILE?=tfplan
 CLUSTER_NAME?=ecs-cluster-$(ENV)
 IMAGE_VERSION?=0.0.1
-
+# AWS variables
 AWS_ACCESS_KEY_ID?=
 AWS_SECRET_ACCESS_KEY?=
 AWS_DEFAULT_REGION?=us-east-1
-
-DOCKER_REGISTRY?=000000000000.dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
-
+# Terraform backend variables
 AWS_BACKEND_BUCKET?=
 AWS_BACKEND_ACCESS_KEY_ID?=
 AWS_BACKEND_SECRET_ACCESS_KEY?=
 AWS_BACKEND_REGION?=sa-east-1
+# docker variables
+DOCKER_REGISTRY?=000000000000.dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
 
 docker-login:
 	aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \
 		docker login --username AWS $(DOCKER_REGISTRY) --password-stdin
 
 build-image:
-	docker image build --tag $(DOCKER_REGISTRY)/api-gateway:$(IMAGE_VERSION) ../api-gateway
-	docker image build --tag $(DOCKER_REGISTRY)/books-microservice:$(IMAGE_VERSION) ../books-microservice
-	docker image build --tag $(DOCKER_REGISTRY)/users-microservice:$(IMAGE_VERSION) ../users-microservice
-	docker image build --tag $(DOCKER_REGISTRY)/recommendations-microservice:$(IMAGE_VERSION) ../recommendations-microservice
-	docker image build --tag $(DOCKER_REGISTRY)/client-microservice:$(IMAGE_VERSION) ../client-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/api-gateway:$(IMAGE_VERSION) ../../api-gateway
+	docker image build --tag $(DOCKER_REGISTRY)/books-microservice:$(IMAGE_VERSION) ../../books-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/users-microservice:$(IMAGE_VERSION) ../../users-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/recommendations-microservice:$(IMAGE_VERSION) ../../recommendations-microservice
+	docker image build --tag $(DOCKER_REGISTRY)/client-microservice:$(IMAGE_VERSION) ../../client-microservice
 
 create-ecr-repo:
 	aws ecr describe-repositories --repository-names api-gateway --region $(AWS_DEFAULT_REGION) || \
@@ -57,8 +58,7 @@ create-workspace:
 	-@terraform workspace new production 2> /dev/null
 	terraform workspace select $(ENV)
 
-# init: create-backend-bucket
-init:
+init: create-backend-bucket
 	terraform init -upgrade=true \
 		-backend-config="bucket=$(AWS_BACKEND_BUCKET)" \
 		-backend-config="key=state.tfstate" \
@@ -73,6 +73,9 @@ init:
 fmt:
 	terraform fmt -write=true -recursive
 
+lint:
+	docker container run --rm --name tflint --env TFLINT_LOG=debug -v $$(pwd):/data -t ghcr.io/terraform-linters/tflint
+
 validate:
 	terraform validate
 
@@ -82,7 +85,7 @@ refresh:
 output:
 	terraform output
 
-plan: validate
+plan: validate lint
 	terraform plan \
 		-out=$(PLAN_FILE) \
 		-var-file=$(ENV).tfvars \
