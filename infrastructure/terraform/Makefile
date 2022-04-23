@@ -73,11 +73,11 @@ init: create-backend-bucket
 fmt:
 	terraform fmt -write=true -recursive
 
-lint:
-	docker container run --rm --name tflint --env TFLINT_LOG=debug -v $$(pwd):/data -t ghcr.io/terraform-linters/tflint
-
 validate:
 	terraform validate
+
+lint:
+	docker container run --rm --name tflint --env TFLINT_LOG=debug -v $$(pwd):/data -t ghcr.io/terraform-linters/tflint
 
 refresh:
 	terraform refresh	-var-file=$(ENV).tfvars

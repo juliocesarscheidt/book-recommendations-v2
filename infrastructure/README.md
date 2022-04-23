@@ -14,7 +14,8 @@ export AWS_BACKEND_ACCESS_KEY_ID="$AWS_BACKEND_ACCESS_KEY_ID"
 export AWS_BACKEND_SECRET_ACCESS_KEY="$AWS_BACKEND_SECRET_ACCESS_KEY"
 export AWS_BACKEND_REGION="$AWS_BACKEND_REGION"
 # application settings
-export DOCKER_REGISTRY="000000000000.dkr.ecr.${AWS_BACKEND_REGION}.amazonaws.com"
+export AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r '.Account')
+export DOCKER_REGISTRY="${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
 export CLUSTER_NAME="ecs-cluster-${ENV}"
 export IMAGE_VERSION="0.0.1"
 

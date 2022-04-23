@@ -35,7 +35,7 @@ docker-compose up -d --build \
 
 The services are going to run on AWS, using ECS with Fargate for containers underlying infrastructure.
 
-Also it will use services like RDS Postgres, DocumentDB, Amazon MQ for Rabbitmq, ElasticCache for Redis, for databases, event queues and cache respectively.
+Also it will use services like RDS Postgres, DocumentDB, Amazon MQ for Rabbitmq, ElasticCache for Redis, for databases, event broker and cache respectively.
 
 ## Cloud architecture
 ![Architecture](./architecture/book-recommendations-infra.drawio.png)
