@@ -34,7 +34,7 @@ export default {
     author: 'Autor',
     genre: 'Gênero',
     image: 'Imagem',
-    rate: 'Nota',
+    rating: 'Nota',
   },
   buttons: {
     cancel: 'Cancelar',
