@@ -73,7 +73,7 @@ done
 
 
 # upsert user rate
-curl --silent -X POST --data '{"user_uuid": "17fc6972e270d41bcd45e9e8", "book_uuid": "d3n1t3q6w3f4x3x7c3d7x3l3", "rate": 8}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating' | jq -r
+curl --silent -X POST --data '{"user_uuid": "17fc6972e270d41bcd45e9e8", "book_uuid": "j3q1i3x6y3b5e3a0e3j8q3n4", "rate": 8}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating' | jq -r
 
 # get user rate
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating/17fc6972e270d41bcd45e9e8' | jq -r
@@ -93,13 +93,13 @@ curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost
 curl --silent -X POST --data '{"title": "Clean Architecture", "author": "Robert Martin", "genre": "Software", "image": "https://images-na.ssl-images-amazon.com/images/I/41-sN-mzwKL._SX258_BO1,204,203,200_QL70_ML2_.jpg"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book' | jq -r
 
 # get book
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/d3n1t3q6w3f4x3x7c3d7x3l3' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
 
 # update book
-curl --silent -X PUT --data '{"title": "Architecture", "author": "Martin", "genre": "Software Architecture", "image": "https://images-na.ssl-images-amazon.com"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/d3n1t3q6w3f4x3x7c3d7x3l3' | jq -r
+curl --silent -X PUT --data '{"title": "Architecture", "author": "Martin", "genre": "Software Architecture", "image": "https://images-na.ssl-images-amazon.com"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
 
 # delete book
-curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/d3n1t3q6w3f4x3x7c3d7x3l3' | jq -r
+curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
 
 # list book
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book?page=0&size=50' | jq -r

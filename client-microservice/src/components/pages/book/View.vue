@@ -19,7 +19,7 @@
           <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="bookData.image"></input>
         </div>
         <div class="form-group">
-          <label for="input-rate">{{ $t('book.rate') }} ({{ rate }})</label>
+          <label for="input-rate">{{ $t('book.rating') }} ({{ rate }})</label>
           <star-rating v-model="rate"
             v-bind:show-rating="false"
             v-bind:read-only="loading"

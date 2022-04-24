@@ -49,7 +49,7 @@
           <div class="text-nowrap">{{ $t('book.image') }}</div>
         </template>
         <template #head(rate)="">
-          <div class="text-nowrap">{{ $t('book.rate') }}</div>
+          <div class="text-nowrap">{{ $t('book.rating') }}</div>
         </template>
         <template #head(uuid)="">
           <div class="text-nowrap">{{ $t('buttons.actions') }}</div>

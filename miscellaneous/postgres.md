@@ -1,7 +1,7 @@
 # Postgres
 
 ```bash
-docker-compose exec postgres sh -c "PG_PASSWORD=postgres psql -U postgres -p 5432 -h 127.0.0.1 --dbname=book_db"
+docker-compose exec postgres sh -c "PG_PASSWORD=admin psql -U postgres -p 5432 -h 127.0.0.1 --dbname=book_db"
 
 
 CREATE EXTENSION hstore;
