@@ -14,24 +14,22 @@ public class CreateBook extends BaseUseCase {
 
   @Autowired
   BookRepository repository;
-  
+
   public CreateBookResponseDTO execute(CreateBookRequestDTO dto) {
     Book book = new Book();
     BeanUtils.copyProperties(dto, book);
 
-	book.setUuid(generateUuid());
+    book.setUuid(generateUuid());
     book.setCreatedAt(getCurrentTimestampUTC());
     book.setUpdatedAt(getCurrentTimestampUTC());
- 
+
     try {
-    	repository.save(book);
+      repository.save(book);
+      return new CreateBookResponseDTO(book.uuid);
 
-        return new CreateBookResponseDTO(book.uuid);
-
-      } catch (Exception e) {
-        e.printStackTrace();
-        return null;
-      }
-
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 }

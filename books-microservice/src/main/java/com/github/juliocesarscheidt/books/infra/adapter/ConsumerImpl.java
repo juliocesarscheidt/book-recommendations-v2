@@ -7,11 +7,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.amqp.core.MessageProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import com.github.juliocesarscheidt.books.application.adapter.CommandHandler;
+import com.github.juliocesarscheidt.books.application.adapter.Consumer;
+import com.github.juliocesarscheidt.books.application.adapter.Producer;
 import com.github.juliocesarscheidt.books.application.dto.BaseDTO;
-import com.github.juliocesarscheidt.books.domain.adapter.CommandHandler;
-import com.github.juliocesarscheidt.books.domain.adapter.Consumer;
-import com.github.juliocesarscheidt.books.domain.adapter.Producer;
 
 @Component
 public class ConsumerImpl implements Consumer {

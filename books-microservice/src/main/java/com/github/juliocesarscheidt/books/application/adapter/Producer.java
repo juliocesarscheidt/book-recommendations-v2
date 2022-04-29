@@ -1,4 +1,4 @@
-package com.github.juliocesarscheidt.books.domain.adapter;
+package com.github.juliocesarscheidt.books.application.adapter;
 
 public interface Producer {
 

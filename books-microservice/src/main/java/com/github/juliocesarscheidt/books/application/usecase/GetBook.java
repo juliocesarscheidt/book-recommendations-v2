@@ -11,16 +11,16 @@ import com.github.juliocesarscheidt.books.infra.repository.BookRepository;
 
 @Service
 public class GetBook extends BaseUseCase {
-  
+
   @Autowired
   BookRepository repository;
 
   public GetBookResponseDTO execute(GetBookRequestDTO dto) {
-	if (dto.getUuid() == null) return null;
+    if (dto.getUuid() == null) return null;
 
     try {
       Book book = repository.findByUuid(dto.getUuid());
-	  if (book == null) return null;
+      if (book == null) return null;
 
       GetBookResponseDTO response = new GetBookResponseDTO();
       BeanUtils.copyProperties(book, response);

@@ -5,12 +5,12 @@ import java.lang.reflect.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.juliocesarscheidt.books.application.adapter.CommandHandler;
 import com.github.juliocesarscheidt.books.application.commands.CommandBase;
 import com.github.juliocesarscheidt.books.application.dto.BaseDTO;
 import com.github.juliocesarscheidt.books.application.service.BaseService;
 import com.github.juliocesarscheidt.books.application.service.BookService;
 import com.github.juliocesarscheidt.books.application.service.CommandsValidationService;
-import com.github.juliocesarscheidt.books.domain.adapter.CommandHandler;
 
 @Service
 public class CommandHandlerImpl implements CommandHandler {
