@@ -33,11 +33,11 @@ public class ListBook extends BaseUseCase {
       books.stream().forEach(book -> {
         GetBookResponseDTO dtoResponse = new GetBookResponseDTO();
         if (book != null) {
-        	BeanUtils.copyProperties(book, dtoResponse);
-            booksDto.add(dtoResponse);
+          BeanUtils.copyProperties(book, dtoResponse);
+          booksDto.add(dtoResponse);
         }
       });
-  
+
       response.setBooks(booksDto);
       return response;
 

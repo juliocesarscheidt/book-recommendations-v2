@@ -7,9 +7,10 @@ import org.springframework.amqp.core.MessageDeliveryMode;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.amqp.core.MessageProperties;
 
-import com.github.juliocesarscheidt.books.domain.adapter.Producer;
+import com.github.juliocesarscheidt.books.application.adapter.Producer;
+
+import org.springframework.amqp.core.MessageProperties;
 
 @Service
 public class ProducerImpl implements Producer {

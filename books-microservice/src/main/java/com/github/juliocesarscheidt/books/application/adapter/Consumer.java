@@ -1,4 +1,4 @@
-package com.github.juliocesarscheidt.books.domain.adapter;
+package com.github.juliocesarscheidt.books.application.adapter;
 
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;

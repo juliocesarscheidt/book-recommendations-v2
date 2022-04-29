@@ -12,20 +12,20 @@ import com.github.juliocesarscheidt.books.infra.repository.BookRepository;
 public class UpdateBook extends BaseUseCase {
 
   @Autowired
-  BookRepository repository;;
+  BookRepository repository;
 
   public UpdateBookResponseDTO execute(UpdateBookRequestDTO dto) {
     if (dto.getUuid() == null) return null;
 
     try {
-	  Book book = repository.findByUuid(dto.getUuid());
-	  if (book == null) return null;
+      Book book = repository.findByUuid(dto.getUuid());
+      if (book == null) return null;
 
-	  if (dto.getTitle() != null) book.setTitle(dto.getTitle());
-	  if (dto.getAuthor() != null) book.setAuthor(dto.getAuthor());
-	  if (dto.getGenre() != null) book.setGenre(dto.getGenre());
-	  if (dto.getImage() != null) book.setImage(dto.getImage());
-	  book.setUpdatedAt(getCurrentTimestampUTC());
+      if (dto.getTitle() != null) book.setTitle(dto.getTitle());
+      if (dto.getAuthor() != null) book.setAuthor(dto.getAuthor());
+      if (dto.getGenre() != null) book.setGenre(dto.getGenre());
+      if (dto.getImage() != null) book.setImage(dto.getImage());
+      book.setUpdatedAt(getCurrentTimestampUTC());
 
       repository.save(book);
       return new UpdateBookResponseDTO();
