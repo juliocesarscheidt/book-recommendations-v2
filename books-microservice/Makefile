@@ -22,7 +22,7 @@ install:
 		-v "$$(pwd)":/usr/src/app \
 		-w /usr/src/app \
 		juliocesarmidia/java14.0.2-maven3.8.1:latest \
-		mvn install
+		mvn install -Dmaven.test.skip=true
 
 compile:
 	docker container run -t --rm \
