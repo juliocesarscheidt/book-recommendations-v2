@@ -28,7 +28,6 @@ jobs:
       run: |
         ls ${{ github.workspace }}
         echo "JOB STATUS ${{ job.status }}"
-        echo "${DEPLOYMENT_REPO_NAME}"
 
     - name: Retrieve private SSH file to Git Authentication through SSH
       env:
@@ -41,13 +40,14 @@ jobs:
     - name: Set SSH config file
       run: |
         mkdir -p ~/.ssh
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
         echo "Host git-codecommit.*.amazonaws.com" >> ~/.ssh/config
         echo "User ${{ secrets.CODE_COMMIT_SSH_KEY_ID }}" >> ~/.ssh/config
         echo "IdentityFile /tmp/book-recommendations" >> ~/.ssh/config
         chmod 600 ~/.ssh/config
 
     - name: Mirror
-      run: git push --mirror ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/book-recommendations-v2
+      run: git -o StrictHostKeyChecking=no push --mirror ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/book-recommendations-v2
 
     - name: Remove files
       run: |
