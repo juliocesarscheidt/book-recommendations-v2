@@ -36,17 +36,18 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws s3 cp s3://${{ secrets.S3_BUCKET_NAME }}/book-recommendations/book-recommendations /tmp/book-recommendations
+        chmod 600 /tmp/book-recommendations
 
     - name: Set SSH config file
       run: |
         mkdir -p ~/.ssh
-        echo "Host git-codecommit.${AWS_REGION}.amazonaws.com" >> ~/.ssh/config
+        echo "Host git-codecommit.*.amazonaws.com" >> ~/.ssh/config
         echo "User ${{ secrets.CODE_COMMIT_SSH_KEY_ID }}" >> ~/.ssh/config
         echo "IdentityFile /tmp/book-recommendations" >> ~/.ssh/config
         chmod 600 ~/.ssh/config
 
     - name: Mirror
-      run: git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+      run: git push --mirror ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/book-recommendations-v2
 
     - name: Remove files
       run: |
