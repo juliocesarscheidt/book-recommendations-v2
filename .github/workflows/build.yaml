@@ -11,10 +11,14 @@ jobs:
   build:
     name: Mirror to CodeBuild
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        # working-directory: .
 
     env:
       AWS_REGION: us-east-1
-      GITHUB_REPOSITORY_NAME: $(echo ${GITHUB_REPOSITORY} | cut -d'/' -f2)
+      DEPLOYMENT_REPO_NAME: book-recommendations-v2
 
     steps:
     - name: Checkout
@@ -24,7 +28,27 @@ jobs:
       run: |
         ls ${{ github.workspace }}
         echo "JOB STATUS ${{ job.status }}"
-        echo "${GITHUB_REPOSITORY_NAME}"
+        echo "${DEPLOYMENT_REPO_NAME}"
+
+    - name: Retrieve private SSH file to Git Authentication through SSH
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        aws s3 cp s3://${{ secrets.S3_BUCKET_NAME }}/book-recommendations/book-recommendations /tmp/book-recommendations
+
+    - name: Set SSH config file
+      run: |
+        mkdir -p ~/.ssh
+        echo "Host git-codecommit.${AWS_REGION}.amazonaws.com" >> ~/.ssh/config
+        echo "User ${{ secrets.CODE_COMMIT_SSH_KEY_ID }}" >> ~/.ssh/config
+        echo "IdentityFile /tmp/book-recommendations" >> ~/.ssh/config
+        chmod 600 ~/.ssh/config
 
     - name: Mirror
-      run: git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${GITHUB_REPOSITORY_NAME} code-commit-repo
+      run: git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+
+    - name: Remove files
+      run: |
+        rm -rf -p ~/.ssh/config
+        rm -rf /tmp/book-recommendations

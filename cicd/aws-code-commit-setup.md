@@ -1,6 +1,6 @@
 
 
-cat <<EOF > tmp_policy.json
+cat <<EOF > tmp_policy_code_commit.json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -28,7 +28,7 @@ cat <<EOF > tmp_policy.json
 }
 EOF
 
-aws iam create-policy --policy-name "book-recommendations-repo-git-pull-push-policy" --policy-document file://tmp_policy.json
+aws iam create-policy --policy-name "book-recommendations-repo-git-pull-push-policy" --policy-document file://tmp_policy_code_commit.json
 
 // "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-repo-git-pull-push-policy"
 
