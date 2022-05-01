@@ -48,7 +48,7 @@ phases:
     commands:
       - echo build started on `date`
       - echo Building the Docker images...
-      - cd infrastructure/terraform/
+      - cd $CODEBUILD_SRC_DIR/infrastructure/terraform/
       - make push-image
 
   post_build:
@@ -60,6 +60,8 @@ phases:
       - unzip terraform_0.12.26_linux_amd64.zip && rm -f terraform_0.12.26_linux_amd64.zip
       - mv terraform /usr/local/bin/
 
+      - cd $CODEBUILD_SRC_DIR/infrastructure/terraform/
+      - aws s3 cp s3://${AWS_BACKEND_BUCKET}/terraform/ecs-cluster/development.tfvars .
       - make init
 
       - |
