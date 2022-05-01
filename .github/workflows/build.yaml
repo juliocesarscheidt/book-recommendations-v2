@@ -52,6 +52,7 @@ jobs:
       run: |
         git remote add codebuild ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
         git remote update codebuild
+        git fetch codebuild
         git push codebuild $GITHUB_REF_NAME
         # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
 
