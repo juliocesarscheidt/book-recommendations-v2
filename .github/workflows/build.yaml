@@ -48,7 +48,8 @@ jobs:
         chmod 600 ~/.ssh/config
 
     - name: Mirror
-      run: git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/book-recommendations-v2
+      run: |
+        git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
 
     - name: Remove files
       run: |
