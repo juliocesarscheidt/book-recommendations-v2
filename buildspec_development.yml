@@ -10,8 +10,10 @@ phases:
       - echo pre_build started on `date`
       - aws --version
 
-      - yum install -y jq
+      - yum install -y jq curl unzip
       - jq --version
+
+      - echo $ENV
 
       - echo "AWS_DEFAULT_REGION -> $AWS_DEFAULT_REGION"
       - echo "CODEBUILD_SOURCE_REPO_URL -> $CODEBUILD_SOURCE_REPO_URL"
@@ -45,12 +47,20 @@ phases:
   build:
     commands:
       - echo build started on `date`
-      - echo Building the Docker image...
+      - echo Building the Docker images...
+      - cd terraform/
+      - make push-image
 
   post_build:
     commands:
       - echo post_build started on `date`
-      - echo Pushing the Docker image...
+      - echo Pushing the Docker images...
+
+      - curl --silent -X GET -L https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip --output terraform_0.12.26_linux_amd64.zip
+      - unzip terraform_0.12.26_linux_amd64.zip && rm -f terraform_0.12.26_linux_amd64.zip
+      - mv terraform /usr/local/bin/
+
+      - make init
 
       - |
         if [ $CODEBUILD_BUILD_SUCCEEDING = 1 ]; then
