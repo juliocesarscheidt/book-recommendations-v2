@@ -9,8 +9,10 @@ on:
 
 jobs:
   build:
-    name: Mirror to CodeBuild
+    name: Setup and Mirror to AWS CodeBuild
+
     runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
@@ -25,7 +27,7 @@ jobs:
 
     - name: List files in the repository
       run: |
-        ls ${{ github.workspace }}
+        ls $GITHUB_WORKSPACE
         echo "JOB STATUS ${{ job.status }}"
 
     - name: Retrieve private SSH file to Git Authentication through SSH
@@ -48,7 +50,10 @@ jobs:
 
     - name: Mirror
       run: |
-        git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+        git remote add codebuild ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+        git remote update codebuild
+        git push codebuild $GITHUB_REF_NAME
+        # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
 
     - name: Remove files
       run: |
