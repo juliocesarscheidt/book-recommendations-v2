@@ -5,9 +5,6 @@ env:
   parameter-store: {}
 
 phases:
-  env:
-    AWS::AccountId
-
   pre_build:
     commands:
       - echo pre_build started on `date`
