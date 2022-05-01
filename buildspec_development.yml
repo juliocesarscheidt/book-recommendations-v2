@@ -1,0 +1,67 @@
+version: 0.2
+
+env:
+  shell: bash
+  parameter-store: {}
+
+phases:
+  pre_build:
+    commands:
+      - echo pre_build started on `date`
+      - aws --version
+
+      - yum install -y jq
+      - jq --version
+
+      - echo "AWS_DEFAULT_REGION -> $AWS_DEFAULT_REGION"
+      - echo "CODEBUILD_SOURCE_REPO_URL -> $CODEBUILD_SOURCE_REPO_URL"
+      - echo "CODEBUILD_BUILD_IMAGE -> $CODEBUILD_BUILD_IMAGE"
+      - echo "CODEBUILD_BUILD_NUMBER -> $CODEBUILD_BUILD_NUMBER"
+      - echo "CODEBUILD_RESOLVED_SOURCE_VERSION -> $CODEBUILD_RESOLVED_SOURCE_VERSION"
+      - echo "CODEBUILD_BUILD_ID -> $CODEBUILD_BUILD_ID"
+
+      - ls -lth $CODEBUILD_SRC_DIR
+
+      - REPOSITORY_NAME=$(echo $CODEBUILD_BUILD_ID | cut -d':' -f1)
+      - echo $REPOSITORY_NAME
+
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
+      - echo $REPOSITORY_URI
+
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo $IMAGE_TAG
+
+      - BUILD_ID=$(echo $CODEBUILD_BUILD_ID | cut -d':' -f2)
+      - echo $BUILD_ID
+
+      - BUILD_URL=$(echo "https://$AWS_DEFAULT_REGION.console.aws.amazon.com/codesuite/codebuild/$AWS_ACCOUNT_ID/projects/$REPOSITORY_NAME/build/$REPOSITORY_NAME%3A$BUILD_ID/?region=$AWS_DEFAULT_REGION")
+      - echo $BUILD_URL
+
+  build:
+    commands:
+      - echo build started on `date`
+      - echo Building the Docker image...
+
+  post_build:
+    commands:
+      - echo post_build started on `date`
+      - echo Pushing the Docker image...
+
+      - |
+        if [ $CODEBUILD_BUILD_SUCCEEDING = 1 ]; then
+          content="✔️ Pull request build SUCCEEDED ![View Build]($BUILD_URL)";
+        else
+          content="❌ Pull request build FAILED ![View Build]($BUILD_URL)";
+        fi
+
+      - echo "$content"
+
+artifacts:
+  files: []
+
+  secondary-artifacts:
+    DefinitionArtifact:
+      files: []
+    ImageArtifact:
+      files: []
