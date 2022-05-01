@@ -1,0 +1,50 @@
+name: build
+
+on:
+  push:
+    branches: [ main, development ]
+  # pull_request:
+  #   branches: [ main, development ]
+
+jobs:
+  build:
+    name: Setup and Mirror to AWS CodeBuild
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    env:
+      AWS_REGION: us-east-1
+      DEPLOYMENT_REPO_NAME: book-recommendations-v2
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Retrieve private SSH file to Git Authentication through SSH
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        aws s3 cp s3://${{ secrets.S3_BUCKET_NAME }}/book-recommendations/book-recommendations /tmp/book-recommendations
+        chmod 600 /tmp/book-recommendations
+    - name: Set SSH config file
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+        ssh-keyscan -t rsa git-codecommit.${AWS_REGION}.amazonaws.com >> ~/.ssh/known_hosts
+        echo "Host git-codecommit.*.amazonaws.com" >> ~/.ssh/config
+        echo "User ${{ secrets.CODE_COMMIT_SSH_KEY_ID }}" >> ~/.ssh/config
+        echo "IdentityFile /tmp/book-recommendations" >> ~/.ssh/config
+        chmod 600 ~/.ssh/config
+    - name: Mirror to AWS CodeCommit
+      run: |
+        git remote add codecommit ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+        git fetch codecommit
+        git remote update codecommit
+        git push -f codecommit $GITHUB_REF_NAME
+        # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+    - name: Remove files
+      run: |
+        rm -rf ~/.ssh/config /tmp/book-recommendations
+    - name: Print job status
+      run: |
+        echo "JOB STATUS ${{ job.status }}"
