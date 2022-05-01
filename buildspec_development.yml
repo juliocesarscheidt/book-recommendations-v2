@@ -5,6 +5,9 @@ env:
   parameter-store: {}
 
 phases:
+  env:
+    AWS::AccountId
+
   pre_build:
     commands:
       - echo pre_build started on `date`
@@ -19,6 +22,10 @@ phases:
       - echo "CODEBUILD_BUILD_NUMBER -> $CODEBUILD_BUILD_NUMBER"
       - echo "CODEBUILD_RESOLVED_SOURCE_VERSION -> $CODEBUILD_RESOLVED_SOURCE_VERSION"
       - echo "CODEBUILD_BUILD_ID -> $CODEBUILD_BUILD_ID"
+      - echo "CODEBUILD_BUILD_ARN -> $CODEBUILD_BUILD_ARN"
+
+      - AWS_ACCOUNT_ID=$(echo $CODEBUILD_BUILD_ARN | cut -d':' -f5)
+      - echo $AWS_ACCOUNT_ID
 
       - ls -lth $CODEBUILD_SRC_DIR
 
