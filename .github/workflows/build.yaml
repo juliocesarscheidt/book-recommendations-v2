@@ -47,7 +47,7 @@ jobs:
         chmod 600 ~/.ssh/config
 
     - name: Mirror
-      run: git -o StrictHostKeyChecking=no push --mirror ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/book-recommendations-v2
+      run: git push --mirror ssh://git-codecommit.us-east-1.amazonaws.com/v1/repos/book-recommendations-v2
 
     - name: Remove files
       run: |
