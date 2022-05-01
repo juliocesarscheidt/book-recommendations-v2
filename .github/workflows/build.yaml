@@ -38,8 +38,8 @@ jobs:
     - name: Mirror to AWS CodeCommit
       run: |
         git remote add codecommit ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+        git fetch codecommit
         git remote update codecommit
-        # git fetch codecommit
         git push -f codecommit $GITHUB_REF_NAME
         # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
     - name: Remove files
