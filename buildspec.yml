@@ -6,6 +6,7 @@ env:
 
 phases:
   pre_build:
+    on-failure: ABORT
     commands:
       - echo pre_build started on `date`
       - aws --version
@@ -45,6 +46,7 @@ phases:
       - echo $BUILD_URL
 
   build:
+    on-failure: ABORT
     commands:
       - echo build started on `date`
       - echo Building the Docker images...
@@ -52,6 +54,7 @@ phases:
       - make push-image
 
   post_build:
+    on-failure: ABORT
     commands:
       - echo post_build started on `date`
       - echo Pushing the Docker images...
