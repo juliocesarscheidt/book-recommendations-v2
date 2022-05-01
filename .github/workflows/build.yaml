@@ -1,0 +1,30 @@
+name: build
+
+on:
+  push:
+    branches: [ main, development ]
+
+  pull_request:
+    branches: [ main, development ]
+
+jobs:
+  build:
+    name: Mirror to CodeBuild
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: us-east-1
+      GITHUB_REPOSITORY_NAME: $(echo ${GITHUB_REPOSITORY} | cut -d'/' -f2)
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: List files in the repository
+      run: |
+        ls ${{ github.workspace }}
+        echo "JOB STATUS ${{ job.status }}"
+        echo "${GITHUB_REPOSITORY_NAME}"
+
+    - name: Mirror
+      run: git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${GITHUB_REPOSITORY_NAME} code-commit-repo

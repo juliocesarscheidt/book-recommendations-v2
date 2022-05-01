@@ -1,0 +1,25 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "codecommit:CreateBranch",
+              "codecommit:ListBranches",
+              "codecommit:GitPull",
+              "codecommit:ListPullRequests",
+              "codecommit:GetReferences",
+              "codecommit:GetFile",
+              "codecommit:GetCommit",
+              "codecommit:GetComment",
+              "codecommit:UpdateComment",
+              "codecommit:GetCommitHistory",
+              "codecommit:GetRepository",
+              "codecommit:GetBranch",
+              "codecommit:GitPush",
+              "codecommit:GetPullRequest"
+          ],
+          "Resource": "arn:aws:codecommit:${AWS_DEFAULT_REGION}:${AWS_ACCOUNT}:book-recommendations-v2"
+      }
+  ]
+}
