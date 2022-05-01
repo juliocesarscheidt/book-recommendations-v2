@@ -48,7 +48,7 @@ phases:
     commands:
       - echo build started on `date`
       - echo Building the Docker images...
-      - cd terraform/
+      - cd infrastructure/terraform/
       - make push-image
 
   post_build:
