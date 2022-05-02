@@ -19,7 +19,7 @@ test-app:
 		-v "$$(pwd):/usr/src/app" \
 		-w /usr/src/app \
 		--entrypoint "" \
-		juliocesarmidia/recommendations-microservice:latest pytest -v \
+		recommendations-microservice:latest pytest -v \
 			--log-level=DEBUG --full-trace ./src/test/
 
 coverage:
@@ -28,7 +28,7 @@ coverage:
 		-v "$$(pwd):/usr/src/app" \
 		-w /usr/src/app \
 		--entrypoint "" \
-		juliocesarmidia/recommendations-microservice:latest pytest -v \
+		recommendations-microservice:latest pytest -v \
 			--log-level=DEBUG --full-trace \
 			--cov-report term-missing \
 			--cov=./src/  \
@@ -40,7 +40,7 @@ report:
 		-v "$$(pwd):/usr/src/app" \
 		-w /usr/src/app \
 		--entrypoint "" \
-		juliocesarmidia/recommendations-microservice:latest pytest -v \
+		recommendations-microservice:latest pytest -v \
 			--log-level=DEBUG --full-trace \
 			-o junit_family=xunit1 \
 			--cov-report xml:src/coverage-reports/coverage.xml \
