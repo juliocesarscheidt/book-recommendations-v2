@@ -95,6 +95,9 @@ User APKA4CJNBNXJ3IYVXLSU
 IdentityFile /home/julio/Documentos/book-recommendations-v2/cicd/book-recommendations
 
 
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+ssh-keyscan -t rsa git-codecommit.${AWS_REGION}.amazonaws.com >> ~/.ssh/known_hosts
+
 
 git clone \
   "ssh://git-codecommit.${AWS_DEFAULT_REGION}.amazonaws.com/v1/repos/book-recommendations-v2" \

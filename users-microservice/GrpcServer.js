@@ -2,7 +2,9 @@ const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const wrapServerWithReflection = require('grpc-node-server-reflection');
 
+/* eslint-disable */
 const PROTO_PATH = __dirname + '/protofiles/user.proto';
+/* eslint-enable */
 
 class GrpcServer {
   server;
