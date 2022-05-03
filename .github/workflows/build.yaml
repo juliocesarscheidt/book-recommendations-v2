@@ -7,7 +7,7 @@ on:
     branches: [ main, development ]
 
 env:
-  DEPLOYMENT_REPO_NAME: book-recommendations-v2
+  REPOSITORY_NAME: book-recommendations-v2
 
 jobs:
   build:
@@ -21,31 +21,32 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-    - name: Lint and test API Gateway
+    - name: Lint and Unit Tests for API Gateway
       working-directory: api-gateway/
       run: |
         make build
         make lint-app
         make test-app
-    - name: Lint and test Users Microservice
+    - name: Lint and Unit Tests for Users Microservice
       working-directory: users-microservice/
       run: |
         make build
         make lint-app
         make test-app
-    - name: Lint and test Books Microservice
+    - name: Lint and Unit Tests for Books Microservice
       working-directory: books-microservice/
       run: |
         make build
         make lint-app
         make test-app
-    - name: Lint and test Recommendations Microservice
+    - name: Lint and Unit Tests for Recommendations Microservice
       working-directory: recommendations-microservice/
       run: |
         make build
         make lint-app
         make test-app
     - name: Build and push Docker images
+      if: ${{ github.event_name != 'pull_request' }}
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -75,15 +76,15 @@ jobs:
     - name: Mirror to AWS CodeCommit
       if: ${{ github.event_name != 'pull_request' }}
       run: |
-        git remote add codecommit ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+        git remote add codecommit ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME}
         git remote update codecommit
         git fetch --unshallow codecommit || true
         git push -f codecommit $GITHUB_REF_NAME
-        # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
+        # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME}
     - name: Remove temp files
       if: ${{ github.event_name != 'pull_request' }}
       run: |
-        rm -rf ~/.ssh/config /tmp/book-recommendations
+        rm -rf ~/.ssh/config /tmp/book-recommendations ~/.docker/config.json
     - name: Print job status
       run: |
         echo "JOB STATUS ${{ job.status }}"
@@ -107,7 +108,7 @@ jobs:
         docker container run -i --rm \
           --env GITHUB_TOKEN=$BOT_GITHUB_TOKEN \
           --env GITHUB_OWNER=$OWNER \
-          --env GITHUB_REPO=$DEPLOYMENT_REPO_NAME \
+          --env GITHUB_REPO=$REPOSITORY_NAME \
           --env GITHUB_COMMENT_TYPE=pr \
           --env GITHUB_PR_ISSUE_NUMBER=$PULL_REQUEST_NUMBER \
           --env GITHUB_COMMENT_FORMAT="<b>Comment</b><br/>{{.}}" \
@@ -119,7 +120,7 @@ jobs:
         docker container run -i --rm \
           --env GITHUB_TOKEN=$BOT_GITHUB_TOKEN \
           --env GITHUB_OWNER=$OWNER \
-          --env GITHUB_REPO=$DEPLOYMENT_REPO_NAME \
+          --env GITHUB_REPO=$REPOSITORY_NAME \
           --env GITHUB_COMMENT_TYPE=pr \
           --env GITHUB_PR_ISSUE_NUMBER=$PULL_REQUEST_NUMBER \
           --env GITHUB_COMMENT_FORMAT="<b>Comment</b><br/>{{.}}" \
