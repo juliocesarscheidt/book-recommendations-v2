@@ -42,6 +42,9 @@ Also it will use services like RDS Postgres, DocumentDB, Amazon MQ for Rabbitmq,
 
 Instructions for deploy here: [Instructions](./infrastructure/README.md)
 
+## CI/CD flow architecture
+![Architecture](./architecture/book-recommendations-cicd.drawio.png)
+
 ## TODO
 
 > Implement Unit Tests
@@ -52,4 +55,5 @@ Instructions for deploy here: [Instructions](./infrastructure/README.md)
 
 > Implement CI/CD
 
-- [ ] Github Actions
+- [x] Github Actions
+- [x] CodeCommit and CodeBuild
