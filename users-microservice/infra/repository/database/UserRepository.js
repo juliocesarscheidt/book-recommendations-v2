@@ -1,8 +1,10 @@
 var mongoose = require('mongoose');
 
 const UserSchema = require('../../../domain/schema/UserSchema');
+/* eslint-disable */
 const MONGO_CONN_STRING = process.env.MONGO_CONN_STRING || 'mongodb://root:admin@127.0.0.1:27017';
 const MONGO_DATABASE = process.env.MONGO_DATABASE || 'user_db';
+/* eslint-enable */
 
 class UserRepository {
   UserModel;

@@ -54,7 +54,6 @@ create-backend-bucket:
 
 create-workspace:
 	-@terraform workspace new development 2> /dev/null
-	-@terraform workspace new staging 2> /dev/null
 	-@terraform workspace new production 2> /dev/null
 	terraform workspace select $(ENV)
 
@@ -77,7 +76,11 @@ validate:
 	terraform validate
 
 lint:
-	docker container run --rm --name tflint --env TFLINT_LOG=debug -v $$(pwd):/data -t ghcr.io/terraform-linters/tflint
+	docker container run --rm -t \
+		--name tflint \
+		--env TFLINT_LOG=debug \
+		-v $$(pwd):/data \
+		ghcr.io/terraform-linters/tflint
 
 refresh:
 	terraform refresh	-var-file=$(ENV).tfvars

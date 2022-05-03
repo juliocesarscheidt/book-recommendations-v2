@@ -4,6 +4,7 @@ module.exports = {
         "commonjs": true,
         "es6": true
     },
+    "parser": "babel-eslint",
     "extends": "eslint:recommended",
     "globals": {
         "Atomics": "readonly",
@@ -14,5 +15,6 @@ module.exports = {
     },
     "ignorePatterns": ["**/test/**", "**/pb/**", "**/protofiles/**"],
     "rules": {
+      "no-unused-vars": [1],
     }
 };

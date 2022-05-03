@@ -2,9 +2,22 @@
 
 MAVEN_REPO?="$$(echo ~/.m2/)/repository"
 
-build:
+build: install package
 	docker image build \
-		-t docker.io/juliocesarmidia/books-microservice:latest .
+		--tag books-microservice:latest \
+		--file Dockerfile .
+
+lint-app:
+	@echo "no lint"
+
+test-app:
+	docker container run -t --rm \
+		--name books-microservice-test \
+		-v $(MAVEN_REPO):/root/.m2/repository \
+		-v "$$(pwd)":/usr/src/app \
+		-w /usr/src/app \
+		juliocesarmidia/java14.0.2-maven3.8.1:latest \
+		mvn test
 
 clean:
 	docker container run -t --rm \
@@ -42,8 +55,6 @@ package:
 		juliocesarmidia/java14.0.2-maven3.8.1:latest \
 		mvn package -Dmaven.test.skip=true
 
-# mvn package -Dmaven.test.skip=true
-
 prepare-package:
 	docker container run -t --rm \
 		--name maven-compiler \
@@ -52,15 +63,6 @@ prepare-package:
 		-w /usr/src/app \
 		juliocesarmidia/java14.0.2-maven3.8.1:latest \
 		mvn prepare-package
-
-test:
-	docker container run -t --rm \
-		--name maven-compiler \
-		-v $(MAVEN_REPO):/root/.m2/repository \
-		-v "$$(pwd)":/usr/src/app \
-		-w /usr/src/app \
-		juliocesarmidia/java14.0.2-maven3.8.1:latest \
-		mvn test
 
 verify:
 	docker container run -t --rm \
@@ -78,6 +80,4 @@ report:
 		-v "$$(pwd)":/usr/src/app \
 		-w /usr/src/app \
 		juliocesarmidia/java14.0.2-maven3.8.1:latest \
-		mvn jacoco:prepare-agent install jacoco:report
-
-# mvn clean jacoco:prepare-agent install jacoco:report
+		mvn clean jacoco:prepare-agent install jacoco:report

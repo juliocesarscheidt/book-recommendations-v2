@@ -1,10 +1,13 @@
-name: build
+name: CI Pipeline
 
 on:
   push:
     branches: [ main, development ]
-  # pull_request:
-  #   branches: [ main, development ]
+  pull_request:
+    branches: [ main, development ]
+
+env:
+  REPOSITORY_NAME: book-recommendations-v2
 
 jobs:
   build:
@@ -15,11 +18,45 @@ jobs:
         shell: bash
     env:
       AWS_REGION: us-east-1
-      DEPLOYMENT_REPO_NAME: book-recommendations-v2
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+    - name: Lint and Unit Tests for API Gateway
+      working-directory: api-gateway/
+      run: |
+        make build
+        make lint-app
+        make test-app
+    - name: Lint and Unit Tests for Users Microservice
+      working-directory: users-microservice/
+      run: |
+        make build
+        make lint-app
+        make test-app
+    - name: Lint and Unit Tests for Books Microservice
+      working-directory: books-microservice/
+      run: |
+        make build
+        make lint-app
+        make test-app
+    - name: Lint and Unit Tests for Recommendations Microservice
+      working-directory: recommendations-microservice/
+      run: |
+        make build
+        make lint-app
+        make test-app
+    - name: Build and push Docker images
+      if: ${{ github.event_name != 'pull_request' }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+      working-directory: infrastructure/terraform/
+      run: |
+        IMAGE_VERSION=$(git rev-parse --short=7 HEAD) make push-image
     - name: Retrieve private SSH file to Git Authentication through SSH
+      if: ${{ github.event_name != 'pull_request' }}
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -27,6 +64,7 @@ jobs:
         aws s3 cp s3://${{ secrets.S3_BUCKET_NAME }}/book-recommendations/book-recommendations /tmp/book-recommendations
         chmod 600 /tmp/book-recommendations
     - name: Set SSH config file
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -36,15 +74,55 @@ jobs:
         echo "IdentityFile /tmp/book-recommendations" >> ~/.ssh/config
         chmod 600 ~/.ssh/config
     - name: Mirror to AWS CodeCommit
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
-        git remote add codecommit ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
-        git fetch codecommit
+        git remote add codecommit ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME}
         git remote update codecommit
+        git fetch --unshallow codecommit || true
         git push -f codecommit $GITHUB_REF_NAME
-        # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${DEPLOYMENT_REPO_NAME}
-    - name: Remove files
+        # git push --mirror ssh://git-codecommit.${AWS_REGION}.amazonaws.com/v1/repos/${REPOSITORY_NAME}
+    - name: Remove temp files
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
-        rm -rf ~/.ssh/config /tmp/book-recommendations
+        rm -rf ~/.ssh/config /tmp/book-recommendations ~/.docker/config.json
     - name: Print job status
       run: |
         echo "JOB STATUS ${{ job.status }}"
+
+  notify:
+    name: Notify Pipeline
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: build
+    env:
+      BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+      PULL_REQUEST_NUMBER: ${{ github.event.number }}
+      OWNER: juliocesarscheidt
+    steps:
+    - name: The job has failed
+      if: ${{ failure() }}
+      run: |
+        docker container run -i --rm \
+          --env GITHUB_TOKEN=$BOT_GITHUB_TOKEN \
+          --env GITHUB_OWNER=$OWNER \
+          --env GITHUB_REPO=$REPOSITORY_NAME \
+          --env GITHUB_COMMENT_TYPE=pr \
+          --env GITHUB_PR_ISSUE_NUMBER=$PULL_REQUEST_NUMBER \
+          --env GITHUB_COMMENT_FORMAT="<b>Comment</b><br/>{{.}}" \
+          --env GITHUB_COMMENT="The build of commit $GITHUB_SHA has failed" \
+          cloudposse/github-commenter:latest
+    - name: The job has succeeded
+      if: ${{ success() }}
+      run: |
+        docker container run -i --rm \
+          --env GITHUB_TOKEN=$BOT_GITHUB_TOKEN \
+          --env GITHUB_OWNER=$OWNER \
+          --env GITHUB_REPO=$REPOSITORY_NAME \
+          --env GITHUB_COMMENT_TYPE=pr \
+          --env GITHUB_PR_ISSUE_NUMBER=$PULL_REQUEST_NUMBER \
+          --env GITHUB_COMMENT_FORMAT="<b>Comment</b><br/>{{.}}" \
+          --env GITHUB_COMMENT="The build of commit $GITHUB_SHA was successful, LGTM" \
+          cloudposse/github-commenter:latest

@@ -90,10 +90,10 @@ EOF
 chmod 600 ~/.ssh/config
 cat ~/.ssh/config
 
-Host git-codecommit.*.amazonaws.com
-User APKA4CJNBNXJ3IYVXLSU
-IdentityFile /home/julio/Documentos/book-recommendations-v2/cicd/book-recommendations
 
+
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+ssh-keyscan -t rsa git-codecommit.${AWS_REGION}.amazonaws.com >> ~/.ssh/known_hosts
 
 
 git clone \

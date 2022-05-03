@@ -2,24 +2,24 @@
 
 build:
 	docker image build \
-		--tag juliocesarmidia/recommendations-microservice:latest \
+		--tag recommendations-microservice:latest \
 		--file Dockerfile .
 
-lint:
+lint-app:
 	docker container run --rm \
-		--name py-linter \
+		--name recommendations-microservice-lint \
 		-v $$(pwd):/usr/src/app \
 		-w /usr/src/app \
 		--entrypoint "" \
 		cytopia/black:latest-0.2 sh -c "black --check -v ."
 
-test:
+test-app:
 	docker container run -t --rm \
-		--name py-test \
+		--name recommendations-microservice-test \
 		-v "$$(pwd):/usr/src/app" \
 		-w /usr/src/app \
 		--entrypoint "" \
-		juliocesarmidia/recommendations-microservice:latest pytest -v \
+		recommendations-microservice:latest pytest -v \
 			--log-level=DEBUG --full-trace ./src/test/
 
 coverage:
@@ -28,7 +28,7 @@ coverage:
 		-v "$$(pwd):/usr/src/app" \
 		-w /usr/src/app \
 		--entrypoint "" \
-		juliocesarmidia/recommendations-microservice:latest pytest -v \
+		recommendations-microservice:latest pytest -v \
 			--log-level=DEBUG --full-trace \
 			--cov-report term-missing \
 			--cov=./src/  \
@@ -40,7 +40,7 @@ report:
 		-v "$$(pwd):/usr/src/app" \
 		-w /usr/src/app \
 		--entrypoint "" \
-		juliocesarmidia/recommendations-microservice:latest pytest -v \
+		recommendations-microservice:latest pytest -v \
 			--log-level=DEBUG --full-trace \
 			-o junit_family=xunit1 \
 			--cov-report xml:src/coverage-reports/coverage.xml \

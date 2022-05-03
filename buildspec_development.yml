@@ -10,12 +10,9 @@ phases:
     commands:
       - echo pre_build started on `date`
       - aws --version
-
       - yum install -y jq curl unzip
-      - jq --version
 
-      - echo $ENV
-
+      - echo "ENV -> $ENV"
       - echo "AWS_DEFAULT_REGION -> $AWS_DEFAULT_REGION"
       - echo "CODEBUILD_SOURCE_REPO_URL -> $CODEBUILD_SOURCE_REPO_URL"
       - echo "CODEBUILD_BUILD_IMAGE -> $CODEBUILD_BUILD_IMAGE"
@@ -26,22 +23,14 @@ phases:
 
       - AWS_ACCOUNT_ID=$(echo $CODEBUILD_BUILD_ARN | cut -d':' -f5)
       - echo $AWS_ACCOUNT_ID
-
-      - ls -lth $CODEBUILD_SRC_DIR
-
       - REPOSITORY_NAME=$(echo $CODEBUILD_BUILD_ID | cut -d':' -f1)
       - echo $REPOSITORY_NAME
-
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
-      - echo $REPOSITORY_URI
-
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
-      - echo $IMAGE_TAG
-
       - BUILD_ID=$(echo $CODEBUILD_BUILD_ID | cut -d':' -f2)
       - echo $BUILD_ID
-
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPOSITORY_NAME
+      - echo $REPOSITORY_URI
+      - IMAGE_VERSION=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo $IMAGE_VERSION
       - BUILD_URL=$(echo "https://$AWS_DEFAULT_REGION.console.aws.amazon.com/codesuite/codebuild/$AWS_ACCOUNT_ID/projects/$REPOSITORY_NAME/build/$REPOSITORY_NAME%3A$BUILD_ID/?region=$AWS_DEFAULT_REGION")
       - echo $BUILD_URL
 
@@ -49,36 +38,28 @@ phases:
     on-failure: ABORT
     commands:
       - echo build started on `date`
-      - echo Building the Docker images...
       - cd $CODEBUILD_SRC_DIR/infrastructure/terraform/
-      - make push-image
+      - curl --silent -X GET -L https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip --output terraform_0.12.26_linux_amd64.zip
+      - unzip terraform_0.12.26_linux_amd64.zip && rm -f terraform_0.12.26_linux_amd64.zip
+      - chmod +x terraform && mv terraform /usr/local/bin/
+      - aws s3 cp s3://${AWS_BACKEND_BUCKET}/terraform/ecs-cluster/${ENV}.tfvars .
+      - make init
 
   post_build:
     on-failure: ABORT
     commands:
       - echo post_build started on `date`
-      - echo Pushing the Docker images...
-
-      - curl --silent -X GET -L https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip --output terraform_0.12.26_linux_amd64.zip
-      - unzip terraform_0.12.26_linux_amd64.zip && rm -f terraform_0.12.26_linux_amd64.zip
-      - chmod +x terraform && mv terraform /usr/local/bin/
-
-      - cd $CODEBUILD_SRC_DIR/infrastructure/terraform/
-      - aws s3 cp s3://${AWS_BACKEND_BUCKET}/terraform/ecs-cluster/development.tfvars .
-      - make init
-
+      - make apply
       - |
         if [ $CODEBUILD_BUILD_SUCCEEDING = 1 ]; then
           content="✔️ Pull request build SUCCEEDED ![View Build]($BUILD_URL)";
         else
           content="❌ Pull request build FAILED ![View Build]($BUILD_URL)";
         fi
-
       - echo "$content"
 
 artifacts:
   files: []
-
   secondary-artifacts:
     DefinitionArtifact:
       files: []

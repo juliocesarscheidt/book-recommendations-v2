@@ -1,8 +1,6 @@
 # API Gateway
 
 ```bash
-go fmt .
-
 
 go get github.com/golang/protobuf
 go get google.golang.org/grpc
@@ -21,6 +19,11 @@ export AMQP_CONN_STRING=amqp://rabbitmq:admin@127.0.0.1:5872/
 export REDIS_CONN_STRING=127.0.0.1:6379
 
 go run main.go
+
+
+go vet .
+
+go fmt .
 
 ```
 

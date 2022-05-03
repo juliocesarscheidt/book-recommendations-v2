@@ -3,7 +3,9 @@ const UserRepository = require('../repository/database/UserRepository');
 // const UserRepository = require('../repository/memory/UserRepositoryMemory');
 const RedisClient = require('../adapter/RedisClient');
 
+/* eslint-disable */
 const REDIS_CONN_STRING = process.env.REDIS_CONN_STRING || '127.0.0.1:5672';
+/* eslint-enable */
 
 class UserService {
   userRepository;
