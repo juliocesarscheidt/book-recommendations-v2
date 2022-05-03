@@ -1,5 +1,5 @@
 
-cat <<EOF > tmp_policy_s3_user.json
+cat <<EOF > tmp_policy_s3_user_s3_policy.json
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -12,9 +12,55 @@ cat <<EOF > tmp_policy_s3_user.json
 }
 EOF
 
-aws iam create-policy --policy-name "book-recommendations-s3-get-file" --policy-document file://tmp_policy_s3_user.json
+aws iam create-policy \
+  --policy-name "book-recommendations-s3-get-file" \
+  --policy-document file://tmp_policy_s3_user_s3_policy.json
 
 // "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-get-file"
+
+
+
+cat <<EOF > tmp_policy_s3_user_ecr_policy.json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ECRPullPolicy",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:CreateRepository",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "ecr:UploadLayerPart",
+        "ecr:PutImage",
+        "ecr:InitiateLayerUpload",
+        "ecr:CompleteLayerUpload",
+        "ecr:DescribeRepositories"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "ECRAuthPolicy",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
+EOF
+
+aws iam create-policy \
+  --policy-name "book-recommendations-s3-ecr-cicd" \
+  --policy-document file://tmp_policy_s3_user_ecr_policy.json
+
+// "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-ecr-cicd"
 
 
 
@@ -35,7 +81,6 @@ echo "${S3_USER_ID}"
 
 
 
-
 aws iam create-access-key --user-name "book-recommendations-s3-user"
 {
     "AccessKey": {
@@ -49,10 +94,14 @@ aws iam create-access-key --user-name "book-recommendations-s3-user"
 
 
 
-
 aws iam attach-user-policy \
   --user-name "book-recommendations-s3-user" \
   --policy-arn "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-get-file"
+
+aws iam attach-user-policy \
+  --user-name "book-recommendations-s3-user" \
+  --policy-arn "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-ecr-cicd"
+
 
 aws iam list-attached-user-policies --user-name "book-recommendations-s3-user"
 {
@@ -60,6 +109,10 @@ aws iam list-attached-user-policies --user-name "book-recommendations-s3-user"
         {
             "PolicyName": "book-recommendations-s3-get-file",
             "PolicyArn": "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-get-file"
+        },
+        {
+            "PolicyName": "book-recommendations-s3-ecr-cicd",
+            "PolicyArn": "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-ecr-cicd"
         }
     ]
 }
