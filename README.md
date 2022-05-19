@@ -38,12 +38,12 @@ The services are going to run on AWS, using ECS with Fargate for containers unde
 Also it will use services like RDS Postgres, DocumentDB, Amazon MQ for Rabbitmq, ElasticCache for Redis, for databases, event broker and cache respectively.
 
 ## Cloud architecture
-![Architecture](./architecture/book-recommendations-infra.drawio.png)
+![Architecture](./architecture/book-recommendations-infra.drawio.svg)
 
 Instructions for deploy here: [Instructions](./infrastructure/README.md)
 
 ## CI/CD flow architecture
-![Architecture](./architecture/book-recommendations-cicd.drawio.png)
+![Architecture](./architecture/book-recommendations-cicd.drawio.svg)
 
 ## TODO
 
