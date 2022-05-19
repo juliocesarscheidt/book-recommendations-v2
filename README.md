@@ -9,7 +9,7 @@ The services which use AMQP queue to receive commands, use the request/response 
 The main intention it is to calculate and recommend books based on users ratings.
 
 ## Application architecture
-![Architecture](./architecture/book-recommendations.drawio.png)
+![Architecture](./architecture/book-recommendations.drawio.svg)
 
 ## Up and Running
 
