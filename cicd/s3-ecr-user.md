@@ -1,3 +1,6 @@
+# Instructions on creating an AWS User to be used on CI to interact with S3 and ECR
+
+```bash
 
 cat <<EOF > tmp_policy_s3_user_s3_policy.json
 {
@@ -16,8 +19,7 @@ aws iam create-policy \
   --policy-name "book-recommendations-s3-get-file" \
   --policy-document file://tmp_policy_s3_user_s3_policy.json
 
-// "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-get-file"
-
+# "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-get-file"
 
 
 cat <<EOF > tmp_policy_s3_user_ecr_policy.json
@@ -60,10 +62,10 @@ aws iam create-policy \
   --policy-name "book-recommendations-s3-ecr-cicd" \
   --policy-document file://tmp_policy_s3_user_ecr_policy.json
 
-// "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-ecr-cicd"
+# "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-ecr-cicd"
 
 
-
+# create an user to interact with S3 and ECR
 aws iam create-user --user-name "book-recommendations-s3-user"
 
 aws iam get-user --user-name "book-recommendations-s3-user"
@@ -81,6 +83,7 @@ echo "${S3_USER_ID}"
 
 
 
+# create an access key to use on CI
 aws iam create-access-key --user-name "book-recommendations-s3-user"
 {
     "AccessKey": {
@@ -93,7 +96,7 @@ aws iam create-access-key --user-name "book-recommendations-s3-user"
 }
 
 
-
+# attach policies to user
 aws iam attach-user-policy \
   --user-name "book-recommendations-s3-user" \
   --policy-arn "arn:aws:iam::${AWS_ACCOUNT}:policy/book-recommendations-s3-get-file"
@@ -117,3 +120,4 @@ aws iam list-attached-user-policies --user-name "book-recommendations-s3-user"
     ]
 }
 
+```
