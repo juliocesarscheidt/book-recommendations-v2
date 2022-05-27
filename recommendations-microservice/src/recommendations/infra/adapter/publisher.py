@@ -4,9 +4,6 @@ from application.adapter.abstract_publisher import AbstractPublisher
 
 
 class Publisher(AbstractPublisher):
-    def __init__(self) -> None:
-        pass
-
     def publish_temp_queue(self, channel, reply_queue_name, response_body):
         channel.basic_publish(
             exchange="",
@@ -30,3 +27,9 @@ class Publisher(AbstractPublisher):
                 delivery_mode=2,
             ),
         )
+
+    def channel_ack(self, channel, delivery_tag):
+        channel.basic_ack(delivery_tag=delivery_tag)
+
+    def channel_nack(self, channel, delivery_tag, requeue=True):
+        channel.basic_nack(delivery_tag=delivery_tag, multiple=False, requeue=requeue)

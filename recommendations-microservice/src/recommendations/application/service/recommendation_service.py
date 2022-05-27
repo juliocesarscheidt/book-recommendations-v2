@@ -28,7 +28,7 @@ def euclidean_distance(item1, item2, base):
     return dist_real
 
 
-def get_recommendations(user, base, k=10):
+def get_recommendations(user, base, k=50):
     totals = {}
     sum_similarities = {}
 

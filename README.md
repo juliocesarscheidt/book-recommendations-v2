@@ -44,16 +44,3 @@ Instructions for deploy here: [Instructions](./infrastructure/README.md)
 
 ## CI/CD flow architecture
 ![Architecture](./architecture/book-recommendations-cicd.drawio.svg)
-
-## TODO
-
-> Implement Unit Tests
-
-- [x] users-microservice
-- [x] books-microservice
-- [ ] recommendations-microservice
-
-> Implement CI/CD
-
-- [x] Github Actions
-- [x] CodeCommit and CodeBuild

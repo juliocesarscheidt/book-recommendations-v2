@@ -2,28 +2,29 @@ import json
 import logging
 
 from application.adapter.abstract_publisher import AbstractPublisher
-from application.adapter.abstract_cache import AbstractCache
+from application.adapter.abstract_redis_adapter import AbstractRedisAdapter
+from application.adapter.abstract_grpc_adapter import AbastractGrpcAdapter
 from application.dto.get_recommendation_response_dto import GetRecommendationResponseDto
 from application.service.rate_service import build_rates
 from application.service.recommendation_service import get_recommendations
 
 
-class Service(object):
+class EventController(object):
     publisher: AbstractPublisher
-    cache: AbstractCache
-    grpc_client: None
+    redis_adapter: AbstractRedisAdapter
+    grpc_adapter: AbastractGrpcAdapter
 
-    def __init__(self, publisher, cache, grpc_client) -> None:
+    def __init__(self, publisher, redis_adapter, grpc_adapter) -> None:
         self.publisher = publisher
-        self.cache = cache
-        self.grpc_client = grpc_client
+        self.redis_adapter = redis_adapter
+        self.grpc_adapter = grpc_adapter
 
-    def calculate_rates(self, __message, __channel, __properties):
+    def calculate_recommendation(self, __message, __channel, __properties):
         logging.info("[INFO] message")
         logging.info(__message)
 
-        # TODO: iterate over rates
-        rates = self.grpc_client.list_user_rate(0, 50)
+        # TODO: retrieve ratings with pagination
+        rates = self.grpc_adapter.list_user_rate(0, 50)
         if rates is None or len(rates) == 0:
             return
 
@@ -38,7 +39,7 @@ class Service(object):
         if recommendations is not None:
             cache_key = f"/recommendation/user/{user_uuid}"
             logging.info("cache_key :: " + cache_key)
-            self.cache.set_cache(cache_key, json.dumps(recommendations))
+            self.redis_adapter.set_cache(cache_key, json.dumps(recommendations))
 
         logging.info("[x] Done")
 
@@ -51,7 +52,7 @@ class Service(object):
         cache_key = f"/recommendation/user/{user_uuid}"
         logging.info("cache_key :: " + cache_key)
 
-        recommendations = self.cache.get_cache(cache_key)
+        recommendations = self.redis_adapter.get_cache(cache_key)
         logging.info("recommendations :: " + str(recommendations))
 
         if recommendations is None:

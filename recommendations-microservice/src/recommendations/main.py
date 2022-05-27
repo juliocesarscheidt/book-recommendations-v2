@@ -2,7 +2,7 @@ import pika
 import logging
 
 from config import get_amqp_config, get_redis_config, get_grpc_config
-from infra.handler.handler import Handler
+from infra.handler.event_handler import EventHandler
 
 logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
@@ -11,10 +11,10 @@ if __name__ in "__main__":
     redis_config = get_redis_config()
     grpc_config = get_grpc_config()
 
-    handler = Handler(
+    event_handler = EventHandler(
         pika.URLParameters(amqp_config["conn_string"]),
         amqp_config["queue"],
         redis_config["conn_string"],
         grpc_config["conn_string"],
     )
-    handler.handle()
+    event_handler.start()

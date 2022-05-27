@@ -28,7 +28,7 @@ export AMQP_CONN_STRING=amqp://rabbitmq:admin@127.0.0.1:5872/
 export REDIS_CONN_STRING=127.0.0.1:6379
 export GRPC_CONN_STRING=127.0.0.1:50051
 
-python3 src/recommendations/main.py
+python3 -u src/recommendations/main.py
 
 
 # black linter

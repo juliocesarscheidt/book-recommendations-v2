@@ -5,8 +5,10 @@ from tenacity import Retrying, RetryError, stop_after_attempt, wait_exponential
 import pb.user_pb2 as user_pb2
 import pb.user_pb2_grpc as user_pb2_grpc
 
+from application.adapter.abstract_grpc_adapter import AbastractGrpcAdapter
 
-class GrpcClient:
+
+class GrpcAdapter(AbastractGrpcAdapter):
     channel: None
     stub_user_service: None
     stub_user_rate_service: None
