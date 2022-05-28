@@ -57,7 +57,9 @@ func InjectRoutes(router *mux.Router, grpcClient adapter.GrpcClient, amqpClient 
 	// book routes (/api/book)
 	subRouterBook.Path("").HandlerFunc(controller.CreateBook(amqpClient)).Methods(http.MethodPost)
 	subRouterBook.Path("/{book_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.GetBook(amqpClient)).Methods(http.MethodGet)
+	subRouterBook.Path("/{book_uuid:[a-zA-Z0-9]{24}}/file/url").HandlerFunc(controller.GetBookPresignUrl(amqpClient, redisClient)).Methods(http.MethodGet)
 	subRouterBook.Path("/{book_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.UpdateBook(amqpClient)).Methods(http.MethodPut)
+	subRouterBook.Path("/{book_uuid:[a-zA-Z0-9]{24}}/file").HandlerFunc(controller.UpdateBookWithFile(amqpClient, redisClient)).Methods(http.MethodPut)
 	subRouterBook.Path("/{book_uuid:[a-zA-Z0-9]{24}}").HandlerFunc(controller.DeleteBook(amqpClient)).Methods(http.MethodDelete)
 	subRouterBook.Path("").Queries("page", "{page}", "size", "{size}").HandlerFunc(controller.ListBook(amqpClient)).Methods(http.MethodGet)
 

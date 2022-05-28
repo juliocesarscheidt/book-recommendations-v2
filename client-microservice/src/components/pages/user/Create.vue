@@ -3,23 +3,23 @@
     <article class="flex flex-column flex-justify-center flex-align-center">
       <div style="width: 100%; min-width: 200px; margin-bottom: 0px;">
         <div class="form-group">
-          <label for="input-name">{{ $t('user.name') }}</label>
+          <label>{{ $t('user.name') }}</label>
           <input type="text" class="form-control" v-model.trim="name">
         </div>
         <div class="form-group">
-          <label for="input-surname">{{ $t('user.surname') }}</label>
+          <label>{{ $t('user.surname') }}</label>
           <input type="text" class="form-control" v-model.trim="surname">
         </div>
         <div class="form-group">
-          <label for="input-email">{{ $t('user.email') }}</label>
+          <label>{{ $t('user.email') }}</label>
           <input type="email" class="form-control" v-model.trim="email">
         </div>
         <div class="form-group">
-          <label for="input-phone">{{ $t('user.phone') }}</label>
+          <label>{{ $t('user.phone') }}</label>
           <input type="phone" class="form-control" v-model.trim="phone" v-format-phone="phone">
         </div>
         <div class="form-group">
-          <label for="input-password">{{ $t('user.password') }}</label>
+          <label>{{ $t('user.password') }}</label>
           <input type="password" class="form-control" v-model.trim="password">
         </div>
 

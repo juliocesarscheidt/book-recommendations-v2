@@ -15,6 +15,8 @@ import {
 import {
   createBook,
   getBook,
+  getBookPresignUrl,
+  updateBookWithFile,
   updateBook,
   deleteBook,
   listBook,
@@ -42,6 +44,8 @@ export {
   listUser,
   createBook,
   getBook,
+  getBookPresignUrl,
+  updateBookWithFile,
   updateBook,
   deleteBook,
   listBook,

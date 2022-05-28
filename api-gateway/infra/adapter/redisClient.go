@@ -72,3 +72,15 @@ func (redisClient RedisClient) Set(key string, value interface{}) error {
 
 	return nil
 }
+
+func (redisClient RedisClient) Del(key string) (error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err := redisClient.Client.Del(ctx, key).Err(); err != nil {
+		fmt.Println("[ERROR]", err)
+		return err
+	}
+
+	return nil
+}

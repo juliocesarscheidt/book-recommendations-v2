@@ -1,12 +1,20 @@
 package controller
 
 import (
+	"io"
 	"fmt"
+	"time"
+	"errors"
 	"strconv"
+	"strings"
 	"net/http"
+	// "mime/multipart"
 	"encoding/json"
 
 	"github.com/gorilla/mux"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/juliocesarscheidt/apigateway/application/usecase"
 	"github.com/juliocesarscheidt/apigateway/application/dto"
@@ -14,15 +22,115 @@ import (
 	httpmodule "github.com/juliocesarscheidt/apigateway/infra/http"
 )
 
+const (
+	MAX_FILE_SIZE = 10.00
+	BUCKET_NAME = "blackdevs-aws"
+)
+
+func validateImageFileForm(filename string, fileExtension string, fileSizeMb float64) error {
+	if fileExtension != "png" && fileExtension != "jpg" && fileExtension != "jpeg" {
+		return errors.New("Invalid File Extension")
+	}
+	if fileSizeMb > MAX_FILE_SIZE {
+		return errors.New("Invalid File Size")
+	}
+	return nil
+}
+
+func appendBucketPathToFilename(filename string) string {
+	return fmt.Sprintf("book-recommendations-files/%s", filename)
+}
+
+func generateFilenameRandBucketKey(filename string, fileExtension string) (string, string) {
+	now := time.Now()
+	nowSecs := now.Unix()
+	filenameRand := fmt.Sprintf("%s-%d.%s", filename, nowSecs, fileExtension)
+	filenameBucketKey := appendBucketPathToFilename(filenameRand)
+	return filenameRand, filenameBucketKey
+}
+
+func getS3Client() (*s3.S3, error) {
+	sess, err := session.NewSession(&aws.Config{
+		Region: aws.String("sa-east-1")},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return s3.New(sess), nil
+}
+
+func putS3File(file io.ReadSeeker, bucketName string, filenameBucketKey string) (*s3.PutObjectOutput, error) {
+	s3Client, err := getS3Client()
+	if err != nil {
+		return nil, err
+	}
+	input := &s3.PutObjectInput{
+		Body: file,
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(filenameBucketKey),
+	}
+	objectOutput, err := s3Client.PutObject(input)
+	if err != nil {
+		return nil, err
+	}
+	return objectOutput, nil
+}
+
+func generateS3PresignUrl(bucketName string, filenameBucketKey string) (string, error) {
+	s3Client, err := getS3Client()
+	if err != nil {
+		return "", err
+	}
+	req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
+		Bucket: aws.String(bucketName),
+		Key:    aws.String(filenameBucketKey),
+	})
+	url, err := req.Presign(60*60*time.Second) // 1 hour
+	if err != nil {
+		return "", err
+	}
+	return url, nil
+}
+
+// routes
 func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
-		var createBookRequestDTO dto.CreateBookRequestDTO
-		if err := json.NewDecoder(r.Body).Decode(&createBookRequestDTO); err != nil {
+		file, header, err := r.FormFile("image")
+    if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
+    }
+		defer file.Close()
+
+		filenameParts := strings.Split(header.Filename, ".")
+		filename := strings.Trim(filenameParts[0], "")
+		fileExtension := strings.Trim(filenameParts[1], "")
+		fileSizeMb := float64(header.Size) / 1024 / 1024
+
+		if err := validateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
+			ThrowBadRequest(w, err.Error())
+			return
 		}
+		filenameRand, filenameBucketKey := generateFilenameRandBucketKey(filename, fileExtension)
+		fmt.Println("filenameBucketKey :: " + filenameBucketKey)
+
+		objectOutput, err := putS3File(file, BUCKET_NAME, filenameBucketKey)
+		if err != nil {
+			ThrowInternalServerError(w, err.Error())
+			return
+    }
+		fmt.Println(objectOutput)
+
+		createBookRequestDTO := dto.CreateBookRequestDTO{
+			Title: r.FormValue("title"),
+			Author: r.FormValue("author"),
+			Genre: r.FormValue("genre"),
+			Image: filenameRand,
+		}
+		fmt.Println(createBookRequestDTO)
+
 		uuid, err := usecase.CreateBook(createBookRequestDTO, amqpClient)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
@@ -55,6 +163,116 @@ func GetBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(&httpmodule.HttpResponse{Data: book})
+	}
+}
+
+func GetBookPresignUrl(amqpClient *adapter.AmqpClient, redisClient adapter.RedisClient) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		params := mux.Vars(r)
+		fmt.Println(params)
+		book_uuid, _ := params["book_uuid"]
+
+		// check on cache
+		cacheKey := fmt.Sprintf("/book/%s/file/url", book_uuid)
+		result, err := redisClient.Get(cacheKey)
+		if (err != nil) {
+			fmt.Errorf("Failed to retrieve from cache: %v", err)
+		}
+		if (result != nil) {
+			fmt.Println("Cache Hit :: " + cacheKey)
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(&httpmodule.HttpResponse{Data: result})
+			return
+		}
+		fmt.Println("Cache Miss :: " + cacheKey)
+
+		// from here, it wasn't on cache yet
+		getBookRequestDTO := dto.GetBookRequestDTO{
+			Uuid: book_uuid,
+		}
+		book, err := usecase.GetBook(getBookRequestDTO, amqpClient)
+		if err != nil {
+			ThrowInternalServerError(w, err.Error())
+			return
+		}
+		fmt.Printf("Response :: %v\n", book)
+
+		filenameBucketKey := appendBucketPathToFilename(book.Image)
+
+		url, err := generateS3PresignUrl(BUCKET_NAME, filenameBucketKey)
+		if err != nil {
+			ThrowInternalServerError(w, err.Error())
+			return
+		}
+
+		// put on cache
+		if err := redisClient.Set(cacheKey, url); err != nil {
+			fmt.Errorf("Failed to set on cache: %v", err)
+		}
+
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(&httpmodule.HttpResponse{Data: url})
+	}
+}
+
+func UpdateBookWithFile(amqpClient *adapter.AmqpClient, redisClient adapter.RedisClient) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		params := mux.Vars(r)
+		fmt.Println(params)
+		book_uuid, _ := params["book_uuid"]
+
+		file, header, err := r.FormFile("image")
+    if err != nil {
+			ThrowInternalServerError(w, err.Error())
+			return
+    }
+		defer file.Close()
+
+		filenameParts := strings.Split(header.Filename, ".")
+		filename := strings.Trim(filenameParts[0], "")
+		fileExtension := strings.Trim(filenameParts[1], "")
+		fileSizeMb := float64(header.Size) / 1024 / 1024
+
+		if err := validateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
+			ThrowBadRequest(w, err.Error())
+			return
+		}
+		filenameRand, filenameBucketKey := generateFilenameRandBucketKey(filename, fileExtension)
+		fmt.Println("filenameBucketKey :: " + filenameBucketKey)
+
+		objectOutput, err := putS3File(file, BUCKET_NAME, filenameBucketKey)
+		if err != nil {
+			ThrowInternalServerError(w, err.Error())
+			return
+    }
+		fmt.Println(objectOutput)
+
+		updateBookRequestDTO := dto.UpdateBookRequestDTO{
+			Uuid: book_uuid,
+			Title: r.FormValue("title"),
+			Author: r.FormValue("author"),
+			Genre: r.FormValue("genre"),
+			Image: filenameRand,
+		}
+		fmt.Println(updateBookRequestDTO)
+
+		err = usecase.UpdateBook(updateBookRequestDTO, amqpClient)
+		if err != nil {
+			ThrowInternalServerError(w, err.Error())
+			return
+		}
+
+		// delete from cache
+		cacheKey := fmt.Sprintf("/book/%s/file/url", book_uuid)
+		if err := redisClient.Del(cacheKey); err != nil {
+			fmt.Errorf("Failed to set on cache: %v", err)
+		}
+
+		w.WriteHeader(http.StatusAccepted)
 	}
 }
 

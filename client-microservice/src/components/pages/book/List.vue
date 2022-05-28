@@ -36,8 +36,9 @@
         <template #cell(genre)="data">
           <i>{{ data.value | capitalize }}</i>
         </template>
+
         <template #cell(image)="data">
-          <a v-bind:href="data.value" target="_blank" title="See Image">{{ data.value | trimLetters(25) }}</a>
+          <div class="text-nowrap" @click="openImageUrl(data.item.uuid)">{{ data.value | trimLetters(25) }}</div>
         </template>
 
         <template #head(title)="">
@@ -79,7 +80,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { listBook, deleteBook, getRate } from '../../../services/';
+import { getBookPresignUrl, listBook, deleteBook, getRate } from '../../../services/';
 
 export default {
   components: {
@@ -171,6 +172,15 @@ export default {
         }
       }
     },
+    async openImageUrl(uuid) {
+      try {
+        const url = await getBookPresignUrl(uuid);
+        window.open(url, "_blank");
+      } catch (err) {
+        console.log(err);
+        this.notifyError(err.response.data.message);
+      }
+    }
   },
   beforeDestroy() {
   },

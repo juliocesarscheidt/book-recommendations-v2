@@ -18,17 +18,19 @@ It is possible to run all services locally using docker and docker-compose.
 ### Locally
 
 ```bash
+# network
+docker network create \
+  --driver=bridge \
+  --subnet=172.100.10.0/24 \
+  --gateway=172.100.10.1 subnet_0
+
 # infrastructure
-docker-compose up -d --build \
-  postgres mongo redis rabbitmq
+docker-compose -f docker-compose-infra.yaml up -d --build
+docker-compose -f docker-compose-infra.yaml logs -f --tail 50
 
 # services
-docker-compose up -d --build \
-  api-gateway \
-  users-microservice \
-  books-microservice \
-  recommendations-microservice \
-  client-microservice
+docker-compose -f docker-compose-services.yaml up -d --build
+docker-compose -f docker-compose-services.yaml logs -f --tail 50
 ```
 
 ### Cloud

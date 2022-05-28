@@ -3,6 +3,7 @@ module github.com/juliocesarscheidt/apigateway
 go 1.14
 
 require (
+	github.com/aws/aws-sdk-go v1.44.24 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.0 // indirect
