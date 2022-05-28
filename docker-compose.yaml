@@ -68,6 +68,7 @@ services:
       GRPC_CONN_STRING: ${GRPC_CONN_STRING}
       AMQP_CONN_STRING: ${AMQP_CONN_STRING}
       REDIS_CONN_STRING: ${REDIS_CONN_STRING}
+      PREFETCH_COUNT: ${PREFETCH_COUNT}
     networks:
       - subnet_0
     restart: on-failure

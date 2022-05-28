@@ -1,42 +1,14 @@
-from math import sqrt
+from application.service.distance_service import calculate_euclidean_distance
 
 
-def euclidean_distance(item1, item2, base):
-    # dict of similarities
-    si = {}
-
-    for item in base[item1]:
-        if item in base[item2]:
-            si[item] = 1
-
-    # there are no ratings in common for these users
-    if len(si) == 0:
-        return 0
-
-    # Euclidean Distance(x, y) = Sqrt( Sum( Pow( (x - y), 2 ) ) )
-    result = sum(
-        [
-            pow(base[item1][item] - base[item2][item], 2)
-            for item in base[item1]
-            if item in base[item2]
-        ]
-    )
-
-    dist_real = sqrt(result)
-    # dist_uniform = 1 / (1 + dist_real)
-
-    return dist_real
-
-
-def get_recommendations(user, base, k=50):
+def calculate_recommendations(user, base, k=50):
     totals = {}
     sum_similarities = {}
-
     other_users = [other for other in base if other != user]
 
     # searching other users different from current user
     for other in other_users:
-        similarity = euclidean_distance(user, other, base)
+        similarity = calculate_euclidean_distance(user, other, base)
 
         # if there is any similarity just skip
         if similarity <= 0:

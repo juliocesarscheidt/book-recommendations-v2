@@ -2,7 +2,7 @@
 
 This project is a mesh of microservices simulating a complex environment with different kinds of protocols to expose/interconnect services, like gRPC and AMQP.
 
-Also it implements an API Gateway to proxy and orquestrate requests through internal services.
+Also it implements an API Gateway to proxy and orquestrate requests through internal services, in addition it makes the authentication for the requests.
 
 The services which use AMQP queue to receive commands, use the request/response pattern.
 

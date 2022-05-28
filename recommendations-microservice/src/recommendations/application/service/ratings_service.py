@@ -1,4 +1,4 @@
-def build_rates(rates):
+def build_ratings(rates):
     rates_dict = {}
     for rate in rates:
         inner_rates_dict = {}
@@ -9,4 +9,5 @@ def build_rates(rates):
         for inner_rate in inner_rates:
             inner_rates_dict[inner_rate["book_uuid"]] = inner_rate["rate"]
         rates_dict[rate["user_uuid"]] = inner_rates_dict
+
     return rates_dict

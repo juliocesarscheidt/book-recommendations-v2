@@ -1,4 +1,4 @@
-import logging
+from infra.common.logger import logger
 
 
 class Commands:
@@ -21,7 +21,7 @@ class Commands:
             if not callable(handler_fn):
                 return None
         except Exception as e:
-            logging.error(e)
+            logger.error(e)
             return None
 
         return handler_fn

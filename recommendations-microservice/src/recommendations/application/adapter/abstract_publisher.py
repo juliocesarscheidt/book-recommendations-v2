@@ -1,4 +1,4 @@
-class AbstractPublisher(object):
+class AbstractPublisher:
     def __init__(self) -> None:
         pass
 
@@ -8,10 +8,4 @@ class AbstractPublisher(object):
     def publish_exchange(
         self, channel, exchange, routing_key, response_body, reply_queue_name
     ):
-        pass
-
-    def channel_ack(self, channel, delivery_tag):
-        pass
-
-    def channel_nack(self, channel, delivery_tag, requeue=True):
         pass

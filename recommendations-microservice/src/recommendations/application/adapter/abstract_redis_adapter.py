@@ -1,6 +1,4 @@
-class AbstractRedisAdapter(object):
-    redis_client: None
-
+class AbstractRedisAdapter:
     def __init__(self, redis_conn_string) -> None:
         pass
 
