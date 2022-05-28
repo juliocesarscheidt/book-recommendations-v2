@@ -101,7 +101,7 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
     if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
-    }
+		}
 		defer file.Close()
 
 		filenameParts := strings.Split(header.Filename, ".")
@@ -120,7 +120,7 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
-    }
+		}
 		fmt.Println(objectOutput)
 
 		createBookRequestDTO := dto.CreateBookRequestDTO{
@@ -229,7 +229,7 @@ func UpdateBookWithFile(amqpClient *adapter.AmqpClient, redisClient adapter.Redi
     if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
-    }
+		}
 		defer file.Close()
 
 		filenameParts := strings.Split(header.Filename, ".")
@@ -248,7 +248,7 @@ func UpdateBookWithFile(amqpClient *adapter.AmqpClient, redisClient adapter.Redi
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
-    }
+		}
 		fmt.Println(objectOutput)
 
 		updateBookRequestDTO := dto.UpdateBookRequestDTO{
