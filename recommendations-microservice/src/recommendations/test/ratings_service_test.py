@@ -1,12 +1,7 @@
-import json
-import pytest
-import mock
-import logging
-
-from recommendations.application.service.rate_service import build_rates
+from application.service.ratings_service import build_ratings
 
 
-def test_expected_rates(mocker):
+def test_build_ratings(mocker):
     rates = [
         {
             "user_uuid": "17f85d7f76e0935e50a78178",
@@ -51,9 +46,9 @@ def test_expected_rates(mocker):
             "621ff675dc39ed5b1bce10b1": 3.0,
         },
     }
-    logging.info(expected_rates_dict)
+    print(expected_rates_dict)
 
-    rates_dict = build_rates(rates)
-    logging.info(rates_dict)
+    rates_dict = build_ratings(rates)
+    print(rates_dict)
 
     assert rates_dict == expected_rates_dict

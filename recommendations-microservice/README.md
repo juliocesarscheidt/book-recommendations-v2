@@ -32,9 +32,9 @@ python3 -u src/recommendations/main.py
 
 
 # black linter
-make lint
+make lint-app
 
-make test
+make test-app
 
 make report
 

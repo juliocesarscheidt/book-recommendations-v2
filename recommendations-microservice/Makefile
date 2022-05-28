@@ -20,7 +20,7 @@ test-app:
 		-w /usr/src/app \
 		--entrypoint "" \
 		recommendations-microservice:latest pytest -v \
-			--log-level=DEBUG --full-trace ./src/test/
+			--log-level=DEBUG --full-trace ./src/recommendations/test/
 
 coverage:
 	docker container run -t --rm \
@@ -32,7 +32,7 @@ coverage:
 			--log-level=DEBUG --full-trace \
 			--cov-report term-missing \
 			--cov=./src/  \
-			./src/test/
+			./src/recommendations/test/
 
 report:
 	docker container run -t --rm \
@@ -45,4 +45,4 @@ report:
 			-o junit_family=xunit1 \
 			--cov-report xml:src/coverage-reports/coverage.xml \
 			--junitxml=src/coverage-reports/results.xml \
-			--cov=./src/ ./src/test/
+			--cov=./src/ ./src/recommendations/test/

@@ -1,10 +1,7 @@
 import pika
-import logging
 
 from config import get_amqp_config, get_redis_config, get_grpc_config
 from infra.handler.event_handler import EventHandler
-
-logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.INFO)
 
 if __name__ in "__main__":
     amqp_config = get_amqp_config()
