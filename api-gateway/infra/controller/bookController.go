@@ -24,7 +24,7 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 
 		file, header, err := r.FormFile("image")
-    if err != nil {
+		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
@@ -151,7 +151,7 @@ func UpdateBookWithImage(amqpClient *adapter.AmqpClient, redisClient adapter.Red
 		book_uuid, _ := params["book_uuid"]
 
 		file, header, err := r.FormFile("image")
-    if err != nil {
+		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
