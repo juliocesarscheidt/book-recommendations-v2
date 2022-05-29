@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	jwt "github.com/golang-jwt/jwt/v4"
 
-	"github.com/juliocesarscheidt/apigateway/application/service"
+	"github.com/juliocesarscheidt/apigateway/common"
 	"github.com/juliocesarscheidt/apigateway/infra/controller"
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
 )
@@ -17,13 +17,13 @@ import (
 func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFunc {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			tokenString, err := service.ExtractTokenString(r.Header.Get("Authorization"))
+			tokenString, err := common.ExtractTokenString(r.Header.Get("Authorization"))
 			if err != nil {
 				controller.ThrowUnauthorized(w, "Invalid Authorization Header")
 				return
 			}
 
-			token, err := service.ParseTokenUsingPublicKey(tokenString)
+			token, err := common.ParseTokenUsingPublicKey(tokenString)
 			if err != nil {
 				log.Printf("ERROR :: %s\n", err)
 				if errors.Is(err, jwt.ErrTokenMalformed) {
@@ -37,7 +37,7 @@ func AuthenticationMiddleware(redisClient adapter.RedisClient) mux.MiddlewareFun
 				return
 			}
 
-			claims, err := service.ValidateClaims(token)
+			claims, err := common.ValidateClaims(token)
 			if err != nil {
 				controller.ThrowUnauthorized(w, err.Error())
 				return

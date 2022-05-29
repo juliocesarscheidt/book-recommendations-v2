@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"io"
+	"os"
 	"fmt"
-	"time"
-	"errors"
 	"strconv"
 	"strings"
 	"net/http"
@@ -12,86 +10,13 @@ import (
 	"encoding/json"
 
 	"github.com/gorilla/mux"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 
+	"github.com/juliocesarscheidt/apigateway/common"
 	"github.com/juliocesarscheidt/apigateway/application/usecase"
 	"github.com/juliocesarscheidt/apigateway/application/dto"
 	"github.com/juliocesarscheidt/apigateway/infra/adapter"
 	httpmodule "github.com/juliocesarscheidt/apigateway/infra/http"
 )
-
-const (
-	MAX_FILE_SIZE = 10.00
-	BUCKET_NAME = "blackdevs-aws"
-)
-
-// TODO: move these methods to a separated library
-func validateImageFileForm(filename string, fileExtension string, fileSizeMb float64) error {
-	if fileExtension != "png" && fileExtension != "jpg" && fileExtension != "jpeg" {
-		return errors.New("Invalid File Extension")
-	}
-	if fileSizeMb > MAX_FILE_SIZE {
-		return errors.New("Invalid File Size")
-	}
-	return nil
-}
-
-func appendBucketPathToFilename(filename string) string {
-	return fmt.Sprintf("book-recommendations-files/%s", filename)
-}
-
-func generateFilenameRandBucketKey(filename string, fileExtension string) (string, string) {
-	now := time.Now()
-	nowSecs := now.Unix()
-	filenameRand := fmt.Sprintf("%s-%d.%s", filename, nowSecs, fileExtension)
-	filenameBucketKey := appendBucketPathToFilename(filenameRand)
-	return filenameRand, filenameBucketKey
-}
-
-func getS3Client() (*s3.S3, error) {
-	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("sa-east-1")},
-	)
-	if err != nil {
-		return nil, err
-	}
-	return s3.New(sess), nil
-}
-
-func putS3File(file io.ReadSeeker, bucketName string, filenameBucketKey string) (*s3.PutObjectOutput, error) {
-	s3Client, err := getS3Client()
-	if err != nil {
-		return nil, err
-	}
-	input := &s3.PutObjectInput{
-		Body: file,
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(filenameBucketKey),
-	}
-	objectOutput, err := s3Client.PutObject(input)
-	if err != nil {
-		return nil, err
-	}
-	return objectOutput, nil
-}
-
-func generateS3PresignUrl(bucketName string, filenameBucketKey string) (string, error) {
-	s3Client, err := getS3Client()
-	if err != nil {
-		return "", err
-	}
-	req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
-		Bucket: aws.String(bucketName),
-		Key:    aws.String(filenameBucketKey),
-	})
-	url, err := req.Presign(60*60*time.Second) // 1 hour
-	if err != nil {
-		return "", err
-	}
-	return url, nil
-}
 
 // routes
 func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
@@ -110,13 +35,14 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 		fileExtension := strings.Trim(filenameParts[1], "")
 		fileSizeMb := float64(header.Size) / 1024 / 1024
 
-		if err := validateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
+		if err := common.ValidateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
 			ThrowBadRequest(w, err.Error())
 			return
 		}
-		filenameRand, filenameBucketKey := generateFilenameRandBucketKey(filename, fileExtension)
+		filenameRand, filenameBucketKey := common.GenerateFilenameRandBucketKey(filename, fileExtension)
 
-		_, err = putS3File(file, BUCKET_NAME, filenameBucketKey)
+		bucketName := os.Getenv("BUCKET_NAME")
+		_, err = common.PutS3File(file, bucketName, filenameBucketKey)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
@@ -197,9 +123,10 @@ func GetBookPresignUrl(amqpClient *adapter.AmqpClient, redisClient adapter.Redis
 		}
 		fmt.Printf("Response :: %v\n", book)
 
-		filenameBucketKey := appendBucketPathToFilename(book.Image)
+		filenameBucketKey := common.AppendBucketPathToFilename(book.Image)
 
-		url, err := generateS3PresignUrl(BUCKET_NAME, filenameBucketKey)
+		bucketName := os.Getenv("BUCKET_NAME")
+		url, err := common.GenerateS3PresignUrl(bucketName, filenameBucketKey)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
@@ -235,13 +162,14 @@ func UpdateBookWithImage(amqpClient *adapter.AmqpClient, redisClient adapter.Red
 		fileExtension := strings.Trim(filenameParts[1], "")
 		fileSizeMb := float64(header.Size) / 1024 / 1024
 
-		if err := validateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
+		if err := common.ValidateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
 			ThrowBadRequest(w, err.Error())
 			return
 		}
-		filenameRand, filenameBucketKey := generateFilenameRandBucketKey(filename, fileExtension)
+		filenameRand, filenameBucketKey := common.GenerateFilenameRandBucketKey(filename, fileExtension)
 
-		_, err = putS3File(file, BUCKET_NAME, filenameBucketKey)
+		bucketName := os.Getenv("BUCKET_NAME")
+		_, err = common.PutS3File(file, bucketName, filenameBucketKey)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
