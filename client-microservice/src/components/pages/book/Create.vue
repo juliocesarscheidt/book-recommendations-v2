@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;">
+      <div style="width: 100%; min-width: 250px; margin-bottom: 0px;">
         <div class="form-group">
           <label>{{ $t('book.title') }}</label>
           <input type="text" class="form-control" v-model.trim="title">
@@ -21,14 +21,18 @@
             <label class="custom-file-label" for="inputGroupFile">{{ $t('book.choose_file') }}</label>
           </div>
           <div class="flex flex-column flex-justify-center flex-align-center" v-if="imagePreview && imageSelected">
-            <span style="text-align: center;">{{ $t('book.image_preview') }}</span>
-            <img style="height: auto; max-height: 200px; width: 200px; margin: 0; padding: 0; box-shadow: 0 0 20px 0.25px rgba(0, 0, 0, .25);" v-bind:src="imagePreview" v-bind:alt="$t('book.image_preview')">
-            <code style="width: 200px; margin: 0; padding: 0; text-align: center;">{{ imageSelected.name }}</code>
+            <span class="text-center">{{ $t('book.image_preview') }}</span>
+            <img style="height: auto; max-height: 250px; width: 250px; margin: 0; padding: 0; box-shadow: 0 0 20px 0.25px rgba(0, 0, 0, .25);" v-bind:src="imagePreview" v-bind:alt="$t('book.image_preview')">
+            <code class="text-center" style="width: 250px; margin: 0; padding: 0;">{{ imageSelected.name }}</code>
           </div>
         </div>
 
         <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" @click="callCreateBook">
           {{ $t('buttons.save') }}
+        </button>
+
+        <button type="button" class="btn btn-outline-secondary btn-lg btn-block mt-4" @click="$router.push({ name: 'BookList' })">
+          {{ $t('buttons.return') }}
         </button>
       </div>
     </article>

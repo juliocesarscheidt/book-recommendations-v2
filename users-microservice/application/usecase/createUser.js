@@ -1,9 +1,10 @@
 const CreateUserDTO = require('../dto/CreateUserDTO');
 const DuplicateEmailException = require('../exception/DuplicateEmailException');
-const { encryptPassword } = require('../service/encryptionCommonService');
+const { encryptPassword } = require('../../common/encryption');
+const { generateRandomString } = require('../../common/stringUtils');
 
 const execute = async ({ name, surname, email, phone, password }, userRepository, redisClient) => {
-  const uuid = ((new Date()).getTime().toString(16) + Math.random().toString(16)).replace('.', '').substring(0, 24);
+  let uuid = generateRandomString(24);
   if (password) {
     password = encryptPassword(password);
   }

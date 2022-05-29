@@ -38,7 +38,7 @@ curl --silent -X GET --url 'http://localhost:3080/api/healthcheck' | jq -r
 
 ```bash
 # sign up
-curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' --url 'http://localhost:3080/api/auth/signup' | jq -r
+curl --silent -X POST --data '{"name": "julio", "surname": "scheidt", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' --url 'http://localhost:3080/api/auth/signup' | jq -r
 
 # sign in
 curl --silent -X POST --data '{"email": "admin@email.com", "password": "PASSWORD"}' --url 'http://localhost:3080/api/auth/signin' | jq -r
@@ -54,13 +54,13 @@ echo "${TOKEN}"
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/me' | jq -r
 
 # create user
-curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user' | jq -r
+curl --silent -X POST --data '{"name": "julio", "surname": "scheidt", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user' | jq -r
 
 # get user
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r
 
 # update user
-curl --silent -X PUT --data '{"name": "julio2", "surname": "cesar", "email": "julio2@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r
+curl --silent -X PUT --data '{"name": "julio2", "surname": "scheidt", "email": "julio2@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r
 
 # delete user
 curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r

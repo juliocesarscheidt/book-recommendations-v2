@@ -37,6 +37,7 @@ export default {
     rating: 'Nota',
     choose_file: 'Escolha uma imagem',
     image_preview: 'Pre-visualização da imagem',
+    update_image: 'Alterar imagem',
   },
   buttons: {
     cancel: 'Cancelar',

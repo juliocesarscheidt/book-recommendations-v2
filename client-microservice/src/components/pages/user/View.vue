@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <div style="width: 100%; min-width: 200px; margin-bottom: 0px;" v-if="userData">
+      <div style="width: 100%; min-width: 250px; margin-bottom: 0px;" v-if="userData">
         <div class="form-group">
           <label for="input-name">{{ $t('user.name') }}</label>
           <input type="text" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="userData.name">
@@ -23,14 +23,20 @@
           <input type="password" class="form-control" v-bind:disabled="!isEdit || loading" v-model.trim="password">
         </div>
 
-        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="!isEdit" @click="callEditUser">
-          {{ $t('buttons.edit') }}
-        </button>
-        <button type="button" class="btn btn-outline-primary btn-lg btn-block mt-4" v-if="isEdit" @click="callUpdateUser">
-          {{ $t('buttons.save') }}
-        </button>
-        <button type="button" class="btn btn-outline-danger btn-lg btn-block mt-4" @click="callDeleteUser">
-          {{ $t('buttons.delete') }}
+        <div class="form-group">
+          <button type="button" class="btn btn-outline-danger btn-lg mt-4" style="width: 50%;" @click="callDeleteUser">
+            {{ $t('buttons.delete') }}
+          </button>
+          <button type="button" class="btn btn-outline-primary btn-lg mt-4" style="width: 50%;" v-if="!isEdit" @click="callEditUser">
+            {{ $t('buttons.edit') }}
+          </button>
+          <button type="button" class="btn btn-outline-primary btn-lg mt-4" style="width: 50%;" v-if="isEdit" @click="callUpdateUser">
+            {{ $t('buttons.save') }}
+          </button>
+        </div>
+
+        <button type="button" class="btn btn-outline-secondary btn-lg btn-block mt-4" @click="$router.push({ name: 'UserList' })">
+          {{ $t('buttons.return') }}
         </button>
       </div>
     </article>

@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <form style="width: 100%; min-width: 200px; margin-bottom: 0px;" @keyup.enter="userSignUp">
+      <form style="width: 100%; min-width: 250px; margin-bottom: 0px;" @keyup.enter="userSignUp">
         <div class="form-group">
           <label for="input-name">{{ $t('user.name') }}</label>
           <input type="text" class="form-control" v-model.trim="name">
@@ -29,7 +29,7 @@
     </article>
 
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <div style="width: 100%; min-width: 200px;">
+      <div style="width: 100%; min-width: 250px;">
         <p>
           {{ $t('auth.or_signin') }}
         </p>
