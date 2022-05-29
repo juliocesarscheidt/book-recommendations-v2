@@ -38,7 +38,8 @@
         </template>
 
         <template #cell(image)="data">
-          <div class="text-nowrap" @click="openImageUrl(data.item.uuid)">{{ data.value | trimLetters(25) }}</div>
+          <div v-if="data.value" class="text-nowrap text-link" @click="openImageUrl(data.item.uuid)" v-bind:title="$t('book.image_preview')">{{ data.value | trimLetters(25) }}</div>
+          <div v-else class="text-nowrap text-link">-</div>
         </template>
 
         <template #head(title)="">

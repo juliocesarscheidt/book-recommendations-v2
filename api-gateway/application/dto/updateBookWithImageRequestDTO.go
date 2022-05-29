@@ -1,8 +1,9 @@
 package dto
 
-type UpdateBookRequestDTO struct {
+type UpdateBookWithImageRequestDTO struct {
 	Uuid string `json:"uuid"`
 	Title string `json:"title"`
 	Author string `json:"author"`
 	Genre string `json:"genre"`
+	Image string `json:"image"`
 }

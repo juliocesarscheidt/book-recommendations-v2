@@ -53,8 +53,8 @@ const updateBookWithImage = async (uuid, { title, author, genre, image }) => {
   })
 }
 
-const updateBook = async (uuid, { title, author, genre, image }) => http
-.put(`/book/${uuid}`, { title, author, genre, image })
+const updateBook = async (uuid, { title, author, genre }) => http
+.put(`/book/${uuid}`, { title, author, genre })
 .then((response) => {
   if (!response.data) {
     return null

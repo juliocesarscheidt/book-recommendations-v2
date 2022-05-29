@@ -35,6 +35,8 @@ export default {
     genre: 'Gênero',
     image: 'Imagem',
     rating: 'Nota',
+    choose_file: 'Escolha uma imagem',
+    image_preview: 'Pre-visualização da imagem',
   },
   buttons: {
     cancel: 'Cancelar',

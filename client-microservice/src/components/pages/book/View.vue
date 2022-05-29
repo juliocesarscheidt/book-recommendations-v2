@@ -17,12 +17,12 @@
         <div v-if="isEdit" class="form-group">
           <label>{{ $t('book.image') }}</label>
           <div class="custom-file mb-2">
-            <input type="file" class="custom-file-input" id="inputGroupFile" style="display: none;" value="" accept="image/*" v-on:change="onFileSelected">
-            <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+            <input type="file" class="custom-file-input" id="inputGroupFile" style="display: none;" value="" accept="image/*" @change="onFileSelected">
+            <label class="custom-file-label" for="inputGroupFile">{{ $t('book.choose_file') }}</label>
           </div>
           <div class="flex flex-column flex-justify-center flex-align-center" v-if="imagePreview && imageSelected">
-            <span style="text-align: center;">Image Preview</span>
-            <img style="height: auto; max-height: 200px; width: 200px; margin: 0; padding: 0; box-shadow: 0 0 20px 0.25px rgba(0, 0, 0, .25);" v-bind:src="imagePreview" alt="">
+            <span style="text-align: center;">{{ $t('book.image_preview') }}</span>
+            <img style="height: auto; max-height: 200px; width: 200px; margin: 0; padding: 0; box-shadow: 0 0 20px 0.25px rgba(0, 0, 0, .25);" v-bind:src="imagePreview" v-bind:alt="$t('book.image_preview')">
             <code style="width: 200px; margin: 0; padding: 0; text-align: center;">{{ imageSelected.name }}</code>
           </div>
         </div>
@@ -91,8 +91,8 @@ export default {
       loading: false,
       bookData: {},
       rate: 0,
-      imageSelected: '',
-      imagePreview: '',
+      imageSelected: null,
+      imagePreview: null,
     }
   },
   computed: {
@@ -171,9 +171,6 @@ export default {
       }
     },
     async callUpsertRate(rating) {
-      console.log('rating', rating);
-      console.log('this.rate', this.rate);
-
       try {
         await upsertRate(this.user.uuid, this.uuid, parseFloat(this.rate.toFixed(2)));
         this.notifySuccess(this.$t('messages.success.updated_with_success'));
@@ -192,7 +189,7 @@ export default {
 
       this.loading = true;
       try {
-        const bookBaseData = {
+        const bookData = {
           title: this.bookData.title,
           author: this.bookData.author,
           genre: this.bookData.genre,
@@ -200,14 +197,11 @@ export default {
 
         if (this.imageSelected) {
           await updateBookWithImage(this.uuid, {
-            ...bookBaseData,
+            ...bookData,
             image: this.imageSelected,
           });
         } else {
-          await updateBook(this.uuid, {
-            ...bookBaseData,
-            image: this.bookData.image,
-          });
+          await updateBook(this.uuid, bookData);
         }
         this.notifySuccess(this.$t('messages.success.updated_with_success'));
 
@@ -217,7 +211,8 @@ export default {
 
       } finally {
         this.loading = false;
-        this.callRefreshData();
+        this.imageSelected = null;
+        this.callGetBook();
         this.replaceRoute(false);
       }
     },

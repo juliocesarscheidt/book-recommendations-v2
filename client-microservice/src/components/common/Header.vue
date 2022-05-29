@@ -12,17 +12,17 @@
         <b-navbar-nav>
           <b-nav-item v-bind:to="{name: 'Home'}">{{ $t('header.home') }}</b-nav-item>
 
-          <b-nav-item-dropdown v-bind:text="$t('header.users')">
+          <b-nav-item-dropdown v-if="user" v-bind:text="$t('header.users')">
             <b-dropdown-item v-bind:to="{name: 'UserList'}">{{ $t('header.list_users') }}</b-dropdown-item>
             <b-dropdown-item v-bind:to="{name: 'UserCreate'}">{{ $t('header.create_user') }}</b-dropdown-item>
           </b-nav-item-dropdown>
 
-          <b-nav-item-dropdown v-bind:text="$t('header.books')">
+          <b-nav-item-dropdown v-if="user" v-bind:text="$t('header.books')">
             <b-dropdown-item v-bind:to="{name: 'BookList'}">{{ $t('header.list_books') }}</b-dropdown-item>
             <b-dropdown-item v-bind:to="{name: 'BookCreate'}">{{ $t('header.create_book') }}</b-dropdown-item>
           </b-nav-item-dropdown>
 
-          <b-nav-item-dropdown v-bind:text="$t('header.recommendations')">
+          <b-nav-item-dropdown v-if="user" v-bind:text="$t('header.recommendations')">
             <b-dropdown-item v-bind:to="{name: 'RecommendationList'}">{{ $t('header.list_recommendations') }}</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
@@ -33,8 +33,8 @@
           </b-nav-item>
 
           <b-nav-item-dropdown :text="$t('header.language')" right>
-            <b-dropdown-item v-on:click="setLanguage('pt-br')">PR-BR</b-dropdown-item>
-            <b-dropdown-item v-on:click="setLanguage('en-us')">EN-US</b-dropdown-item>
+            <b-dropdown-item @click="setLanguage('pt-br')">PR-BR</b-dropdown-item>
+            <b-dropdown-item @click="setLanguage('en-us')">EN-US</b-dropdown-item>
           </b-nav-item-dropdown>
 
           <b-nav-item v-if="user" @click="logout">{{ $t('header.logout') }}</b-nav-item>

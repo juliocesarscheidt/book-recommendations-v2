@@ -17,12 +17,12 @@
         <div class="form-group">
           <label>{{ $t('book.image') }}</label>
           <div class="custom-file mb-2">
-            <input type="file" class="custom-file-input" id="inputGroupFile" style="display: none;" value="" accept="image/*" v-on:change="onFileSelected">
-            <label class="custom-file-label" for="inputGroupFile">Choose file</label>
+            <input type="file" class="custom-file-input" id="inputGroupFile" style="display: none;" value="" accept="image/*" @change="onFileSelected">
+            <label class="custom-file-label" for="inputGroupFile">{{ $t('book.choose_file') }}</label>
           </div>
           <div class="flex flex-column flex-justify-center flex-align-center" v-if="imagePreview && imageSelected">
-            <span style="text-align: center;">Image Preview</span>
-            <img style="height: auto; max-height: 200px; width: 200px; margin: 0; padding: 0; box-shadow: 0 0 20px 0.25px rgba(0, 0, 0, .25);" v-bind:src="imagePreview" alt="">
+            <span style="text-align: center;">{{ $t('book.image_preview') }}</span>
+            <img style="height: auto; max-height: 200px; width: 200px; margin: 0; padding: 0; box-shadow: 0 0 20px 0.25px rgba(0, 0, 0, .25);" v-bind:src="imagePreview" v-bind:alt="$t('book.image_preview')">
             <code style="width: 200px; margin: 0; padding: 0; text-align: center;">{{ imageSelected.name }}</code>
           </div>
         </div>

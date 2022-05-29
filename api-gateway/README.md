@@ -57,13 +57,13 @@ curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost
 curl --silent -X POST --data '{"name": "julio", "surname": "cesar", "email": "admin@email.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user' | jq -r
 
 # get user
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/17fc6972e270d41bcd45e9e8' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r
 
 # update user
-curl --silent -X PUT --data '{"name": "julio2", "surname": "cesar", "email": "julio2@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/17fc6972e270d41bcd45e9e8' | jq -r
+curl --silent -X PUT --data '{"name": "julio2", "surname": "cesar", "email": "julio2@mail.com", "phone": "4199887766", "password": "PASSWORD"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r
 
 # delete user
-curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/17fc6972e270d41bcd45e9e8' | jq -r
+curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/629238df96e8b3c63b32373e' | jq -r
 
 # list user
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user?page=0&size=50' | jq -r
@@ -76,13 +76,13 @@ done
 
 
 # upsert user rate
-curl --silent -X POST --data '{"user_uuid": "17fc6972e270d41bcd45e9e8", "book_uuid": "j3q1i3x6y3b5e3a0e3j8q3n4", "rate": 8}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating' | jq -r
+curl --silent -X POST --data '{"user_uuid": "629238df96e8b3c63b32373e", "book_uuid": "z3j1m3c6w3f5j3r3r3a8v3f5", "rate": 8}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating' | jq -r
 
 # get user rate
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating/17fc6972e270d41bcd45e9e8' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating/629238df96e8b3c63b32373e' | jq -r
 
 # delete user rate
-curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating/17fc6972e270d41bcd45e9e8' | jq -r
+curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating/629238df96e8b3c63b32373e' | jq -r
 
 # list user rate
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/user/rating?page=0&size=50' | jq -r
@@ -98,18 +98,19 @@ curl -i -X POST \
   -F "title=Clean Architecture" \
   -F "author=Robert Martin" \
   -F "genre=Software" \
-  -F "image=@/home/julio/book-recommendations-v2/clean-arch.jpg" \
-  --url 'http://localhost:3080/api/book' | jq -r
+  -F "image=@$PWD/miscellaneous/clean-arch-cover.jpg" \
+  -H "Authorization: Bearer ${TOKEN}" \
+  --url 'http://localhost:3080/api/book'
 
 # get book
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/z3j1m3c6w3f5j3r3r3a8v3f5' | jq -r
 
 # get book presign url
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4/image/url' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/z3j1m3c6w3f5j3r3r3a8v3f5/image/url' | jq -r
 
 
 # update book (without image)
-curl --silent -X PUT --data '{"title": "Architecture", "author": "Martin", "genre": "Software Architecture"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
+curl --silent -X PUT --data '{"title": "Architecture", "author": "Martin", "genre": "Software Architecture"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/z3j1m3c6w3f5j3r3r3a8v3f5' | jq -r
 
 # update book (with image)
 curl -i -X PUT \
@@ -117,12 +118,13 @@ curl -i -X PUT \
   -F "title=Clean Architecture" \
   -F "author=Robert Martin" \
   -F "genre=Software Architecture" \
-  -F "image=@/home/julio/book-recommendations-v2/clean-arch.jpg" \
-  --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4/image' | jq -r
+  -F "image=@$PWD/miscellaneous/clean-arch-cover.jpg" \
+  -H "Authorization: Bearer ${TOKEN}" \
+  --url 'http://localhost:3080/api/book/z3j1m3c6w3f5j3r3r3a8v3f5/image'
 
 
 # delete book
-curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
+curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/z3j1m3c6w3f5j3r3r3a8v3f5' | jq -r
 
 # list book
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book?page=0&size=50' | jq -r
@@ -138,6 +140,6 @@ done
 
 ```bash
 # get recommendations
-curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/recommendation/user/17fc6972e270d41bcd45e9e8' | jq -r
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/recommendation/user/629238df96e8b3c63b32373e' | jq -r
 
 ```

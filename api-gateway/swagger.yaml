@@ -995,7 +995,7 @@ components:
 
     ImageUrl:
       type: string
-      example: 'https://bucket.s3.sa-east-1.amazonaws.com/book-recommendations-files/image.png'
+      example: 'https://bucket.s3.sa-east-1.amazonaws.com/book-recommendations-files/clean-arch-cover-1653858052.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASVA4CJNBNXJ76P7T6AS%3F20220528%2Fsa-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220529T210128S&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2b0f4e9c6e2f53982f59bfce1bb9347710a6d06da6333bdd1a6aa548d4f8c622'
 
     CreatedAt:
       type: string

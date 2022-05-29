@@ -115,14 +115,12 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 			return
 		}
 		filenameRand, filenameBucketKey := generateFilenameRandBucketKey(filename, fileExtension)
-		fmt.Println("filenameBucketKey :: " + filenameBucketKey)
 
-		objectOutput, err := putS3File(file, BUCKET_NAME, filenameBucketKey)
+		_, err = putS3File(file, BUCKET_NAME, filenameBucketKey)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
-		fmt.Println(objectOutput)
 
 		createBookRequestDTO := dto.CreateBookRequestDTO{
 			Title: r.FormValue("title"),
@@ -130,7 +128,6 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 			Genre: r.FormValue("genre"),
 			Image: filenameRand,
 		}
-		fmt.Println(createBookRequestDTO)
 
 		uuid, err := usecase.CreateBook(createBookRequestDTO, amqpClient)
 		if err != nil {
@@ -243,25 +240,22 @@ func UpdateBookWithImage(amqpClient *adapter.AmqpClient, redisClient adapter.Red
 			return
 		}
 		filenameRand, filenameBucketKey := generateFilenameRandBucketKey(filename, fileExtension)
-		fmt.Println("filenameBucketKey :: " + filenameBucketKey)
 
-		objectOutput, err := putS3File(file, BUCKET_NAME, filenameBucketKey)
+		_, err = putS3File(file, BUCKET_NAME, filenameBucketKey)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
-		fmt.Println(objectOutput)
 
-		updateBookRequestDTO := dto.UpdateBookRequestDTO{
+		updateBookWithImageRequestDTO := dto.UpdateBookWithImageRequestDTO{
 			Uuid: book_uuid,
 			Title: r.FormValue("title"),
 			Author: r.FormValue("author"),
 			Genre: r.FormValue("genre"),
 			Image: filenameRand,
 		}
-		fmt.Println(updateBookRequestDTO)
 
-		err = usecase.UpdateBook(updateBookRequestDTO, amqpClient)
+		err = usecase.UpdateBookWithImage(updateBookWithImageRequestDTO, amqpClient)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
@@ -290,7 +284,7 @@ func UpdateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 			ThrowInternalServerError(w, err.Error())
 			return
 		}
-		updateBookRequestDTO.Uuid =  book_uuid
+		updateBookRequestDTO.Uuid = book_uuid
 		err := usecase.UpdateBook(updateBookRequestDTO, amqpClient)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
