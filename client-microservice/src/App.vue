@@ -63,6 +63,11 @@ export default {
   }
 }
 
+.text-link {
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .justify-content-60 {
   width: 60%;
   text-align: justify;

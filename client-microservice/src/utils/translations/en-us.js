@@ -35,6 +35,9 @@ export default {
     genre: 'Genre',
     image: 'Image',
     rating: 'Rating',
+    choose_file: 'Choose a file',
+    image_preview: 'Image preview',
+    update_image: 'Update image',
   },
   buttons: {
     cancel: 'Cancel',

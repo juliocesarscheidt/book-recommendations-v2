@@ -1,21 +1,23 @@
 <template>
   <section class="flex flex-column flex-align-center pt-5 pb-5">
     <article class="flex flex-column flex-justify-center flex-align-center">
-      <p class="mb-4">
-        {{ $t('home.intro_01') }} <b>{{ $t('home.intro_02') }}</b>
-      </p>
+      <div style="width: 100%; min-width: 250px; margin-bottom: 0px;">
+        <p class="mb-4 text-center">
+          {{ $t('home.intro_01') }} <b>{{ $t('home.intro_02') }}</b>
+        </p>
 
-      <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Users" @click="goTo('UserList')">
-        {{ $t('header.users') }} <i class="fas fa-users" aria-hidden="true"></i>
-      </button>
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Users" @click="goTo('UserList')">
+          {{ $t('header.users') }} <i class="fas fa-users" aria-hidden="true"></i>
+        </button>
 
-      <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Books" @click="goTo('BookList')">
-        {{ $t('header.books') }} <i class="fas fa-book" aria-hidden="true"></i>
-      </button>
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Books" @click="goTo('BookList')">
+          {{ $t('header.books') }} <i class="fas fa-book" aria-hidden="true"></i>
+        </button>
 
-      <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Recommendations" @click="goTo('RecommendationList')">
-        {{ $t('header.recommendations') }} <i class="fas fa-star" aria-hidden="true"></i>
-      </button>
+        <button type="button" class="btn btn-outline-primary btn-lg btn-block mr-2" title="Recommendations" @click="goTo('RecommendationList')">
+          {{ $t('header.recommendations') }} <i class="fas fa-star" aria-hidden="true"></i>
+        </button>
+      </div>
     </article>
   </section>
 </template>

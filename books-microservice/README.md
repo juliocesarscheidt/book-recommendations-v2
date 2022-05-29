@@ -14,8 +14,8 @@ make report
 
 
 # run
-docker-compose up -d --build books-microservice
-docker-compose logs -f --tail 100 books-microservice
+docker-compose -f docker-compose-services.yaml up -d --build books-microservice
+docker-compose -f docker-compose-services.yaml logs -f --tail 100 books-microservice
 
 ```
 

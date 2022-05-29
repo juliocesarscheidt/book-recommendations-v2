@@ -2,16 +2,16 @@
 
 ```bash
 
-docker-compose up -d mongo
-docker-compose logs -f --tail 50 mongo
+docker-compose -f docker-compose-infra.yaml up -d mongo
+docker-compose -f docker-compose-infra.yaml logs -f --tail 50 mongo
 
-docker-compose exec mongo bash
+docker-compose -f docker-compose-infra.yaml exec mongo bash
 
 
-docker-compose exec mongo bash -c \
+docker-compose -f docker-compose-infra.yaml exec mongo bash -c \
   "echo 'db.runCommand(\"ping\").ok' | mongosh 'mongodb://root:admin@127.0.0.1:27017/admin' --quiet"
 
-docker-compose exec mongo bash -c "mongosh 'mongodb://root:admin@127.0.0.1:27017/admin'"
+docker-compose -f docker-compose-infra.yaml exec mongo bash -c "mongosh 'mongodb://root:admin@127.0.0.1:27017/admin'"
 
 
 mongo "mongodb://root:admin@127.0.0.1:28017/admin?retryWrites=true&w=majority"

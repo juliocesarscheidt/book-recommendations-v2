@@ -1,7 +1,7 @@
 const UpdateUserDTO = require('../dto/UpdateUserDTO');
 const NotFoundException = require('../exception/NotFoundException');
 const DuplicateEmailException = require('../exception/DuplicateEmailException');
-const { encryptPassword } = require('../service/encryptionCommonService');
+const { encryptPassword } = require('../../common/encryption');
 
 const execute = async ({ _id }, payload, userRepository, redisClient) => {
   const user = await userRepository.find({ _id });

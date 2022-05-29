@@ -1,4 +1,4 @@
-# BOok Recommendations Client
+# Book Recommendations Client
 
 ## Project setup
 ```

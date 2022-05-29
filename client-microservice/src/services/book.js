@@ -1,13 +1,28 @@
 import http from '../utils/http.js';
 
-const createBook = async (title, author, genre, image) => http
-.post('/book', { title, author, genre, image })
-.then((response) => {
-  if (!response.data) {
-    return null
-  }
-  return response.data.data
-});
+const uploadEventCallable = (uploadEvent) => {
+  console.log(`Upload progress: ${(uploadEvent.loaded / uploadEvent.total) * 100} %`);
+}
+
+const buildFormData = (title, author, genre, image) => {
+  const fd = new FormData();
+  fd.append('title', title);
+  fd.append('author', author);
+  fd.append('genre', genre);
+  fd.append('image', image, image.name);
+  return fd;
+}
+
+const createBook = async (title, author, genre, image) => {
+  const fd = buildFormData(title, author, genre, image);
+  return http.post('/book', fd, { onUploadProgress: uploadEventCallable })
+  .then((response) => {
+    if (!response.data) {
+      return null
+    }
+    return response.data.data
+  })
+}
 
 const getBook = async (uuid) => http
 .get(`/book/${uuid}`)
@@ -18,8 +33,28 @@ const getBook = async (uuid) => http
   return response.data.data
 });
 
-const updateBook = async (uuid, { title, author, genre, image }) => http
-.put(`/book/${uuid}`, { title, author, genre, image })
+const getBookPresignUrl = async (uuid) => http
+.get(`/book/${uuid}/image/url`)
+.then((response) => {
+  if (!response.data) {
+    return null
+  }
+  return response.data.data
+});
+
+const updateBookWithImage = async (uuid, { title, author, genre, image }) => {
+  const fd = buildFormData(title, author, genre, image);
+  return http.put(`/book/${uuid}/image`, fd, { onUploadProgress: uploadEventCallable })
+  .then((response) => {
+    if (!response.data) {
+      return null
+    }
+    return response.data.data
+  })
+}
+
+const updateBook = async (uuid, { title, author, genre }) => http
+.put(`/book/${uuid}`, { title, author, genre })
 .then((response) => {
   if (!response.data) {
     return null
@@ -48,6 +83,8 @@ const listBook = async (page = 0, size = 50) => http
 export {
   createBook,
   getBook,
+  getBookPresignUrl,
+  updateBookWithImage,
   updateBook,
   deleteBook,
   listBook,
