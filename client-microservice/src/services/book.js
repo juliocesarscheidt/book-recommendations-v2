@@ -4,17 +4,17 @@ const uploadEventCallable = (uploadEvent) => {
   console.log(`Upload progress: ${(uploadEvent.loaded / uploadEvent.total) * 100} %`);
 }
 
-const buildFormData = (title, author, genre, selectedFile) => {
+const buildFormData = (title, author, genre, image) => {
   const fd = new FormData();
   fd.append('title', title);
   fd.append('author', author);
   fd.append('genre', genre);
-  fd.append('image', selectedFile, selectedFile.name);
+  fd.append('image', image, image.name);
   return fd;
 }
 
-const createBook = async (title, author, genre, selectedFile) => {
-  const fd = buildFormData(title, author, genre, selectedFile);
+const createBook = async (title, author, genre, image) => {
+  const fd = buildFormData(title, author, genre, image);
   return http.post('/book', fd, { onUploadProgress: uploadEventCallable })
   .then((response) => {
     if (!response.data) {
@@ -34,7 +34,7 @@ const getBook = async (uuid) => http
 });
 
 const getBookPresignUrl = async (uuid) => http
-.get(`/book/${uuid}/file/url`)
+.get(`/book/${uuid}/image/url`)
 .then((response) => {
   if (!response.data) {
     return null
@@ -42,9 +42,9 @@ const getBookPresignUrl = async (uuid) => http
   return response.data.data
 });
 
-const updateBookWithFile = async (uuid, { title, author, genre, selectedFile }) => {
-  const fd = buildFormData(title, author, genre, selectedFile);
-  return http.put(`/book/${uuid}/file`, fd, { onUploadProgress: uploadEventCallable })
+const updateBookWithImage = async (uuid, { title, author, genre, image }) => {
+  const fd = buildFormData(title, author, genre, image);
+  return http.put(`/book/${uuid}/image`, fd, { onUploadProgress: uploadEventCallable })
   .then((response) => {
     if (!response.data) {
       return null
@@ -84,7 +84,7 @@ export {
   createBook,
   getBook,
   getBookPresignUrl,
-  updateBookWithFile,
+  updateBookWithImage,
   updateBook,
   deleteBook,
   listBook,

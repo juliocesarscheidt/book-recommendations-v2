@@ -63,7 +63,7 @@
 <script>
 import StarRating from 'vue-star-rating';
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-import { getBook, updateBookWithFile, updateBook, deleteBook, getRate, upsertRate } from '../../../services/';
+import { getBook, updateBookWithImage, updateBook, deleteBook, getRate, upsertRate } from '../../../services/';
 
 export default {
   components: {
@@ -199,9 +199,9 @@ export default {
         };
 
         if (this.imageSelected) {
-          await updateBookWithFile(this.uuid, {
+          await updateBookWithImage(this.uuid, {
             ...bookBaseData,
-            selectedFile: this.imageSelected,
+            image: this.imageSelected,
           });
         } else {
           await updateBook(this.uuid, {

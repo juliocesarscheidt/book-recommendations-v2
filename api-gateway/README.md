@@ -93,13 +93,33 @@ curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost
 
 ```bash
 # create book
-curl --silent -X POST --data '{"title": "Clean Architecture", "author": "Robert Martin", "genre": "Software", "image": "https://images-na.ssl-images-amazon.com/images/I/41-sN-mzwKL._SX258_BO1,204,203,200_QL70_ML2_.jpg"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book' | jq -r
+curl -i -X POST \
+  -H "Content-Type: multipart/form-data" \
+  -F "title=Clean Architecture" \
+  -F "author=Robert Martin" \
+  -F "genre=Software" \
+  -F "image=@/home/julio/book-recommendations-v2/clean-arch.jpg" \
+  --url 'http://localhost:3080/api/book' | jq -r
 
 # get book
 curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
 
-# update book
-curl --silent -X PUT --data '{"title": "Architecture", "author": "Martin", "genre": "Software Architecture", "image": "https://images-na.ssl-images-amazon.com"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
+# get book presign url
+curl --silent -X GET -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4/image/url' | jq -r
+
+
+# update book (without image)
+curl --silent -X PUT --data '{"title": "Architecture", "author": "Martin", "genre": "Software Architecture"}' -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r
+
+# update book (with image)
+curl -i -X PUT \
+  -H "Content-Type: multipart/form-data" \
+  -F "title=Clean Architecture" \
+  -F "author=Robert Martin" \
+  -F "genre=Software Architecture" \
+  -F "image=@/home/julio/book-recommendations-v2/clean-arch.jpg" \
+  --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4/image' | jq -r
+
 
 # delete book
 curl --silent -X DELETE -H "Authorization: Bearer ${TOKEN}" --url 'http://localhost:3080/api/book/j3q1i3x6y3b5e3a0e3j8q3n4' | jq -r

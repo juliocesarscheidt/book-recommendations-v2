@@ -27,6 +27,7 @@ const (
 	BUCKET_NAME = "blackdevs-aws"
 )
 
+// TODO: move these methods to a separated library
 func validateImageFileForm(filename string, fileExtension string, fileSizeMb float64) error {
 	if fileExtension != "png" && fileExtension != "jpg" && fileExtension != "jpeg" {
 		return errors.New("Invalid File Extension")
@@ -174,8 +175,8 @@ func GetBookPresignUrl(amqpClient *adapter.AmqpClient, redisClient adapter.Redis
 		fmt.Println(params)
 		book_uuid, _ := params["book_uuid"]
 
-		// check on cache
-		cacheKey := fmt.Sprintf("/book/%s/file/url", book_uuid)
+		// get from cache
+		cacheKey := fmt.Sprintf("/book/%s/image/url", book_uuid)
 		result, err := redisClient.Get(cacheKey)
 		if (err != nil) {
 			fmt.Errorf("Failed to retrieve from cache: %v", err)
@@ -207,7 +208,7 @@ func GetBookPresignUrl(amqpClient *adapter.AmqpClient, redisClient adapter.Redis
 			return
 		}
 
-		// put on cache
+		// set on cache
 		if err := redisClient.Set(cacheKey, url); err != nil {
 			fmt.Errorf("Failed to set on cache: %v", err)
 		}
@@ -217,7 +218,7 @@ func GetBookPresignUrl(amqpClient *adapter.AmqpClient, redisClient adapter.Redis
 	}
 }
 
-func UpdateBookWithFile(amqpClient *adapter.AmqpClient, redisClient adapter.RedisClient) http.HandlerFunc {
+func UpdateBookWithImage(amqpClient *adapter.AmqpClient, redisClient adapter.RedisClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 
@@ -266,10 +267,10 @@ func UpdateBookWithFile(amqpClient *adapter.AmqpClient, redisClient adapter.Redi
 			return
 		}
 
-		// delete from cache
-		cacheKey := fmt.Sprintf("/book/%s/file/url", book_uuid)
+		// delete presign url from cache if it was there
+		cacheKey := fmt.Sprintf("/book/%s/image/url", book_uuid)
 		if err := redisClient.Del(cacheKey); err != nil {
-			fmt.Errorf("Failed to set on cache: %v", err)
+			fmt.Errorf("Failed to delete from cache: %v", err)
 		}
 
 		w.WriteHeader(http.StatusAccepted)

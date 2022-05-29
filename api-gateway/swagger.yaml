@@ -572,9 +572,19 @@ paths:
         - BearerAuth: []
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/BookBody'
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                genre:
+                  type: string
+                image:
+                  type: string
+                  format: binary
       responses:
         '201':
           description: 'Created'
@@ -710,7 +720,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookBody'
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                genre:
+                  type: string
       responses:
         '202':
           description: 'Accepted'
@@ -756,6 +773,111 @@ paths:
       responses:
         '204':
           description: 'No Content'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /api/book/{uuid}/image:
+    put:
+      tags:
+        - BookServices
+      summary: update book with image
+      operationId: updateBookWithImage
+      security:
+        - BearerAuth: []
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for book
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                genre:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: 'Accepted'
+        '400':
+          description: 'Bad Request'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseBadRequest'
+        '401':
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseUnauthorized'
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseNotFound'
+        '500':
+          description: 'Internal Server Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponseServerError'
+
+  /api/book/{uuid}/image/url:
+    get:
+      tags:
+        - BookServices
+      summary: get book image url
+      operationId: getBookImageUrl
+      security:
+        - BearerAuth: []
+      parameters:
+      - name: uuid
+        in: path
+        description: Uuid for book
+        required: true
+        schema:
+          $ref: '#/components/schemas/Uuid'
+      responses:
+        '200':
+          description: 'OK'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetBookImageUrlSuccessResponse'
         '400':
           description: 'Bad Request'
           content:
@@ -870,6 +992,10 @@ components:
     Uuid:
       type: string
       example: '17f182b0dfc002737d507f74'
+
+    ImageUrl:
+      type: string
+      example: 'https://bucket.s3.sa-east-1.amazonaws.com/book-recommendations-files/image.png'
 
     CreatedAt:
       type: string
@@ -1043,6 +1169,12 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/BookFull'
+
+    GetBookImageUrlSuccessResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ImageUrl'
 
     ListBookSuccessResponse:
       type: object
