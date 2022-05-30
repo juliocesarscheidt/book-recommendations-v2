@@ -14,4 +14,6 @@ locals {
   redis_conn_string = module.redis.redis_conn_string
   # postgres
   postgres_conn_string = module.postgres.postgres_conn_string
+  # s3
+  api_gw_bucket_name = "${var.app_config_api_gateway_bucket_name}-${var.env}"
 }

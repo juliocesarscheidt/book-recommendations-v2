@@ -16,6 +16,8 @@ AWS_BACKEND_SECRET_ACCESS_KEY?=
 AWS_BACKEND_REGION?=sa-east-1
 # docker variables
 DOCKER_REGISTRY?=000000000000.dkr.ecr.$(AWS_DEFAULT_REGION).amazonaws.com
+# API GW variables
+API_GW_BUCKET_NAME?=
 
 docker-login:
 	aws ecr get-login-password --region $(AWS_DEFAULT_REGION) | \
@@ -96,6 +98,7 @@ plan: validate lint
 		-var docker_registry="$(DOCKER_REGISTRY)" \
 		-var cluster_name="$(CLUSTER_NAME)" \
 		-var image_version="$(IMAGE_VERSION)" \
+		-var app_config_api_gateway_bucket_name="$(API_GW_BUCKET_NAME)" \
 		-input=false
 
 apply:

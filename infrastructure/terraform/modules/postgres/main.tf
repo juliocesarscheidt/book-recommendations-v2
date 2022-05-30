@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 0.14.3"
+}
+
 resource "null_resource" "dependency_getter" {
   provisioner "local-exec" {
     command = "echo ${length(var.dependencies)}"

@@ -21,7 +21,7 @@ func GetS3Client() (*s3.S3, error) {
 	return s3.New(sess), nil
 }
 
-func PutS3File(file io.ReadSeeker, bucketName string, filenameBucketKey string) (*s3.PutObjectOutput, error) {
+func PutS3File(file io.ReadSeeker, bucketName string, filenameBucketKey string, contentType string) (*s3.PutObjectOutput, error) {
 	s3Client, err := GetS3Client()
 	if err != nil {
 		return nil, err
@@ -29,7 +29,9 @@ func PutS3File(file io.ReadSeeker, bucketName string, filenameBucketKey string) 
 	input := &s3.PutObjectInput{
 		Body: file,
 		Bucket: aws.String(bucketName),
-		Key:    aws.String(filenameBucketKey),
+		Key: aws.String(filenameBucketKey),
+		ContentType: aws.String(contentType),
+		ServerSideEncryption: aws.String("AES256"), // SSE-S3 Encryption
 	}
 	objectOutput, err := s3Client.PutObject(input)
 	if err != nil {
@@ -45,7 +47,7 @@ func GenerateS3PresignUrl(bucketName string, filenameBucketKey string) (string, 
 	}
 	req, _ := s3Client.GetObjectRequest(&s3.GetObjectInput{
 		Bucket: aws.String(bucketName),
-		Key:    aws.String(filenameBucketKey),
+		Key: aws.String(filenameBucketKey),
 	})
 	url, err := req.Presign(60*60*time.Second) // 1 hour
 	if err != nil {

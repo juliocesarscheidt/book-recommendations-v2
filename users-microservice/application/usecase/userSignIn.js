@@ -1,6 +1,6 @@
 const SignInDTO = require('../dto/SignInDTO');
 const InvalidEmailPasswordException = require('../exception/InvalidEmailPasswordException');
-const { comparePasswordSync, generateUserToken } = require('../../common/encryption');
+const { comparePasswordSync, generateUserToken } = require('../../common/encryptionUtils');
 
 const execute = async ({ email, password }, userRepository, redisClient) => {
   const user = await userRepository.find({ email });

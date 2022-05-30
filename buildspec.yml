@@ -39,8 +39,8 @@ phases:
     commands:
       - echo build started on `date`
       - cd $CODEBUILD_SRC_DIR/infrastructure/terraform/
-      - curl --silent -X GET -L https://releases.hashicorp.com/terraform/0.12.26/terraform_0.12.26_linux_amd64.zip --output terraform_0.12.26_linux_amd64.zip
-      - unzip terraform_0.12.26_linux_amd64.zip && rm -f terraform_0.12.26_linux_amd64.zip
+      - curl --silent -X GET -L https://releases.hashicorp.com/terraform/0.14.3/terraform_0.14.3_linux_amd64.zip --output terraform_0.14.3_linux_amd64.zip
+      - unzip terraform_0.14.3_linux_amd64.zip && rm -f terraform_0.14.3_linux_amd64.zip
       - chmod +x terraform && mv terraform /usr/local/bin/
       - aws s3 cp s3://${AWS_BACKEND_BUCKET}/terraform/ecs-cluster/${ENV}.tfvars .
       - make init

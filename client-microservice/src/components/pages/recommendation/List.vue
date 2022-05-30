@@ -32,8 +32,10 @@
         <template #cell(genre)="data">
           <i>{{ data.value | capitalize }}</i>
         </template>
+
         <template #cell(image)="data">
-          <a v-bind:href="data.value" target="_blank" title="See Image">{{ data.value | trimLetters(25) }}</a>
+          <div v-if="data.value" class="text-nowrap text-link" @click="openImageUrl(data.item.uuid)" v-bind:title="$t('book.image_preview')">{{ data.value | trimLetters(25) }}</div>
+          <div v-else class="text-nowrap text-link">-</div>
         </template>
 
         <template #head(title)="">
@@ -69,7 +71,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import { listBook, getRecommendations } from '../../../services/';
+import { getBookPresignUrl, listBook, getRecommendations } from '../../../services/';
 
 export default {
   components: {
@@ -155,6 +157,15 @@ export default {
         this.loading = false;
       }
     },
+    async openImageUrl(uuid) {
+      try {
+        const url = await getBookPresignUrl(uuid);
+        window.open(url, "_blank");
+      } catch (err) {
+        console.log(err);
+        this.notifyError(err.response.data.message);
+      }
+    }
   },
   beforeDestroy() {
   },

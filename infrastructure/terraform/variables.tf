@@ -212,6 +212,10 @@ variable "app_config_api_gateway_container_environment" {
   type        = list(any)
   description = "Config for app api-gateway container environment"
 }
+variable "app_config_api_gateway_bucket_name" {
+  type        = string
+  description = "Config for app api-gateway S3 Bucket Name"
+}
 
 variable "tags" {
   type        = map(string)

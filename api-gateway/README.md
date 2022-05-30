@@ -17,6 +17,7 @@ go mod download
 export GRPC_CONN_STRING=127.0.0.1:50051
 export AMQP_CONN_STRING=amqp://rabbitmq:admin@127.0.0.1:5872/
 export REDIS_CONN_STRING=127.0.0.1:6379
+export BUCKET_NAME=book-recommendations-v2-api-gw-bucket
 
 go run main.go
 

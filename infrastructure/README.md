@@ -19,6 +19,8 @@ export DOCKER_REGISTRY="${AWS_ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.c
 export CLUSTER_NAME="ecs-cluster-${ENV}"
 export IMAGE_VERSION="0.0.1"
 
+export API_GW_BUCKET_NAME="book-recommendations-v2-api-gw-bucket-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 12 | head -n1)"
+
 cd terraform/
 
 # login into the ECR, build the image, creates the repository (if doesn't exist) and pushes the image to the repository

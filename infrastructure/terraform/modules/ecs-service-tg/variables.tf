@@ -10,7 +10,7 @@ variable "env" {
   default     = "development"
 }
 
-variable docker_registry {
+variable "docker_registry" {
   type        = string
   description = "Docker registry"
 }
@@ -60,7 +60,7 @@ variable "private_namespace_id" {
   description = "ID for private namespace"
 }
 
-variable dependencies {
+variable "dependencies" {
   type        = any
   default     = []
   description = "Dependencies"

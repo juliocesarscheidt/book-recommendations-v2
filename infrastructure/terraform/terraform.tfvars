@@ -108,3 +108,4 @@ app_config_api_gateway = {
 app_config_api_gateway_container_port = 3080
 app_config_api_gateway_container_environment = [
 ]
+app_config_api_gateway_bucket_name = "book-recommendations-v2-api-gw-bucket"

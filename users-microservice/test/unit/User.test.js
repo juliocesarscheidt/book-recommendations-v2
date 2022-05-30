@@ -3,7 +3,7 @@ const { faker } = require('@faker-js/faker');
 const UserRepository = require('../../infra/repository/memory/UserRepositoryMemory');
 const RedisClient = require('../../infra/adapter/RedisClientMock');
 const { createUser, getUser, updateUser, deleteUser, listUser, userSignUp, userSignIn } = require('../../application/usecase/index');
-const { decodeJwtToken } = require('../../common/encryption');
+const { decodeJwtToken } = require('../../common/encryptionUtils');
 
 let userRepository;
 let redisClient;

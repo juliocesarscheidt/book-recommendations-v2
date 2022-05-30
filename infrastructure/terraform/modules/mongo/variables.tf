@@ -4,7 +4,7 @@ variable "env" {
   default     = "development"
 }
 
-variable dependencies {
+variable "dependencies" {
   type        = any
   default     = []
   description = "Dependencies"
