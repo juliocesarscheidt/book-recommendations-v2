@@ -248,13 +248,12 @@ export default {
         this.notifyError(err.response.data.message);
       }
     },
-    onFileSelected (event) {
+    onFileSelected(event) {
       this.imageSelected = event.target.files[0];
       const vm = this;
       const readerUrl = new FileReader();
       readerUrl.readAsDataURL(this.imageSelected);
       readerUrl.onload = function(e) {
-        console.error(e.target);
         vm.imagePreview = e.target.result;
       }
       readerUrl.onerror = function(e) {
