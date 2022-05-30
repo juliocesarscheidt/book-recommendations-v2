@@ -1,3 +1,7 @@
+terraform {
+  required_version = "~> 0.14.3"
+}
+
 resource "aws_cloudwatch_log_group" "task-log-group" {
   retention_in_days = 1
   name              = "/aws/ecs/${var.app_config.name}-${var.env}"

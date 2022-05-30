@@ -8,6 +8,7 @@ import (
 
 const (
 	MAX_FILE_SIZE = 5.00 // 5 MB
+	BUCKET_PREFIX = "book-recommendations-files"
 )
 
 func ValidateImageFileForm(filename string, fileExtension string, fileSizeMb float64) error {
@@ -21,7 +22,7 @@ func ValidateImageFileForm(filename string, fileExtension string, fileSizeMb flo
 }
 
 func AppendBucketPathToFilename(filename string) string {
-	return fmt.Sprintf("book-recommendations-files/%s", filename)
+	return fmt.Sprintf("%s/%s", BUCKET_PREFIX, filename)
 }
 
 func GenerateFilenameRandBucketKey(filename string, fileExtension string) (string, string) {

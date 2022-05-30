@@ -115,21 +115,25 @@ module "recommendations-microservice" {
 }
 
 module "api-gateway" {
-  source                    = "./modules/ecs-service-tg"
-  aws_region                = var.aws_region
-  env                       = var.env
-  docker_registry           = var.docker_registry
-  cluster_name              = var.cluster_name
-  image_version             = var.image_version
-  subnet_ids                = aws_subnet.private_subnet.*.id
-  security_group_ids        = [aws_security_group.api-gateway-sg.id]
-  target_group_id           = aws_alb_target_group.api-gateway-tg.id
-  app_config                = var.app_config_api_gateway
+  source             = "./modules/ecs-service-tg"
+  aws_region         = var.aws_region
+  env                = var.env
+  docker_registry    = var.docker_registry
+  cluster_name       = var.cluster_name
+  image_version      = var.image_version
+  subnet_ids         = aws_subnet.private_subnet.*.id
+  security_group_ids = [aws_security_group.api-gateway-sg.id]
+  target_group_id    = aws_alb_target_group.api-gateway-tg.id
+  app_config = merge(var.app_config_api_gateway, {
+    "task_role_arn" = aws_iam_role.s3_role_api_gw.arn
+  })
   app_config_container_port = var.app_config_api_gateway_container_port
   app_config_container_environment = concat(var.app_config_api_gateway_container_environment, [
     { "name" : "GRPC_CONN_STRING", "value" : local.grpc_conn_string },
     { "name" : "AMQP_CONN_STRING", "value" : local.amqp_conn_string },
     { "name" : "REDIS_CONN_STRING", "value" : local.redis_conn_string },
+    { "name" : "BUCKET_NAME", "value" : local.api_gw_bucket_name },
+    { "name" : "AWS_DEFAULT_REGION", "value" : var.aws_region },
   ])
   private_namespace_id = aws_service_discovery_private_dns_namespace.private-namespace.id
   dependencies = [
@@ -143,6 +147,8 @@ module "api-gateway" {
     module.redis,
     local.amqp_conn_string,
     local.redis_conn_string,
+    aws_s3_bucket.api_gw_s3_bucket,
+    aws_iam_role_policy_attachment.attach_role_policy_api_gw,
   ]
   tags = var.tags
 }

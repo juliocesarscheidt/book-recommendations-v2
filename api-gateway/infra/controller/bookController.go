@@ -34,6 +34,7 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 		filename := strings.Trim(filenameParts[0], "")
 		fileExtension := strings.Trim(filenameParts[1], "")
 		fileSizeMb := float64(header.Size) / 1024 / 1024
+		fileContentType := header.Header["Content-Type"][0]
 
 		if err := common.ValidateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
 			ThrowBadRequest(w, err.Error())
@@ -42,7 +43,7 @@ func CreateBook(amqpClient *adapter.AmqpClient) http.HandlerFunc {
 		filenameRand, filenameBucketKey := common.GenerateFilenameRandBucketKey(filename, fileExtension)
 
 		bucketName := os.Getenv("BUCKET_NAME")
-		_, err = common.PutS3File(file, bucketName, filenameBucketKey)
+		_, err = common.PutS3File(file, bucketName, filenameBucketKey, fileContentType)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
@@ -161,6 +162,7 @@ func UpdateBookWithImage(amqpClient *adapter.AmqpClient, redisClient adapter.Red
 		filename := strings.Trim(filenameParts[0], "")
 		fileExtension := strings.Trim(filenameParts[1], "")
 		fileSizeMb := float64(header.Size) / 1024 / 1024
+		fileContentType := header.Header["Content-Type"][0]
 
 		if err := common.ValidateImageFileForm(filename, fileExtension, fileSizeMb); err != nil {
 			ThrowBadRequest(w, err.Error())
@@ -169,7 +171,7 @@ func UpdateBookWithImage(amqpClient *adapter.AmqpClient, redisClient adapter.Red
 		filenameRand, filenameBucketKey := common.GenerateFilenameRandBucketKey(filename, fileExtension)
 
 		bucketName := os.Getenv("BUCKET_NAME")
-		_, err = common.PutS3File(file, bucketName, filenameBucketKey)
+		_, err = common.PutS3File(file, bucketName, filenameBucketKey, fileContentType)
 		if err != nil {
 			ThrowInternalServerError(w, err.Error())
 			return
