@@ -21,7 +21,6 @@ afterEach(() => {
   userRateRepository.clean();
 });
 
-
 const createFakeUserRate = async (userRateRepository, rate = 8.0) => {
   const userRate = {
     _id: generateRandomString(),
