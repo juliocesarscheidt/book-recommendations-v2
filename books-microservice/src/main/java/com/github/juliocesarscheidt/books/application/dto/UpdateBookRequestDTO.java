@@ -1,7 +1,10 @@
 package com.github.juliocesarscheidt.books.application.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class UpdateBookRequestDTO extends BaseDTO {
 
+  @NotBlank
   public String uuid;
 
   public String title;

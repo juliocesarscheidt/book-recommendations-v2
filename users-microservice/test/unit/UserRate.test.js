@@ -1,7 +1,7 @@
 const UserRateRepository = require('../../infra/repository/memory/UserRateRepositoryMemory');
 const RedisClient = require('../../infra/adapter/RedisClientMock');
-
 const { upsertUserRate, getUserRate, deleteUserRate, listUserRate } = require('../../application/usecase/index');
+const { generateRandomString } = require('../../common/stringUtils');
 
 let userRateRepository;
 let redisClient;
@@ -21,12 +21,10 @@ afterEach(() => {
   userRateRepository.clean();
 });
 
-const generateUuid = () => ((new Date()).getTime().toString(16) + Math.random().toString(16)).replace('.', '').substring(0, 24);
-
 const createFakeUserRate = async (userRateRepository, rate = 8.0) => {
   const userRate = {
-    _id: generateUuid(),
-    book_uuid: generateUuid(),
+    _id: generateRandomString(),
+    book_uuid: generateRandomString(),
     rate,
   };
   const responseCreateUserRate = await upsertUserRate(userRate, userRateRepository);

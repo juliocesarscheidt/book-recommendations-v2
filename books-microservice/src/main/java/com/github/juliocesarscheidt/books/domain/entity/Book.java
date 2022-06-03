@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.github.juliocesarscheidt.books.application.service.DatetimeConverter;
+import com.github.juliocesarscheidt.books.common.DatetimeUtils;
 
 @Entity(name = "book")
 public class Book {
@@ -77,13 +77,13 @@ public class Book {
     this.image = image;
   }
   public Date getCreatedAt() {
-    return DatetimeConverter.convertDateToGMT(this.createdAt);
+    return DatetimeUtils.convertDateToGMT(this.createdAt);
   }
   public void setCreatedAt(Date createdAt) {
     this.createdAt = createdAt;
   }
   public Date getUpdatedAt() {
-    return DatetimeConverter.convertDateToGMT(this.updatedAt);
+    return DatetimeUtils.convertDateToGMT(this.updatedAt);
   }
   public void setUpdatedAt(Date updatedAt) {
     this.updatedAt = updatedAt;

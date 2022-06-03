@@ -17,7 +17,7 @@ import com.github.juliocesarscheidt.books.domain.entity.Book;
 import com.github.juliocesarscheidt.books.infra.repository.BookRepository;
 
 @Service
-public class ListBook extends BaseUseCase {
+public class ListBook {
 
   @Autowired
   BookRepository repository;
