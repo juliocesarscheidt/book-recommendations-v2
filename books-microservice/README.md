@@ -6,7 +6,7 @@ make package
 
 make build
 
-make test
+make test-app
 
 make verify
 

@@ -2,7 +2,7 @@ package com.github.juliocesarscheidt.books.application.dto;
 
 import java.util.Date;
 
-import com.github.juliocesarscheidt.books.application.service.DatetimeConverter;
+import com.github.juliocesarscheidt.books.common.DatetimeUtils;
 import com.google.gson.annotations.SerializedName;
 
 public class GetBookResponseDTO extends BaseDTO {
@@ -64,7 +64,7 @@ public class GetBookResponseDTO extends BaseDTO {
   }
 
   public Date getCreatedAt() {
-    return DatetimeConverter.convertDateToGMT(this.createdAt);
+    return DatetimeUtils.convertDateToGMT(this.createdAt);
   }
 
   public void setCreatedAt(Date createdAt) {
@@ -72,7 +72,7 @@ public class GetBookResponseDTO extends BaseDTO {
   }
 
   public Date getUpdatedAt() {
-    return DatetimeConverter.convertDateToGMT(this.updatedAt);
+    return DatetimeUtils.convertDateToGMT(this.updatedAt);
   }
 
   public void setUpdatedAt(Date updatedAt) {

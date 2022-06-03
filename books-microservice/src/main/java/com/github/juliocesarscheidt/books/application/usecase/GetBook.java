@@ -10,7 +10,7 @@ import com.github.juliocesarscheidt.books.domain.entity.Book;
 import com.github.juliocesarscheidt.books.infra.repository.BookRepository;
 
 @Service
-public class GetBook extends BaseUseCase {
+public class GetBook {
 
   @Autowired
   BookRepository repository;
