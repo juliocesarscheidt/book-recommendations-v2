@@ -21,8 +21,12 @@ It is possible to run all services locally using docker and docker-compose.
 # network
 docker network create \
   --driver=bridge \
+  -o "com.docker.network.bridge.name"="br-msbook" \
+  -o "com.docker.network.bridge.host_binding_ipv4"="0.0.0.0" \
   --subnet=172.100.10.0/24 \
-  --gateway=172.100.10.1 subnet_0
+  --gateway=172.100.10.1 msbook
+docker network inspect msbook --format="{{json .IPAM.Config}}"
+# [{"Subnet":"172.100.10.0/24","Gateway":"172.100.10.1"}]
 
 # infrastructure
 docker-compose -f docker-compose-infra.yaml up -d --build
