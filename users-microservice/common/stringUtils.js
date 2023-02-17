@@ -1,6 +1,6 @@
-const generateRandomString = (size = 24) => {
+const generateRandomHexString = (size = 24) => {
   let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const characters = 'abcdef0123456789';
   for (let i = 0; i < size; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
@@ -8,5 +8,5 @@ const generateRandomString = (size = 24) => {
 }
 
 module.exports = {
-  generateRandomString,
+  generateRandomHexString,
 }

@@ -10,13 +10,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASS}
       POSTGRES_DB: ${POSTGRES_DB:-book_db}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
     ports:
       - 5432:5432
     volumes:
       - postgres-data:/var/lib/postgresql/data:rw
-      # - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:rw
 
   mongo:
     container_name: mongo
@@ -30,7 +29,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
     volumes:
       - mongo-data:/data/db:rw
@@ -52,7 +51,7 @@ services:
       RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
 
   redis:
@@ -62,22 +61,13 @@ services:
     ports:
       - 6379:6379
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
 
-# networks:
-#   subnet_0:
-#     driver_opts:
-#       com.docker.network.enable_ipv6: "false"
-#     ipam:
-#       driver: default
-#       config:
-#       - subnet: 172.100.10.0/24
-
 networks:
-  subnet_0:
+  msbook:
     external:
-      name: subnet_0
+      name: msbook
 
 volumes:
   postgres-data: {}

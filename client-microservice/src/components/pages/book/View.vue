@@ -46,7 +46,7 @@
             v-bind:active-on-click="false"
             v-bind:star-size="25"
             v-bind:fixed-points=2
-            v-bind:increment=0.01
+            v-bind:increment=0.5
             v-bind:max-rating=10
             @rating-selected ="callUpsertRate"
           >

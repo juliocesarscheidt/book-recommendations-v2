@@ -1,6 +1,5 @@
 const { userSignUp, userSignIn, createUser, getUser, updateUser, deleteUser, listUser } = require('../../application/usecase/index');
 const UserRepository = require('../repository/database/UserRepository');
-// const UserRepository = require('../repository/memory/UserRepositoryMemory');
 const RedisClient = require('../adapter/RedisClient');
 
 /* eslint-disable */
