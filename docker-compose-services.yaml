@@ -19,7 +19,7 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       BUCKET_NAME: ${BUCKET_NAME}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
     volumes:
       - ./api-gateway/:/go/src/app:rw
@@ -39,7 +39,7 @@ services:
       MONGO_DATABASE: ${MONGO_DATABASE}
       REDIS_CONN_STRING: ${REDIS_CONN_STRING}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
     volumes:
       - ./users-microservice:/usr/src/app:rw
@@ -59,7 +59,7 @@ services:
       POSTGRES_PASS: ${POSTGRES_PASS:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-book_db}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
 
   recommendations-microservice:
@@ -74,7 +74,7 @@ services:
       REDIS_CONN_STRING: ${REDIS_CONN_STRING}
       PREFETCH_COUNT: ${PREFETCH_COUNT}
     networks:
-      - subnet_0
+      - msbook
     restart: on-failure
     volumes:
       - ./recommendations-microservice/src:/usr/src/app:rw
@@ -88,7 +88,7 @@ services:
       dockerfile: Development.Dockerfile
     restart: on-failure
     networks:
-      - subnet_0
+      - msbook
     ports:
       - 8080:8080
     environment:
@@ -97,19 +97,10 @@ services:
       - ./client-microservice:/app:rw
       - client-microservice-node-modules:/app/node_modules:rw
 
-# networks:
-#   subnet_0:
-#     driver_opts:
-#       com.docker.network.enable_ipv6: "false"
-#     ipam:
-#       driver: default
-#       config:
-#       - subnet: 172.100.10.0/24
-
 networks:
-  subnet_0:
+  msbook:
     external:
-      name: subnet_0
+      name: msbook
 
 volumes:
   users-microservice-node-modules: {}
